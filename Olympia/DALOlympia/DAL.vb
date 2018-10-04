@@ -1,5 +1,4 @@
 ﻿
-Imports System.Data.SqlClient
 Imports Olympia.OBJOlympia
 Imports System.Data.OleDb
 Imports System.Data.Odbc
@@ -8,8 +7,8 @@ Namespace DALOlympia
 
     Public Class DALBase
 
-        Public conn As New OdbcConnection("Driver={MySql};DSN=rodierscurato;UID=RodiersRodiers;Pwd=%Roller75!;")
-        Public mydt As New System.Data.DataTable
+        Public conn As New OdbcConnection("Driver={MySQL ODBC 5.1 Driver};Server=185.41.126.25;Port=9151;Database=rodierscurato;User=RodiersRodiers;Password=%Roller75!;Option=3;")
+
         Private myListParamColl As New List(Of OdbcParameter)
 
         Public Sub DoParameterAdd(ByVal strName As String, ByVal objValue As Object, ByVal myDBType As Integer)
@@ -52,7 +51,7 @@ Namespace DALOlympia
         '    Return objValue
         'End Function
 
-        Public Sub generateDebugSQL(ByVal strSQL As String)
+        Public Sub GenerateDebugSQL(ByVal strSQL As String)
             ' /// Generate full output string
             Dim i As Integer = 0
             Dim strOutput As New Text.StringBuilder
@@ -74,7 +73,7 @@ Namespace DALOlympia
             Debug.WriteLine("SQL -> " & strOutput.ToString)
         End Sub
 
-        Private Function returnParameter(ByVal i As Integer) As OdbcParameter
+        Private Function ReturnParameter(ByVal i As Integer) As OdbcParameter
             Dim myReturnParameter As New OdbcParameter
             Dim ii As Integer = 0
             For Each myParameter As OdbcParameter In myListParamColl
@@ -88,6 +87,7 @@ Namespace DALOlympia
         End Function
 
         Public Function ReturnDALDataTable(ByVal strSQL As String) As DataTable
+            Dim mydt As New DataTable
             Dim myCommand As New OdbcCommand(strSQL, conn)
             Dim myDataAdapter As New OdbcDataAdapter(myCommand)
 
@@ -98,7 +98,7 @@ Namespace DALOlympia
                     Next
                 End If
 
-                generateDebugSQL(strSQL)
+                GenerateDebugSQL(strSQL)
                 conn.Open()
                 myDataAdapter.Fill(mydt)
                 conn.Close()

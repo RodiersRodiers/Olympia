@@ -1,11 +1,9 @@
-﻿'Imports System.Data.Sql
-'Imports System.Data.SqlClient
-Imports Olympia.OBJOlympia
+﻿Imports Olympia.OBJOlympia
 Imports Olympia.BALOlympia
 
 Public Class GebruikersRechten
     Inherits Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
+    Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load

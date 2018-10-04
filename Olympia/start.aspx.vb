@@ -3,7 +3,7 @@ Imports Olympia.BALOlympia
 
 Partial Class Start
     Inherits Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
+    Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
     Private strHeaderTitle, strDBError, strPagingTot, strPagingRecordsFound As String
 

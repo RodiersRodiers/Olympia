@@ -4,13 +4,9 @@ Imports System.Data.OleDb
 
 Namespace DALOlympia
 
-    Public Class DalGebruikers : Inherits DALOlympia.DALBase
-        Private strSQL As New System.Text.StringBuilder
+    Public Class DalGebruikers : Inherits DALBase
+        Private strSQL As New StringBuilder
         Dim i As Integer = 0
-
-        Public Shared Function doChacheDate(ByVal mydate As Date) As String
-            Return mydate.ToString("yyyy-MM-dd")
-        End Function
 
         Public Function ReadFileExcell(ByVal strfile As String) As DataTable
             Dim dt As New DataTable
@@ -77,7 +73,7 @@ Namespace DALOlympia
         End Function
 
         Public Function getLogging(ByVal sort As String, ByVal startDate As Date, ByVal endDate As Date, ByVal intType As Integer, ByVal strInfo As String) As DataTable
-
+            Dim mydt As New DataTable
             Try
                 strSQL.Remove(0, strSQL.Length)
                 strSQL.Append("SELECT * from logging ")
@@ -112,7 +108,8 @@ Namespace DALOlympia
 
 #Region "Gebruikers"
 
-        Public Function getGebruiker(ByVal ID_Lid As Integer) As DataTable
+        Public Function GetGebruiker(ByVal ID_Lid As Integer) As DataTable
+            Dim mydt As New DataTable
             Try
                 strSQL.Remove(0, strSQL.Length)
                 strSQL.Append("SELECT * from Gebruikers where active=1 and ID_Lid = ? ")
@@ -126,11 +123,12 @@ Namespace DALOlympia
             Return mydt
         End Function
 
-        Public Function getTrainers(ByVal sort As String) As DataTable
+        Public Function GetTrainers(ByVal sort As String) As DataTable
+            Dim mydt As New DataTable
             Try
                 strSQL.Remove(0, strSQL.Length)
                 strSQL.Append("SELECT * from Gebruikers g join Rechten r on g.ID_Lid = r.ID_Lid where active=1 and id_actie=31 order by " & sort)
-                mydt = returnDALDataTable(strSQL.ToString)
+                mydt = ReturnDALDataTable(strSQL.ToString)
 
             Catch ex As Exception
                 Throw
@@ -138,16 +136,17 @@ Namespace DALOlympia
             Return mydt
         End Function
 
-        Public Function getGebruikers(ByVal sort As String, ByVal filter As String) As DataTable
+        Public Function GetGebruikers(ByVal sort As String, ByVal filter As String) As DataTable
+            Dim mydt As New DataTable
             Try
                 If filter Like "" Then
                     strSQL.Remove(0, strSQL.Length)
                     strSQL.Append("SELECT * from Gebruikers where active=1 order by " & sort)
-                    mydt = returnDALDataTable(strSQL.ToString)
+                    mydt = ReturnDALDataTable(strSQL.ToString)
                 Else
                     strSQL.Remove(0, strSQL.Length)
                     strSQL.Append("SELECT * from Gebruikers where active=1 AND (naam like '%" & filter & "%' or voornaam like '%" & filter & "%' ) order by " & sort)
-                    mydt = returnDALDataTable(strSQL.ToString)
+                    mydt = ReturnDALDataTable(strSQL.ToString)
                 End If
             Catch ex As Exception
                 Throw
@@ -208,7 +207,7 @@ Namespace DALOlympia
                 MyCmd.Parameters.Add("@ID_Lid", SqlDbType.Int).Value = mygebruiker.IdLid
 
                 conn.Open()
-                i = MyCmd.ExecuteNonQuery()
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -218,15 +217,15 @@ Namespace DALOlympia
 
         Public Function CheckGebruiker(ByVal Naam As String, ByVal Voornaam As String, ByVal gebDatum As Date) As Integer
             Dim i As Integer = 0
-            Dim MyCmd As New SqlCommand("select * from gebruikers where naam = @naam AND voornaam = @voornaam AND gebdatum=@gebdatum ")
-
             Try
-                MyCmd.Parameters.Add("@naam", SqlDbType.NVarChar).Value = Naam
-                MyCmd.Parameters.Add("@voornaam", SqlDbType.NVarChar).Value = Voornaam
-                MyCmd.Parameters.Add("@gebdatum", SqlDbType.Date).Value = gebDatum
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("select * from gebruikers where naam = ? AND voornaam = ? AND gebdatum= ? ")
+                DoParameterAdd("@naam", Naam, 13)
+                DoParameterAdd("@voornaam", Voornaam, 13)
+                DoParameterAdd("@gebdatum", gebDatum, 13)
 
                 conn.Open()
-                i = MyCmd.ExecuteNonQuery()
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -250,7 +249,7 @@ Namespace DALOlympia
         End Function
 
         Public Function CheckToegangenGebruiker(ByVal ID_Lid As Integer) As DataTable
-            Dim mydt As New System.Data.DataTable
+            Dim mydt As New DataTable
             Try
                 strSQL.Remove(0, strSQL.Length)
                 strSQL.Append("select ID_Lid, ID_actie, Validate, menu from Rechten r join PIC_Acties a on a.id = r.ID_Actie where ID_Lid = ?")
@@ -265,13 +264,13 @@ Namespace DALOlympia
 
 #End Region
 
-        Public Function getActies(ByVal sort As String) As DataTable
-            Dim mydt As New System.Data.DataTable
-            Dim MyCmd As New SqlCommand("SELECT * from PIC_Acties order by " & sort)
-            Dim mySqlDataAdapter As New SqlDataAdapter(MyCmd)
+        Public Function GetActies(ByVal sort As String) As DataTable
+            Dim mydt As New DataTable
             Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT * from PIC_Acties order by " & sort)
 
-                mySqlDataAdapter.Fill(mydt)
+                mydt = ReturnDALDataTable(strSQL.ToString)
 
             Catch ex As Exception
                 Throw
@@ -282,13 +281,12 @@ Namespace DALOlympia
 
 #Region "Disciplines"
 
-        Public Function getDisciplines(ByVal sort As String) As DataTable
-            Dim mydt As New System.Data.DataTable
-            Dim MyCmd As New SqlCommand("SELECT * from PIC_Disciplines where active=1 order by " & sort)
-            Dim mySqlDataAdapter As New SqlDataAdapter(MyCmd)
+        Public Function GetDisciplines(ByVal sort As String) As DataTable
+            Dim mydt As New DataTable
             Try
-
-                mySqlDataAdapter.Fill(mydt)
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT * from PIC_Disciplines where active=1 order by " & sort)
+                mydt = ReturnDALDataTable(strSQL.ToString)
 
             Catch ex As Exception
                 Throw
@@ -297,14 +295,13 @@ Namespace DALOlympia
             Return mydt
         End Function
 
-        Public Function insertDiscipline(ByVal myDiscipline As pic_Disciplines) As Integer
-            Dim MyCmd As New SqlCommand("INSERT INTO PIC_Disciplines (Beschrijving) values (@Beschrijving) ")
-            Dim i As Integer
-
+        Public Function InsertDiscipline(ByVal myDiscipline As pic_Disciplines) As Integer
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@Beschrijving", SqlDbType.NVarChar).Value = myDiscipline.beschrijving
-
-                i = MyCmd.ExecuteNonQuery()
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("INSERT INTO PIC_Disciplines (Beschrijving) values (?) ")
+                DoParameterAdd("@Beschrijving", myDiscipline.beschrijving, 13)
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -313,14 +310,13 @@ Namespace DALOlympia
         End Function
 
         Public Function UpdateDiscipline(ByVal myDiscipline As pic_Disciplines) As Integer
-            Dim MyCmd As New SqlCommand("UPDATE PIC_Disciplines SET Beschrijving = @Beschrijving where ID_Discipline = @ID_Discipline ")
-            Dim i As Integer
-
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@Beschrijving", SqlDbType.NVarChar).Value = myDiscipline.beschrijving
-                MyCmd.Parameters.Add("@ID_Discipline", SqlDbType.Int).Value = myDiscipline.Id
-
-                i = MyCmd.ExecuteNonQuery()
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("UPDATE PIC_Disciplines SET Beschrijving = ? where ID_Discipline = ? ")
+                DoParameterAdd("@Beschrijving", myDiscipline.beschrijving, 13)
+                DoParameterAdd("@ID_Discipline", myDiscipline.Id, 10)
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -329,13 +325,12 @@ Namespace DALOlympia
         End Function
 
         Public Function DeleteDiscipline(ByVal myDiscipline As pic_Disciplines) As Integer
-            Dim MyCmd As New SqlCommand("UPDATE PIC_Disciplines SET active = 0 WHERE Id_discipline = @ID_Discipline ")
-            Dim i As Integer
-
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@ID_Discipline", SqlDbType.Int).Value = myDiscipline.Id
-
-                i = MyCmd.ExecuteNonQuery()
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("UPDATE PIC_Disciplines SET active = 0 WHERE Id_discipline = ? ")
+                DoParameterAdd("@ID_Discipline", myDiscipline.Id, 10)
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -346,14 +341,14 @@ Namespace DALOlympia
 
 #Region "TrainingsGroepen"
 
-        Public Function getTrainingsGroepenbyDiscipine(ByVal sort As String, ByVal myIdDiscipline As Integer) As DataTable
-            Dim mydt As New System.Data.DataTable
-            Dim MyCmd As New SqlCommand("SELECT * from PIC_Trainingsgroepen where active=1 and ID_Discipline = @IdDiscipline order by " & sort)
-            MyCmd.Parameters.Add("@IdDiscipline", SqlDbType.Int).Value = myIdDiscipline
-            Dim mySqlDataAdapter As New SqlDataAdapter(MyCmd)
+        Public Function GetTrainingsGroepenbyDiscipine(ByVal sort As String, ByVal myIdDiscipline As Integer) As DataTable
+            Dim mydt As New DataTable
             Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT * from PIC_Trainingsgroepen where active=1 and ID_Discipline = ? order by " & sort)
+                DoParameterAdd("@myIdDiscipline", myIdDiscipline, 10)
+                mydt = ReturnDALDataTable(strSQL.ToString)
 
-                mySqlDataAdapter.Fill(mydt)
             Catch ex As Exception
                 Throw
             End Try
@@ -361,13 +356,12 @@ Namespace DALOlympia
             Return mydt
         End Function
 
-        Public Function getAllTrainingsGroepen(ByVal sort As String) As DataTable
-            Dim mydt As New System.Data.DataTable
-            Dim MyCmd As New SqlCommand("SELECT * from PIC_Trainingsgroepen where active=1 order by " & sort)
-            Dim mySqlDataAdapter As New SqlDataAdapter(MyCmd)
+        Public Function GetAllTrainingsGroepen(ByVal sort As String) As DataTable
+            Dim mydt As New DataTable
             Try
-
-                mySqlDataAdapter.Fill(mydt)
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT * from PIC_Trainingsgroepen where active=1 order by " & sort)
+                mydt = ReturnDALDataTable(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -376,13 +370,13 @@ Namespace DALOlympia
         End Function
 
         Public Function InsertTrainingsgroep(ByVal myTrainingsGroep As pic_Trainingsgroepen) As Integer
-            Dim MyCmd As New SqlCommand("INSERT INTO PIC_Trainingsgroepen (Beschrijving, ID_Discipline) values (@Beschrijving, @ID_Discipline) ")
-            Dim i As Integer
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@Beschrijving", SqlDbType.NVarChar).Value = myTrainingsGroep.beschrijving
-                MyCmd.Parameters.Add("@ID_Discipline", SqlDbType.Int).Value = myTrainingsGroep.Discipline.Id
-
-                i = MyCmd.ExecuteNonQuery()
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("INSERT INTO PIC_Trainingsgroepen (Beschrijving, ID_Discipline) values (?, ?) ")
+                DoParameterAdd("@Beschrijving", myTrainingsGroep.beschrijving, 13)
+                DoParameterAdd("@ID_Discipline", myTrainingsGroep.Discipline.Id, 10)
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -391,13 +385,13 @@ Namespace DALOlympia
         End Function
 
         Public Function UpdateTrainingsgroep(ByVal myTrainingsGroep As pic_Trainingsgroepen) As Integer
-            Dim MyCmd As New SqlCommand("UPDATE PIC_Trainingsgroepen SET Beschrijving = @Beschrijving where ID = @ID ")
-            Dim i As Integer
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@Beschrijving", SqlDbType.NVarChar).Value = myTrainingsGroep.beschrijving
-                MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = myTrainingsGroep.Id
-
-                i = MyCmd.ExecuteNonQuery()
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("UPDATE PIC_Trainingsgroepen SET Beschrijving = @? where ID = @? ")
+                DoParameterAdd("@Beschrijving", myTrainingsGroep.beschrijving, 13)
+                DoParameterAdd("@ID_Groep", myTrainingsGroep.Id, 10)
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -406,12 +400,12 @@ Namespace DALOlympia
         End Function
 
         Public Function DeleteTrainingsgroep(ByVal myTrainingsGroep As pic_Trainingsgroepen) As Integer
-            Dim MyCmd As New SqlCommand("UPDATE PIC_Trainingsgroepen SET active = 0 WHERE Id = @id ")
-            Dim i As Integer
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@id", SqlDbType.Int).Value = myTrainingsGroep.Id
-
-                i = MyCmd.ExecuteNonQuery()
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("UPDATE PIC_Trainingsgroepen SET active = 0 WHERE Id = ? ")
+                DoParameterAdd("@ID_Groep", myTrainingsGroep.Id, 10)
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -424,7 +418,7 @@ Namespace DALOlympia
 #Region "Aanwezigheden"
 
         Public Function getLedenbyGroep(ByVal sort As String, ByVal idGroep As Integer) As DataTable
-            Dim mydt As New System.Data.DataTable
+            Dim mydt As New DataTable
             Dim MyCmd As New SqlCommand("select g.id_lid,naam, voornaam, gebdatum, id_actie from Rechten r  " +
                                         "left join gebruikers g on r.id_lid = g.id_lid " +
                                         "where ID_Groep = @IDGROEP and (id_actie =30 or id_actie=31) " +
@@ -442,7 +436,7 @@ Namespace DALOlympia
         End Function
 
         Public Function getAanwezighedenbyGroep(ByVal sort As String, ByVal idGroep As Integer, ByVal strdatum As String) As DataTable
-            Dim mydt As New System.Data.DataTable
+            Dim mydt As New DataTable
             If strdatum Like "" Then
                 Dim MyCmd As New SqlCommand("select g.ID_Lid as idlid,* from Aanwezigheden a  " +
                             "right join gebruikers g on g.ID_Lid = a.ID_Lid " +
@@ -539,7 +533,7 @@ Namespace DALOlympia
 #Region "Handelingen"
 
         Public Function getAllhandelingenbygebruiker(ByVal sort As String, ByVal idlid As Integer) As DataTable
-            Dim mydt As New System.Data.DataTable
+            Dim mydt As New DataTable
             Dim MyCmd As New SqlCommand("SELECT H.ID, h.Validate,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving,T.id as groepid,t.beschrijving as groepbeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal " +
                                         "from Handelingen H " +
                                         "join gebruikers G on H.id_lid=G.id_lid " +
@@ -561,7 +555,7 @@ Namespace DALOlympia
         End Function
 
         Public Function gethandelingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal idactie As Integer) As DataTable
-            Dim mydt As New System.Data.DataTable
+            Dim mydt As New DataTable
             Dim MyCmd As New SqlCommand("SELECT D.id as disciplineid, D.beschrijving as disciplinebeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, * " +
                                         "from Handelingen H " +
                                         "join gebruikers G on H.id_lid=G.id_lid " +
@@ -644,82 +638,69 @@ Namespace DALOlympia
 #Region "Rechten Gebruikers"
 
         Public Function getRechtenGebruiker(ByVal sort As String, ByVal idlid As Integer) As DataTable
-            Dim mydt As New System.Data.DataTable
+            Dim mydt As New DataTable
             Try
-
-                Dim MyCmd As New SqlCommand("SELECT r.id, T.id as groepid,T.beschrijving as groepbeschrijving, " +
-                                            "A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid,* from Rechten R " +
-                                             "join gebruikers G on R.id_lid=G.id_lid " +
-                                        "join PIC_Trainingsgroepen T on T.id=R.id_groep " +
-                                        "join PIC_Disciplines D on D.id = T.ID_Discipline " +
-                                        "join PIC_acties A on A.id=R.id_actie " +
-                                        "where R.ID_Lid = @idlid ")
-
-                MyCmd.Parameters.Add("@idlid", SqlDbType.Int).Value = idlid
-                Dim mySqlDataAdapter As New SqlDataAdapter(MyCmd)
-                conn.Open()
-                mySqlDataAdapter.Fill(mydt)
-
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT r.id, T.id as groepid,T.beschrijving as groepbeschrijving, ")
+                strSQL.Append("A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid,* from Rechten R ")
+                strSQL.Append("join gebruikers G on R.id_lid=G.id_lid ")
+                strSQL.Append("join PIC_Trainingsgroepen T on T.id=R.id_groep ")
+                strSQL.Append("join PIC_Disciplines D on D.id = T.ID_Discipline ")
+                strSQL.Append("join PIC_acties A on A.id=R.id_actie ")
+                strSQL.Append("where R.ID_Lid = ? ")
+                DoParameterAdd("@idlid", idlid, 10)
+                mydt = ReturnDALDataTable(strSQL.ToString)
 
             Catch ex As Exception
                 Throw
             End Try
-            conn.Close()
             Return mydt
         End Function
 
         Public Function InsertRechtenGebruiker(ByVal myrechten As Rechten) As Integer
             Dim i As Integer = 0
-            Dim MyCmd As New SqlCommand("INSERT into Rechten (ID_Lid, ID_Actie, ID_Groep, Validate) VALUES (@ID_Lid, @ID_Actie, @ID_Groep, @Validate )")
-
             Try
-                MyCmd.Parameters.Add("@ID_Lid", SqlDbType.Int).Value = myrechten.Gebruiker.IdLid
-                MyCmd.Parameters.Add("@ID_Actie", SqlDbType.Int).Value = myrechten.Actie.Id
-                MyCmd.Parameters.Add("@ID_Groep", SqlDbType.Int).Value = myrechten.Groep.Id
-                MyCmd.Parameters.Add("@Validate", SqlDbType.Int).Value = myrechten.Validate
-
-                conn.Open()
-                i = MyCmd.ExecuteNonQuery()
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("INSERT into Rechten (ID_Lid, ID_Actie, ID_Groep, Validate) VALUES (?,?,?,?)")
+                DoParameterAdd("@ID_Lid", myrechten.Gebruiker.IdLid, 10)
+                DoParameterAdd("@ID_Actie", myrechten.Actie.Id, 10)
+                DoParameterAdd("@ID_Groep", myrechten.Groep.Id, 10)
+                DoParameterAdd("@Validate", myrechten.Validate, 10)
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
-            conn.Close()
             Return i
         End Function
 
         Public Function DeleteRechtenGebruiker(ByVal myrechten As Rechten) As Integer
             Dim i As Integer = 0
-            Dim MyCmd As New SqlCommand("Delete from Rechten where ID = @ID ")
-
             Try
-                MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = myrechten.Id
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("Delete from Rechten where ID = ? ")
+                DoParameterAdd("@ID", myrechten.Id, 10)
+                i = ExecuteDALScalar(strSQL.ToString)
 
-                conn.Open()
-                i = MyCmd.ExecuteNonQuery()
             Catch ex As Exception
                 Throw
             End Try
-            conn.Close()
             Return i
         End Function
 
         Public Function UpdateRechtenGebruiker(ByVal myrechten As Rechten) As Integer
             Dim i As Integer = 0
-
-            Dim MyCmd As New SqlCommand("update Rechten set ID_Actie=@ID_Actie, ID_Groep=@ID_Groep,Validate=@Validate where ID = @ID ")
             Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("update Rechten set ID_Actie=?, ID_Groep=? ,Validate=? where ID = ? ")
 
-                MyCmd.Parameters.Add("@ID_Actie", SqlDbType.Int).Value = myrechten.Actie.Id
-                MyCmd.Parameters.Add("@ID_Groep", SqlDbType.Int).Value = myrechten.Groep.Id
-                MyCmd.Parameters.Add("@Validate", SqlDbType.Int).Value = myrechten.Validate
-                MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = myrechten.Id
-
-                conn.Open()
-                i = MyCmd.ExecuteNonQuery()
+                DoParameterAdd("@ID_Actie", myrechten.Actie.Id, 10)
+                DoParameterAdd("@ID_Groep", myrechten.Groep.Id, 10)
+                DoParameterAdd("@Validate", myrechten.Validate, 10)
+                DoParameterAdd("@ID", myrechten.Id, 10)
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
-            conn.Close()
             Return i
         End Function
 #End Region

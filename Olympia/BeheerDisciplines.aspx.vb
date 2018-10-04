@@ -3,7 +3,7 @@ Imports Olympia.BALOlympia
 
 Partial Class BeheerDisciplines
     Inherits Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
+    Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
     Private strDeleteConfirm, strDeleteError, strDeleteOk, strDBError, strPagingTot, strHeaderTitle, strPagingRecordsFound, strInsertBeschrijving, strUpdateOk, _
         strUpdateError, strPrimaryKeyAllreadyExists, strAddError, strAddOk, strCompleted As String

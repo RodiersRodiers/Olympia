@@ -18,7 +18,7 @@
 <body class="w3-content" style="max-width: 1200px">
 
        <div class="w3-black w3-center w3-padding-24 ">
-        <font size="32"><b>Curato</b></font>
+           <font size="32"><b>Curato</b></font>
         <br />
         <div class="w3-right">
         <asp:Label ID="lbllogin" runat="server"></asp:Label>&nbsp;
