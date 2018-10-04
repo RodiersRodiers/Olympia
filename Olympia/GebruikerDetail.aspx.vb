@@ -3,10 +3,10 @@ Imports Olympia.BALOlympia
 
 Public Class GebruikerDetail
     Inherits Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
+    Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
 
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
 
         setMultiLanguages()
         If Not IsPostBack Then

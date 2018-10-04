@@ -72,18 +72,18 @@ Namespace DALOlympia
             Return i
         End Function
 
-        Public Function getLogging(ByVal sort As String, ByVal startDate As Date, ByVal endDate As Date, ByVal intType As Integer, ByVal strInfo As String) As DataTable
+        Public Function GetLogging(ByVal sort As String, ByVal startDate As Date, ByVal endDate As Date, ByVal intType As Integer, ByVal strInfo As String) As DataTable
             Dim mydt As New DataTable
             Try
                 strSQL.Remove(0, strSQL.Length)
-                strSQL.Append("SELECT * from logging ")
-                strSQL.Append(" l join gebruikers g on g.ID_Lid=l.ID_Lid ")
-                strSQL.Append(" WHERE 1=1 And (datum BETWEEN '" & startDate.ToString("yyyy-MM-dd") & "' AND '" & endDate.ToString("yyyy-MM-dd") & "' ) ")
-               
+                strSQL.Append("SELECT * from logging L ")
+                strSQL.Append("join gebruikers g on g.ID_Lid=l.ID_Lid ")
+                strSQL.Append("WHERE 1=1 And (datum BETWEEN '" & startDate.ToString("yyyy-MM-dd") & "' AND '" & endDate.ToString("yyyy-MM-dd") & "' ) ")
+
 
                 If intType > 0 Then
                     strSQL.Append(" AND Type = ? ")
-                    DoParameterAdd("@strInfo", strInfo, 10)
+                    DoParameterAdd("@intType", intType, 10)
                 End If
 
                 If Not strInfo = "" Then
@@ -95,7 +95,7 @@ Namespace DALOlympia
                     strSQL.Append(" ORDER BY " & sort)
                 End If
 
-                mydt = returnDALDataTable(strSQL.ToString)
+                mydt = ReturnDALDataTable(strSQL.ToString)
 
             Catch ex As Exception
                 Throw
@@ -417,94 +417,71 @@ Namespace DALOlympia
 
 #Region "Aanwezigheden"
 
-        Public Function getLedenbyGroep(ByVal sort As String, ByVal idGroep As Integer) As DataTable
+        Public Function GetLedenbyGroep(ByVal sort As String, ByVal idGroep As Integer) As DataTable
             Dim mydt As New DataTable
-            Dim MyCmd As New SqlCommand("select g.id_lid,naam, voornaam, gebdatum, id_actie from Rechten r  " +
-                                        "left join gebruikers g on r.id_lid = g.id_lid " +
-                                        "where ID_Groep = @IDGROEP and (id_actie =30 or id_actie=31) " +
-                                        "order by " & sort)
-            Dim mySqlDataAdapter As New SqlDataAdapter(MyCmd)
             Try
-                MyCmd.Parameters.Add("@IDGROEP", SqlDbType.Int).Value = idGroep
-                conn.Open()
-                mySqlDataAdapter.Fill(mydt)
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("select g.id_lid,naam, voornaam, gebdatum, id_actie from Rechten r ")
+                strSQL.Append("left join gebruikers g on r.id_lid = g.id_lid ")
+                strSQL.Append("where ID_Groep = @IDGROEP and (id_actie =30 or id_actie=31) ")
+                strSQL.Append("order by " & sort)
+                DoParameterAdd("@IDGROEP", idGroep, 10)
+
             Catch ex As Exception
                 Throw
             End Try
-            conn.Close()
             Return mydt
         End Function
 
-        Public Function getAanwezighedenbyGroep(ByVal sort As String, ByVal idGroep As Integer, ByVal strdatum As String) As DataTable
+        Public Function GetAanwezighedenbyGroep(ByVal sort As String, ByVal idGroep As Integer, ByVal strdatum As String) As DataTable
             Dim mydt As New DataTable
-            If strdatum Like "" Then
-                Dim MyCmd As New SqlCommand("select g.ID_Lid as idlid,* from Aanwezigheden a  " +
-                            "right join gebruikers g on g.ID_Lid = a.ID_Lid " +
-                            "left join rechten r on g.ID_Lid = r.ID_Lid " +
-                            "where r.ID_Groep = @IDGROEP and (r.id_actie =30 or r.id_actie=31) " +
-                            "order by " & sort)
-                Dim mySqlDataAdapter As New SqlDataAdapter(MyCmd)
-                Try
-                    MyCmd.Parameters.Add("@IDGROEP", SqlDbType.Int).Value = idGroep
-                    conn.Open()
-                    mySqlDataAdapter.Fill(mydt)
-                Catch ex As Exception
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("select g.ID_Lid as idlid,* from Aanwezigheden a ")
+                strSQL.Append("right join gebruikers g on g.ID_Lid = a.ID_Lid ")
+                strSQL.Append("left join rechten r on g.ID_Lid = r.ID_Lid ")
+                strSQL.Append("where r.ID_Groep = ? and (r.id_actie =30 or r.id_actie=31) ")
+                DoParameterAdd("@IDGROEP", idGroep, 10)
+                If Not strdatum Like "" Then
+                    strSQL.Append("AND datum like @strdatum) ")
+                    DoParameterAdd("@strdatum", strdatum, 23)
+                End If
+
+                strSQL.Append("order by " & sort)
+                i = ExecuteDALScalar(strSQL.ToString)
+
+            Catch ex As Exception
                     Throw
                 End Try
-
-            Else
-
-                Dim MyCmd As New SqlCommand("select g.ID_Lid as idlid,* from Aanwezigheden a  " +
-            "right join gebruikers g on g.ID_Lid = a.ID_Lid " +
-            "left join rechten r on g.ID_Lid = r.ID_Lid " +
-            "where r.ID_Groep = @IDGROEP and (r.id_actie =30 or r.id_actie=31) " +
-            "AND datum like @strdatum) " +
-            "order by " & sort)
-                Dim mySqlDataAdapter As New SqlDataAdapter(MyCmd)
-                Try
-                    MyCmd.Parameters.Add("@IDGROEP", SqlDbType.Int).Value = idGroep
-                    MyCmd.Parameters.Add("@datum", SqlDbType.Date).Value = strdatum
-                    conn.Open()
-                    mySqlDataAdapter.Fill(mydt)
-                Catch ex As Exception
-                    Throw
-                End Try
-
-
-            End If
-            conn.Close()
             Return mydt
         End Function
 
-        Public Function insertAanwezigheid(ByVal myAanwezigheid As Aanwezigheid) As Integer
-            Dim MyCmd As New SqlCommand("INSERT INTO Aanwezigheden (ID_Lid, Datum, ID_Groep, Opmerking, Aanwezig) values (@ID_Lid, @Datum, @ID_Groep, @ID_Opmerking, @Aanwezig) ")
-            Dim i As Integer
-
+        Public Function InsertAanwezigheid(ByVal myAanwezigheid As Aanwezigheid) As Integer
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@ID_Lid", SqlDbType.Int).Value = myAanwezigheid.Gebruiker.IdLid
-                MyCmd.Parameters.Add("@Datum", SqlDbType.Date).Value = myAanwezigheid.Datum
-                MyCmd.Parameters.Add("@ID_Groep", SqlDbType.Int).Value = myAanwezigheid.Groep.Id
-                MyCmd.Parameters.Add("@Opmerking", SqlDbType.NVarChar).Value = myAanwezigheid.Opmerking
-                MyCmd.Parameters.Add("@aanwezig", SqlDbType.Int).Value = myAanwezigheid.Aanwezig
-                conn.Open()
-                i = MyCmd.ExecuteNonQuery()
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("INSERT INTO Aanwezigheden (ID_Lid, Datum, ID_Groep, Opmerking, Aanwezig) values (?,?,?,?,?) ")
+                DoParameterAdd("@ID_Lid", myAanwezigheid.Gebruiker.IdLid, 10)
+                DoParameterAdd("@Datum", myAanwezigheid.Datum, 23)
+                DoParameterAdd("@ID_Groep", myAanwezigheid.Groep.Id, 10)
+                DoParameterAdd("@Opmerking", myAanwezigheid.Opmerking, 13)
+                DoParameterAdd("@aanwezig", myAanwezigheid.Aanwezig, 10)
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
-            conn.Close()
             Return i
         End Function
 
         Public Function UpdateAanwezigheid(ByVal myAanwezigheid As Aanwezigheid) As Integer
-            Dim MyCmd As New SqlCommand("UPDATE Aanwezigheden SET opmerking=@opmerking, Aanwezig=@Aanwezig where ID = @ID ")
-            Dim i As Integer
-
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@opmerking", SqlDbType.NVarChar).Value = myAanwezigheid.Opmerking
-                MyCmd.Parameters.Add("@Aanwezig", SqlDbType.NVarChar).Value = myAanwezigheid.Aanwezig
-                MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = myAanwezigheid.ID
-
-                i = MyCmd.ExecuteNonQuery()
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("UPDATE Aanwezigheden SET opmerking=?, Aanwezig=? where ID = ? ")
+                DoParameterAdd("@opmerking", myAanwezigheid.Opmerking, 13)
+                DoParameterAdd("@Aanwezig", myAanwezigheid.Aanwezig, 10)
+                DoParameterAdd("@ID", myAanwezigheid.Id, 10)
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -513,14 +490,13 @@ Namespace DALOlympia
         End Function
 
         Public Function DeleteAanwezigheid(ByVal myAanwezigheid As Aanwezigheid) As Integer
-            Dim MyCmd As New SqlCommand("Delete from Aanwezigheden WHERE ID = @ID ")
-            Dim i As Integer
-
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = myAanwezigheid.ID
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("Delete from Aanwezigheden WHERE ID = ? ")
+                DoParameterAdd("@ID", myAanwezigheid.Id, 10)
 
-
-                i = MyCmd.ExecuteNonQuery()
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -532,21 +508,20 @@ Namespace DALOlympia
 
 #Region "Handelingen"
 
-        Public Function getAllhandelingenbygebruiker(ByVal sort As String, ByVal idlid As Integer) As DataTable
+        Public Function GetAllhandelingenbygebruiker(ByVal sort As String, ByVal idlid As Integer) As DataTable
             Dim mydt As New DataTable
-            Dim MyCmd As New SqlCommand("SELECT H.ID, h.Validate,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving,T.id as groepid,t.beschrijving as groepbeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal " +
-                                        "from Handelingen H " +
-                                        "join gebruikers G on H.id_lid=G.id_lid " +
-                                        "left join PIC_Trainingsgroepen T on T.id=H.id_groep " +
-                                        "left join PIC_Disciplines D on D.id = H.id_Discipline " +
-                                        "left join PIC_acties A on A.id=H.id_actie " +
-                                        "where h.id_lid = @idlid " +
-                                        "order by " & sort)
-            Dim mySqlDataAdapter As New SqlDataAdapter(MyCmd)
             Try
-                MyCmd.Parameters.Add("@idlid", SqlDbType.Int).Value = idlid
-
-                mySqlDataAdapter.Fill(mydt)
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT H.ID, h.Validate,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving,T.id as groepid,t.beschrijving as groepbeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal ")
+                strSQL.Append("from Handelingen H ")
+                strSQL.Append("join gebruikers G on H.id_lid=G.id_lid ")
+                strSQL.Append("left join PIC_Trainingsgroepen T on T.id=H.id_groep ")
+                strSQL.Append("left join PIC_Disciplines D on D.id = H.id_Discipline ")
+                strSQL.Append("left join PIC_acties A on A.id=H.id_actie ")
+                strSQL.Append("where h.id_lid = ? ")
+                strSQL.Append("order by " & sort)
+                DoParameterAdd("@idlid", idlid, 10)
+                mydt = ReturnDALDataTable(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
@@ -554,21 +529,22 @@ Namespace DALOlympia
             Return mydt
         End Function
 
-        Public Function gethandelingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal idactie As Integer) As DataTable
+        Public Function Gethandelingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal idactie As Integer) As DataTable
             Dim mydt As New DataTable
-            Dim MyCmd As New SqlCommand("SELECT D.id as disciplineid, D.beschrijving as disciplinebeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, * " +
-                                        "from Handelingen H " +
-                                        "join gebruikers G on H.id_lid=G.id_lid " +
-                                        "left join PIC_Disciplines D on D.id = H.id_Discipline " +
-                                        "left join PIC_acties A on A.id=H.id_actie " +
-                                        "where h.id_lid = @idlid and H.id_actie = @idactie " +
-                                        "order by " & sort)
-            Dim mySqlDataAdapter As New SqlDataAdapter(MyCmd)
             Try
-                MyCmd.Parameters.Add("@idlid", SqlDbType.Int).Value = idlid
-                MyCmd.Parameters.Add("@idactie", SqlDbType.Int).Value = idactie
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT H.ID, h.Validate,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving,T.id as groepid,t.beschrijving as groepbeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal ")
+                strSQL.Append("from Handelingen H ")
+                strSQL.Append("join gebruikers G on H.id_lid=G.id_lid ")
+                strSQL.Append("left join PIC_Trainingsgroepen T on T.id=H.id_groep ")
+                strSQL.Append("left join PIC_Disciplines D on D.id = H.id_Discipline ")
+                strSQL.Append("left join PIC_acties A on A.id=H.id_actie ")
+                strSQL.Append("where h.id_lid = ? and H.id_actie = ? ")
+                strSQL.Append("order by " & sort)
+                DoParameterAdd("@idlid", idlid, 10)
+                DoParameterAdd("@idactie", idactie, 10)
+                mydt = ReturnDALDataTable(strSQL.ToString)
 
-                mySqlDataAdapter.Fill(mydt)
             Catch ex As Exception
                 Throw
             End Try
@@ -576,60 +552,55 @@ Namespace DALOlympia
             Return mydt
         End Function
 
-        Public Function insertHandeling(ByVal myHandeling As Handelingen) As Integer
-            Dim MyCmd As New SqlCommand("INSERT INTO Handelingen (ID_Lid, Datum, ID_Groep,ID_Discipline, ID_Actie, Info, Aantal) values (@ID_Lid, @Datum, @ID_Groep,@ID_Discipline, @ID_Actie, @ID_Info, @Aantal) ")
-            Dim i As Integer
-
+        Public Function InsertHandeling(ByVal myHandeling As Handelingen) As Integer
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@ID_Lid", SqlDbType.Int).Value = myHandeling.Gebruiker.IdLid
-                MyCmd.Parameters.Add("@Datum", SqlDbType.Date).Value = myHandeling.Datum
-                MyCmd.Parameters.Add("@ID_Groep", SqlDbType.Int).Value = myHandeling.Groep.Id
-                MyCmd.Parameters.Add("@ID_Discipline", SqlDbType.Int).Value = myHandeling.Discipline.Id
-                MyCmd.Parameters.Add("@ID_Actie", SqlDbType.Int).Value = myHandeling.Actie.Id
-                MyCmd.Parameters.Add("@ID_Info", SqlDbType.NVarChar).Value = myHandeling.Info
-                MyCmd.Parameters.Add("@Aantal", SqlDbType.Int).Value = myHandeling.Aantal
-                conn.Open()
-                i = MyCmd.ExecuteNonQuery()
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("INSERT INTO Handelingen (ID_Lid, Datum, ID_Groep,ID_Discipline, ID_Actie, Info, Aantal) values (?,?,?,?,?,?,?)")
+                DoParameterAdd("@ID_Lid", myHandeling.Gebruiker.IdLid, 10)
+                DoParameterAdd("@Datum", myHandeling.Datum, 23)
+                DoParameterAdd("@ID_Groep", myHandeling.Groep.Id, 10)
+                DoParameterAdd("@ID_Discipline", myHandeling.Discipline.Id, 10)
+                DoParameterAdd("@ID_Actie", myHandeling.Actie.Id, 10)
+                DoParameterAdd("@Info", myHandeling.Info, 13)
+                DoParameterAdd("@Aantal", myHandeling.Aantal, 13)
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
-            conn.Close()
             Return i
         End Function
 
         Public Function UpdateHandeling(ByVal myHandeling As Handelingen) As Integer
-            Dim MyCmd As New SqlCommand("UPDATE Handelingen SET Datum = @Datum, ID_Discipline = @ID_Discipline,ID_Groep=@ID_Groep,Info=@Info, aantal=@aantal where ID = @ID ")
-            Dim i As Integer
-
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@Datum", SqlDbType.Date).Value = myHandeling.Datum
-                MyCmd.Parameters.Add("@ID_Discipline", SqlDbType.Int).Value = myHandeling.Discipline.Id
-                MyCmd.Parameters.Add("@ID_Groep", SqlDbType.Int).Value = myHandeling.Groep.Id
-                MyCmd.Parameters.Add("@Info", SqlDbType.NVarChar).Value = myHandeling.Info
-                MyCmd.Parameters.Add("@Aantal", SqlDbType.Int).Value = myHandeling.Aantal
-                MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = myHandeling.Id
-                conn.Open()
-                i = MyCmd.ExecuteNonQuery()
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("UPDATE Handelingen SET Datum = ?, ID_Discipline = ? ,ID_Groep= ? ,Info= ? , aantal= ? where ID = ? ")
+                DoParameterAdd("@Datum", myHandeling.Datum, 23)
+                DoParameterAdd("@ID_Discipline", myHandeling.Discipline.Id, 10)
+                DoParameterAdd("@ID_Groep", myHandeling.Groep.Id, 10)
+                DoParameterAdd("@Info", myHandeling.Info, 13)
+                DoParameterAdd("@Aantal", myHandeling.Aantal, 13)
+                DoParameterAdd("@ID", myHandeling.Id, 10)
+                i = ExecuteDALScalar(strSQL.ToString)
+
             Catch ex As Exception
                 Throw
             End Try
-            conn.Close()
             Return i
         End Function
 
         Public Function DeleteHandeling(ByVal myHandeling As Handelingen) As Integer
-            Dim MyCmd As New SqlCommand("Delete from Handelingen WHERE ID = @ID_Handeling ")
-            Dim i As Integer
-
+            Dim i As Integer = 0
             Try
-                MyCmd.Parameters.Add("@ID_Handeling", SqlDbType.Int).Value = myHandeling.Id
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("Delete from Handelingen WHERE ID = ? ")
+                DoParameterAdd("@ID_Handeling", myHandeling.Id, 10)
 
-                conn.Open()
-                i = MyCmd.ExecuteNonQuery()
+                i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
             End Try
-            conn.Close()
             Return i
         End Function
 
@@ -637,16 +608,15 @@ Namespace DALOlympia
 
 #Region "Rechten Gebruikers"
 
-        Public Function getRechtenGebruiker(ByVal sort As String, ByVal idlid As Integer) As DataTable
+        Public Function GetRechtenGebruiker(ByVal sort As String, ByVal idlid As Integer) As DataTable
             Dim mydt As New DataTable
             Try
                 strSQL.Remove(0, strSQL.Length)
-                strSQL.Append("SELECT r.id, T.id as groepid,T.beschrijving as groepbeschrijving, ")
-                strSQL.Append("A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid,* from Rechten R ")
-                strSQL.Append("join gebruikers G on R.id_lid=G.id_lid ")
-                strSQL.Append("join PIC_Trainingsgroepen T on T.id=R.id_groep ")
-                strSQL.Append("join PIC_Disciplines D on D.id = T.ID_Discipline ")
-                strSQL.Append("join PIC_acties A on A.id=R.id_actie ")
+                strSQL.Append("SELECT naam, voornaam, R.validate,r.id, T.id as groepid,T.beschrijving as groepbeschrijving, ")
+                strSQL.Append("A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid from Rechten R ")
+                strSQL.Append("left join gebruikers G on R.id_lid=G.id_lid ")
+                strSQL.Append("left join PIC_Trainingsgroepen T on T.id=R.id_groep ")
+                strSQL.Append("left join PIC_acties A on A.id=R.id_actie ")
                 strSQL.Append("where R.ID_Lid = ? ")
                 DoParameterAdd("@idlid", idlid, 10)
                 mydt = ReturnDALDataTable(strSQL.ToString)

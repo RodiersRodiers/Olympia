@@ -1,11 +1,8 @@
 ﻿
 Imports System.IO
-Imports System.Text
 Imports System.Security.Cryptography
 Imports System.Drawing
 Imports System.Drawing.Imaging
-Imports System.Web.UI.WebControls
-
 
 Namespace OBJOlympia
 

@@ -420,7 +420,6 @@ Namespace BALOlympia
 
 #End Region
 
-
 #Region "Disciplines"
         Public Function GetDisciplines(ByVal sort As String) As List(Of pic_Disciplines)
             Dim myList As New List(Of pic_Disciplines)
