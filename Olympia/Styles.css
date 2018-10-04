@@ -1,0 +1,694 @@
+﻿
+HR {
+		color:#353C91;
+		}
+body 
+{	
+	font-size: 13px;
+	font-family: "Roboto", sans-serif, Arial, Helvetica;
+	color: #656565;
+	}
+
+
+.w3-sidebar {font-family: "Roboto", sans-serif}
+h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Roboto", sans-serif;}
+
+table {  
+	     font-family: Montserrat, sans-serif, Arial, Helvetica; 
+	     font-size: 13px; 		      
+	     }	    
+
+th {  font-family: Verdana, sans-serif, Arial, Helvetica; 
+	  font-size: 13px                                                                                                                                                   ; 
+	  font-weight: bold; 
+	  }
+
+
+.hidden
+{
+    display:none;
+    }
+
+.GebruiksCode_red
+{
+     background-color:Red;
+    }
+
+.GebruiksCode_green
+{
+ background-color:Green;
+    }
+
+
+.InputWithoutBorder
+{
+        border: none;
+    }
+
+.PageTitle
+{
+    font-size:20px;
+    font-weight:bold;
+    color:#51575d;
+    }
+
+
+a {  font-family: Montserrat, Arial, Helvetica, sans-serif; 
+	 font-size: 13px; 
+	 color: #000000; 
+	 text-decoration: none}
+
+a:active {   font-family: Montserrat, Arial, Helvetica, sans-serif; 
+	         font-size: 13px; 
+	         color: #009966; 
+	         text-decoration: none}
+
+a:visited {  font-family: Montserrat, Arial, Helvetica, sans-serif; 
+	         font-size: 13px; 
+	         color: #000000; 
+	         text-decoration: underline}
+
+a:link {     font-family: Montserrat, Arial, Helvetica, sans-serif; 
+	         font-size: 13px; 
+	         color: #000000; 
+	         text-decoration: none}
+
+a:hover {    font-family: Montserrat, Arial, Helvetica, sans-serif; 
+	         font-size: 13px; 
+	         color: #d9531f; 
+	         text-decoration: none}
+
+.bodylink { font-size:13px;
+		color:#d62f28;
+		text-decoration:none;
+		font-family:Montserrat,arial;
+		}
+
+a.bodylink { font-size:13px;
+		color:#d62f28;
+		text-decoration:none;
+		font-family:Montserrat,arial;
+		}
+
+a.bodylink:visited  { font-size:13px;
+		color:#d62f28;
+		text-decoration:none;
+		font-family:Montserrat,arial;
+		}
+
+a.bodylink:hover { font-size:13px;
+		text-decoration:none;
+		font-family:Montserrat,arial;
+		color:#353c91;
+		}
+
+.TR_Msg {
+	font-size: 11px;
+	color: #8f5700;
+	height:20px;
+	background-color:#f9f8cb;		
+}
+
+.MsgNegative
+{
+       color: black;
+       font-weight: bold;
+    }
+
+.PleaseWait
+    {
+        padding-bottom:1px;
+        background-image: url('images/UpdateStatus.gif');
+        background-repeat: no-repeat;
+    }
+
+
+p {  font-family: Montserrat, Arial, Helvetica, sans-serif; 
+	 font-size: 12px; 
+	 color: #000000}
+
+input {  font-family: Montserrat, Arial, Helvetica, sans-serif; 
+	     font-size: 10pt; 
+	     color: black; 
+	     }
+
+select {  font-family: Montserrat, Arial, Helvetica, sans-serif; 
+	     font-size: 10pt; 
+	     color: black; 
+	     }	    
+
+textarea {  font-family: Montserrat, Arial, Helvetica, sans-serif; font-size: 10pt; color: #353C91; background-color: #F8F8FC}
+blockquote {  font-family: Montserrat, Arial, Helvetica, sans-serif; font-size: 10pt; color: #000000}
+
+
+.content 
+{
+	background-color: white; 
+	font-family: Montserrat, Arial, Helvetica, sans-serif; 
+	font-size: 10px; 
+	color: Black}
+	
+.disclaimer {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #999999;
+}
+
+
+.datagridBody
+{
+    border-bottom:solid 1px #999999;
+    }
+
+.datagridHeaderSort
+{
+    background-image:url('images/datagridbkgr_sort.gif');
+    background-repeat:repeat;
+    color:#333333;
+    font-weight:bold;
+    border-top: solid 1px #999999;
+    border-left:solid 1px #999999;
+    border-right:solid 1px #999999;
+    border-bottom:solid 1px #999999;
+    border-collapse:collapse;
+     height:20px;
+    }
+    
+.datagridBleuHook
+{
+     background-image:url('images/footerWhiteLeft.gif');
+      background-repeat:no-repeat;
+    }
+
+.datagridPaging
+{
+    background-image:url('images/datagridbkgr.gif');
+    background-repeat:repeat;  
+    border-left:solid 1px #999999;
+    border-right:solid 1px #999999;
+    border-bottom:solid 1px #999999;
+    height:20px;
+    border-collapse:collapse;
+   
+    }
+
+.datagridHeaderNonSort
+{
+    background-image:url('images/datagridbkgr.gif');
+    background-repeat:repeat;
+    color:#333333;
+    font-weight:bold;
+    text-decoration:none;
+    border-top: solid 1px #999999;
+    border-left:solid 1px #999999;
+    border-right:solid 1px #999999;
+    border-bottom:solid 1px #999999;
+    border-collapse:collapse;
+    }
+
+.datagridSelectedItem
+{
+    background-color:#e0e6ff;
+    border-top: outset 1px #ebebeb;
+	border-bottom: solid 1px #ebebeb;
+    border-left:solid 1px #999999;
+    border-right:solid 1px #999999;
+    }
+    
+tr.selected 
+{
+    background-color: #e0e6ff;}
+
+.datagridItem
+{
+    color:#333333;
+    border-top: outset 1px #ebebeb;
+	border-bottom: solid 1px #ebebeb;
+    border-left:solid 1px #999999;
+    border-right:solid 1px #999999;
+    }
+
+.FailureTextLogin
+{
+    color:#dadada;
+    font-size:11px;
+    font-weight:bold;
+    }
+/*
+/////////////////////////////////////////////////////////
+////// CUSTUMVALIDATOR                            ///////
+/////////////////////////////////////////////////////////
+*/
+
+.CustomValidatorCalloutStyle div, 
+.CustomValidatorCalloutStyle td 
+{ 
+    border:solid 2px red; 
+    background-color: #FFEBCD; 
+    font-weight:bold;
+}
+
+/*
+/////////////////////////////////////////////////////////
+////// CompletionList                             ///////
+/////////////////////////////////////////////////////////
+*/
+ 
+.completionList {border:solid 1px #444444;margin:0px;padding:2px;height: 100px;overflow:auto;}
+
+/* AutoComplete highlighted item */ 
+.autocomplete_highlightedListItem 
+{ 
+background-color: #9694c5; 
+color: black;
+font-size:smaller;
+padding: 1px; 
+} 
+
+/* AutoComplete item */ 
+.autocomplete_listItem 
+{ 
+background-color: window; 
+color: windowtext; 
+font-size:smaller;
+padding: 1px; 
+} 
+
+     
+.textbox 
+{
+    border: solid 2px #cccccc;
+    border-top: solid 2px #a0a0a0;
+    }
+
+
+
+/**************/
+/* TABCONTROL */
+/**************/
+
+.SelectedTab
+{
+    font-family: Montserrat,tahoma,helvetica; 
+    color:#db521e; 
+    padding: 3px 4px 3px 4px;
+    border: solid 1px #999999;
+    background-color: #ffffff;    
+    }
+
+.DeSelectedTab
+{
+    font-family: Montserrat,tahoma,helvetica;  
+    padding: 3px 4px 3px 4px;
+    border: solid 1px #999999;
+    background-color: #c0c0c0;
+    }
+
+
+/* ROW FADE */
+
+#tblInsertRowFade td {
+	background-color: #234567;
+	color: #89abcd;
+	padding: 10px;
+}
+#tblInsertRowFade tr.other td {
+	background-color: #89abcd;
+	color: #234567;
+  padding-left: 2px;
+  padding-top: 2px;
+  padding-right: 4px;
+  border-bottom: 1px solid #EBEBEB;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#compose-attachments ul li img
+{
+  padding-right: 2px;
+  vertical-align: middle;
+}
+
+#attachment-title
+{
+  color: #666666;
+  font-weight: bold;
+  font-size: 11px;
+  background: url(images/icons/attachment.png) top left no-repeat;
+  padding: 0px 0px 3px 18px;
+  margin-left: 3px;
+}
+
+#p7menubar li:hover ul a, #p7menubar li.p7hvr ul a {
+	color: #f4f4f4;
+	font-weight:normal;
+	font-size:small;
+}
+/*
+The normal hover class for Sub-Level links. The Important directive
+is required for older browsers. We set a background color, which shows
+over the gradient background. We set text color to white.
+*/
+#p7menubar ul a:hover {
+	background-color: #6f6daa;		
+}
+/* The single backslash \ character inside this comment
+causes IE5 Mac to ignore the following rule, which allows other
+browsers to render top-level menu items to their natural width.
+Do not edit this rule in any way. */
+#p7menubar li {width: auto;}
+
+/* ROW FADE */
+
+#tblInsertRowFade td {
+	background-color: #234567;
+	color: #89abcd;
+	padding: 10px;
+}
+#tblInsertRowFade tr.other td {
+	background-color: #89abcd;
+	color: #234567;
+}
+
+/* ////////////////////////////////////////*/
+/* //////////// VALIDATOR /////////////////*/
+/* ////////////////////////////////////////*/
+.CustomValidatorCalloutStyle div, 
+.CustomValidatorCalloutStyle td { 
+    border:solid 1px #999999; 
+    background-color: #ffeacd;
+}
+
+.ajax__validatorcallout_popup_table /*The popup table.*/
+{
+    }
+
+.ajax__validatorcallout_popup_table_row /*The popup table row.*/
+{
+    }
+    
+.ajax__validatorcallout_callout_cell /*The callout cell.*/
+{
+    }
+
+.ajax__validatorcallout_callout_table /*The table in the callout cell.*/
+{
+    }
+
+.ajax__validatorcallout_callout_table_row /*The callout table row.*/
+{
+    }
+
+.ajax__validatorcallout_error_message_cell /*The error message cell.*/ 
+{
+    }
+
+.ajax__validatorcallout_icon_cell /*The warning icon cell.*/
+{
+
+    }
+
+.ajax__validatorcallout_close_button_cell /*The close button cell. */
+{
+    }
+
+.ajax__validatorcallout_arrow_cell /* The arror cell.*/
+{
+    }
+
+.ajax__validatorcallout_innerdiv /*Inner div of a cell. Used in the close button cell and the arrow cell.*/
+{
+    }
+
+.ajax__validatorcallout_hightlight
+{
+    background-color:#ffeacd;
+    }
+
+.CollapsPanelHeader
+{
+    color: white;
+    background-color: #719DDB;
+    background-image:url('images/datagridbkgr.gif');
+    background-repeat:repeat;
+    font-size: 12px;
+    font-weight:bold;
+    color:Black;
+    text-align:left;
+    cursor: pointer;
+    width:100%;
+    height:18px;
+    padding: 4px; 
+    border: solid 1px #999999;
+    }
+    
+    .CollapsPanelHeaderSporen
+{
+    color: white;
+    background-color: #719DDB;
+    background-image:url('images/datagridbkgr.gif');
+    background-repeat:repeat;
+    font-size: 12px;
+    font-weight:bold;
+    color:Black;
+    text-align:left;
+    cursor: pointer;
+    width:100%;
+    height:25px;
+    padding: 1px; 
+    border: solid 1px #999999;
+    }
+
+.CollapsPanelContent
+{
+    background-color: #DCE4F9;
+    border: 1px gray;                
+    width:100%;
+    padding: 4px;
+    padding-top: 7px;
+    border:  dotted 1px #999999;
+
+    }
+
+.CollapsPanelContentOFF
+{
+    background-color: #CCCCCC;
+    border: 1px gray;                
+    width:100%;
+    padding: 4px;
+    padding-top: 7px;
+    border:  dotted 1px #999999;
+
+    }
+
+.CollapsPanelContentGevoeligDossier
+{
+    background-color: #fe9191;
+    border: 1px gray;                
+    width:100%;
+    padding: 4px;
+    padding-top: 7px;
+    border:  dotted 1px #999999;
+
+    }
+   
+.emptyDate
+{
+	width:100%;
+	padding-left:50px;
+	padding-right:50px;
+	background-color:#fe9191;
+	padding-top:3px;
+	padding-bottom:3px;
+}
+.orangeDate
+{
+	width:100%;
+	padding-left:50px;
+	padding-right:50px;
+	background-color:#F2A538;
+	padding-top:3px;
+	padding-bottom:3px;
+	width:100px;
+	height:30px;
+}
+
+.redDate
+{
+    text-align:left;
+	padding-left:1px;
+	padding-right:50px;
+	background-color:#fe9191;
+	padding-top:0px;
+	padding-bottom:0px;
+
+}
+
+.redDateAlignC
+{
+    text-align:center;       
+	background-color:#fe9191;
+}
+
+
+.Yellow
+{
+    text-align:left;
+	padding-left:1px;
+	padding-right:50px;
+	background-color:#ff6666;
+	padding-top:0px;
+	padding-bottom:0px;
+
+}
+.greenDate
+{
+	width:100%;
+	padding-left:50px;
+	padding-right:50px;
+	background-color:#80B689;
+	padding-top:3px;
+	padding-bottom:3px;
+	width:100px;
+	height:15px;
+}
+/*Openstaande CTI +5 dagen */
+.CTIIncomplete
+ {
+ 	background-color:#fe9191;
+ }
+ .RCCUOK
+ {
+ 	background-color:#80B689;
+ }
+ .RCCUDONE
+ {
+ 	background-color:#FFFFFF;
+ }
+
+ .showmenu
+ {
+     visibility:visible;
+ }
+
+ .hidemenu
+ {
+     visibility:hidden;
+ }
+/*evaluatie Tap bij CTI*/
+ .CTIEvalRow
+ {
+ 	background-color:#80B689; 	/*green*/
+ }
+  
+#confirm
+{
+	display:none;
+}
+
+
+#insertEditTable
+{
+	margin-top:10px;
+	display:none;	
+	border-style:solid;
+	border-width:1px;
+	border-color:#999999;
+}
+
+#colHeading
+{
+	padding-left: 5px;
+	padding-top:2px;
+	padding-bottom:2px;
+	text-align: left;
+	font-weight: bolder;
+	color:Black;
+	background-image:url('images/datagridbkgr.gif');
+	margin:0px;
+}
+
+#bufferMargin
+{
+    width:100%;	
+}
+
+.editNameBtn
+{
+	background-color:White; 
+	padding-left:5px; padding-right:5px; padding-top:2px;padding-bottom: 2px;
+	margin-left:55px;
+}
+#changeNameDiv
+{
+display:none;	
+}
+.btnDialog 
+{
+	background-image:url('images/datagridbkgr.gif');
+	padding-left:5px; padding-right:5px; padding-top:2px;padding-bottom: 2px;
+}
+.vorigeInfo
+{
+	border-width:1px;
+	border-color:Black;
+	border-style:solid;	
+	padding:5px;
+}
+#editorDiv 
+{
+	margin:0px;
+	padding:0px;
+}
+
+.clickMeButton 
+{
+	background-color:#9694c5;
+    color: white;
+	border-style:solid ;
+	border-width:1px;
+	border-color:Black;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:1px;
+	padding-bottom:1px;
+}
+
+.unreadMail
+{
+	background-color:#DEDEDE;
+	
+}
+
+#upperRight 
+{
+	width:92%;
+	margin-right:5px;
+	height:200px;
+	background-color:#DEDEDE; 
+	padding:10px;	
+	overflow:auto;
+	text-align: left;
+}
+#bottomRight
+{
+		overflow:auto;
+		height:400px;
+}
+.myRightSide
+{
+	background-color:#DEDEDE;
+	padding-right:5px;
+	padding-left:5px;
+}
+#centerRight
+{
+	height:20px;
+	margin-top:5px;
+	margin-right:5px;
+	text-align:center; 	
+}
+.padder
+{
+	padding:5px;	
+}
