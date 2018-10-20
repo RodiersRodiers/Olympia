@@ -1,5 +1,5 @@
 ﻿Imports Olympia.OBJOlympia
-Imports System.Data.Odbc
+
 Public Class LoginOlympia
     Inherits Page
     Private myBalOlympia As New BALOlympia.BalGebruikers

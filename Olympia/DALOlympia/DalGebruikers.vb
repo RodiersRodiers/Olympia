@@ -1,6 +1,7 @@
 ﻿Imports Olympia.OBJOlympia
 Imports System.Data.SqlClient
 Imports System.Data.OleDb
+Imports MySql.Data.MySqlClient
 
 Namespace DALOlympia
 
@@ -32,7 +33,7 @@ Namespace DALOlympia
             strSQL.Append("SELECT ID_Lid from Gebruikers where email = ? ")
 
             Try
-                DoParameterAdd("@Email", mygebruiker.Email, 13)
+                DoParameterAdd("@Email", mygebruiker.Email, MySqlDbType.VarChar)
                 i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
@@ -45,8 +46,8 @@ Namespace DALOlympia
             strSQL.Append("SELECT * from Gebruikers where ID_Lid = ? and password = ? ")
 
             Try
-                DoParameterAdd("@IdLid", mygebruiker.IdLid, 10)
-                DoParameterAdd("@Paswoord", mygebruiker.Paswoord, 13)
+                DoParameterAdd("@IdLid", mygebruiker.IdLid, MySqlDbType.Int64)
+                DoParameterAdd("@Paswoord", mygebruiker.Paswoord, MySqlDbType.VarChar)
                 i = ExecuteDALScalar(strSQL.ToString)
             Catch ex As Exception
                 Throw
@@ -61,9 +62,9 @@ Namespace DALOlympia
             strSQL.Append("INSERT into logging (Datum, ID_Lid, Event, type) VALUES({fn NOW()}, ?, ?, ? )")
 
             Try
-                DoParameterAdd("@ID_Lid", myLogging.Gebruiker.IdLid, 10)
-                DoParameterAdd("@EventLogging", myLogging.EventLogging, 13)
-                DoParameterAdd("@Type", myLogging.Type, 10)
+                DoParameterAdd("@ID_Lid", myLogging.Gebruiker.IdLid, MySqlDbType.Int64)
+                DoParameterAdd("@EventLogging", myLogging.EventLogging, MySqlDbType.VarChar)
+                DoParameterAdd("@Type", myLogging.Type, MySqlDbType.Int64)
 
                 i = executeDALScalar(strSQL.ToString)
             Catch ex As Exception
@@ -83,12 +84,12 @@ Namespace DALOlympia
 
                 If intType > 0 Then
                     strSQL.Append(" AND Type = ? ")
-                    DoParameterAdd("@intType", intType, 10)
+                    DoParameterAdd("@intType", intType, MySqlDbType.Int64)
                 End If
 
                 If Not strInfo = "" Then
                     strSQL.Append(" AND Event LIKE ? ")
-                    DoParameterAdd("@strInfo", "%" & strInfo & "%", 13)
+                    DoParameterAdd("@strInfo", "%" & strInfo & "%", MySqlDbType.VarChar)
                 End If
 
                 If sort <> "" Then

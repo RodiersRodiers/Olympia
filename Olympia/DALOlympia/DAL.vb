@@ -1,37 +1,40 @@
 ﻿
 Imports Olympia.OBJOlympia
 Imports System.Data.OleDb
-Imports System.Data.Odbc
+Imports MySql.Data.MySqlClient
+
+
 
 Namespace DALOlympia
 
     Public Class DALBase
 
-        Public conn As New OdbcConnection("Driver={MySQL ODBC 5.1 Driver};Server=185.41.126.25;Port=9151;Database=rodierscurato;User=RodiersRodiers;Password=%Roller75!;Option=3;")
+        'Public conn As New MySqlConnection("Server=185.41.126.25;Port=9151;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
+        Public conn As New MySqlConnection("Server=mysql9.mijnhostingpartner.nl;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
 
-        Private myListParamColl As New List(Of OdbcParameter)
+        Private myListParamColl As New List(Of MySqlParameter)
 
-        Public Sub DoParameterAdd(ByVal strName As String, ByVal objValue As Object, ByVal myDBType As Integer)
-            Dim myparam As OdbcParameter = New OdbcParameter(strName, myDBType)
+        Public Sub DoParameterAdd(ByVal strName As String, ByVal objValue As Object, ByVal myDBType As MySqlDbType)
+            Dim myparam As MySqlParameter = New MySqlParameter(strName, myDBType)
             If objValue Is Nothing Then
                 objValue = ""
             End If
-            If myDBType = OdbcType.NVarChar Then
+            If myDBType = MySqlDbType.VarChar Then
                 Dim strObjectValue As String = TryCast(objValue, String)
 
                 strObjectValue = strObjectValue.Replace("<", "&lt;").Replace(">", "&gt;")
                 strObjectValue = Filtering.filterOutAsciAbove255(strObjectValue)
-                myparam.OdbcType = OdbcType.NVarChar
+                myparam.MySqlDbType = MySqlDbType.VarChar
                 myparam.Direction = ParameterDirection.Input
                 myparam.Value = strObjectValue
             Else
-                myparam.OdbcType = OdbcType.Int
+                myparam.MySqlDbType = MySqlDbType.Int64
                 myparam.Direction = ParameterDirection.Input
                 myparam.Value = objValue
             End If
 
             If myListParamColl Is Nothing Then
-                myListParamColl = New List(Of OdbcParameter)
+                myListParamColl = New List(Of MySqlParameter)
             End If
             myListParamColl.Add(myparam)
         End Sub
@@ -55,12 +58,12 @@ Namespace DALOlympia
             ' /// Generate full output string
             Dim i As Integer = 0
             Dim strOutput As New Text.StringBuilder
-            Dim myParameter As OdbcParameter
+            Dim myParameter As MySqlParameter
             If Not myListParamColl Is Nothing Then
                 Dim s() As String = strSQL.Split("?")
                 For j As Integer = 0 To s.Count - 2
                     myParameter = returnParameter(i)
-                    If myParameter.OdbcType = OdbcType.NVarChar Then
+                    If myParameter.MySqlDbType = MySqlDbType.VarChar Then
                         strOutput.Append(s(j) & "'" & myParameter.Value & "' ")
                     Else
                         strOutput.Append(s(j) & "" & myParameter.Value & " ")
@@ -73,10 +76,10 @@ Namespace DALOlympia
             Debug.WriteLine("SQL -> " & strOutput.ToString)
         End Sub
 
-        Private Function ReturnParameter(ByVal i As Integer) As OdbcParameter
-            Dim myReturnParameter As New OdbcParameter
+        Private Function ReturnParameter(ByVal i As Integer) As MySqlParameter
+            Dim myReturnParameter As New MySqlParameter
             Dim ii As Integer = 0
-            For Each myParameter As OdbcParameter In myListParamColl
+            For Each myParameter As MySqlParameter In myListParamColl
                 If i = ii Then
                     myReturnParameter = myParameter
                     Exit For
@@ -88,12 +91,12 @@ Namespace DALOlympia
 
         Public Function ReturnDALDataTable(ByVal strSQL As String) As DataTable
             Dim mydt As New DataTable
-            Dim myCommand As New OdbcCommand(strSQL, conn)
-            Dim myDataAdapter As New OdbcDataAdapter(myCommand)
+            Dim myCommand As New MySqlCommand(strSQL, conn)
+            Dim myDataAdapter As New MySqlDataAdapter(myCommand)
 
             Try
                 If Not myListParamColl Is Nothing Then
-                    For Each myParam As OdbcParameter In myListParamColl
+                    For Each myParam As MySqlParameter In myListParamColl
                         myCommand.Parameters.Add(myParam)
                     Next
                 End If
@@ -108,18 +111,18 @@ Namespace DALOlympia
             Finally
             End Try
             If Not myListParamColl Is Nothing Then
-                myListParamColl = New List(Of OdbcParameter)
+                myListParamColl = New List(Of MySqlParameter)
             End If
             Return mydt
         End Function
 
         Public Function ExecuteDALCommand(ByVal strSQL As String) As Integer
-            Dim myCommand As New OdbcCommand(strSQL, conn)
-            Dim myDataAdapter As New OdbcDataAdapter(myCommand)
+            Dim myCommand As New MySqlCommand(strSQL, conn)
+            Dim myDataAdapter As New MySqlDataAdapter(myCommand)
             Dim intResult As Integer = 0
             Try
                 If Not myListParamColl Is Nothing Then
-                    For Each myParam As OdbcParameter In myListParamColl
+                    For Each myParam As MySqlParameter In myListParamColl
                         myCommand.Parameters.Add(myParam)
                     Next
                 End If
@@ -134,18 +137,18 @@ Namespace DALOlympia
             Finally
             End Try
             If Not myListParamColl Is Nothing Then
-                myListParamColl = New List(Of OdbcParameter)
+                myListParamColl = New List(Of MySqlParameter)
             End If
             Return intResult
         End Function
 
         Public Function ExecuteDALScalar(ByVal strSQL As String) As Integer
-            Dim myCommand As New OdbcCommand(strSQL, conn)
+            Dim myCommand As New MySqlCommand(strSQL, conn)
             Dim intResult As Integer = 0
 
             Try
                 If Not myListParamColl Is Nothing Then
-                    For Each myParam As OdbcParameter In myListParamColl
+                    For Each myParam As MySqlParameter In myListParamColl
                         myCommand.Parameters.Add(myParam)
                     Next
                 End If
@@ -160,13 +163,13 @@ Namespace DALOlympia
             Finally
             End Try
             If Not myListParamColl Is Nothing Then
-                myListParamColl = New List(Of OdbcParameter)
+                myListParamColl = New List(Of MySqlParameter)
             End If
             Return intResult
         End Function
 
         Private Function AttachTransToConn()
-            Return conn.BeginTransaction(System.Data.IsolationLevel.ReadCommitted)
+            Return conn.BeginTransaction(IsolationLevel.ReadCommitted)
         End Function
 
         Public Function SetExcelConnectionString(ByVal FileName As String, ByVal Header As UseHeader, ByVal IMEX As ExcelImex)
