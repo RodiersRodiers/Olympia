@@ -27,7 +27,7 @@
                     <h2>Inloggen</h2>
 
                     Als je nog geen Login hebt  <a><strong><font color="red"> - 
-                        <asp:LinkButton ID="lbtn_Registreer" runat="server" />
+                        <asp:LinkButton ID="LnkbRegistreer" runat="server" />
                         - </font></strong></a>dan eerst !
                 </td>
             </tr>

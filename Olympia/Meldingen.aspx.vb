@@ -3,12 +3,12 @@ Imports Olympia.BALOlympia
 
 Partial Class Meldingen
     Inherits Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
+    Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
     Private strDeleteConfirm, strDeleteError, strDeleteOk, strDBError, strPagingTot, strHeaderTitle, strPagingRecordsFound, strInsertBeschrijving, strUpdateOk, _
         strUpdateError, strPrimaryKeyAllreadyExists, strAddError, strAddOk, strCompleted As String
 
-    Protected Sub form1_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles form1.Load
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         fillUpStringFields()
         If Not IsPostBack Then
             validateToegang()
@@ -42,10 +42,10 @@ Partial Class Meldingen
                 Case "pagGebruikers"
                     pagGebruikers.Visible = True
                 Case "pagBeheer"
-                    myBtn1.Visible = True
+                    myBtn2.Visible = True
                     beheer.Visible = True
                 Case "pagVergoedingen"
-                    myBtn2.Visible = True
+                    myBtn1.Visible = True
                     vergoeding.Visible = True
             End Select
         Next

@@ -8,12 +8,12 @@ Partial Class BeheerDisciplines
     Private strDeleteConfirm, strDeleteError, strDeleteOk, strDBError, strPagingTot, strHeaderTitle, strPagingRecordsFound, strInsertBeschrijving, strUpdateOk, _
         strUpdateError, strPrimaryKeyAllreadyExists, strAddError, strAddOk, strCompleted As String
 
-    Protected Sub Form1_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles form1.Load
-        fillUpStringFields()
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+        FillUpStringFields()
         If Not IsPostBack Then
             LoadDataLabel1()
-            validateToegang()
-            setMultiLanguages()
+            ValidateToegang()
+            SetMultiLanguages()
         End If
     End Sub
 
@@ -44,10 +44,10 @@ Partial Class BeheerDisciplines
                 Case "pagGebruikers"
                     pagGebruikers.Visible = True
                 Case "pagBeheer"
-                    myBtn1.Visible = True
+                    myBtn2.Visible = True
                     beheer.Visible = True
                 Case "pagVergoedingen"
-                    myBtn2.Visible = True
+                    myBtn1.Visible = True
                     vergoeding.Visible = True
             End Select
         Next

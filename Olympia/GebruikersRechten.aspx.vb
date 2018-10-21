@@ -6,7 +6,7 @@ Public Class GebruikersRechten
     Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
 
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         fillUpStringFields()
         If Not IsPostBack Then
             Dim idlid As Integer = Request.QueryString("ID_lid")
@@ -69,10 +69,10 @@ Public Class GebruikersRechten
                         dtgLabel1.ShowFooter = False
                         btnINSERTAdd.Visible = True
                         btnINSERTCancel.Visible = False
-
+                        LoadData(ViewState("ID_Lid"))
                         If i_Result >= 1 Then
                             ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strAddOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
-                            LoadData(ViewState("ID_Lid"))
+
                         End If
                     Catch ex As Exception
                         If ex.Message = "119" Then

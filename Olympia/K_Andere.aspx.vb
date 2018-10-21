@@ -3,18 +3,18 @@ Imports Olympia.BALOlympia
 
 Partial Class K_Andere
     Inherits Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
+    Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
     Private strDeleteConfirm, strDeleteError, strDeleteOk, strDBError, strPagingTot, strHeaderTitle, strPagingRecordsFound, strInsertBeschrijving, strUpdateOk, _
         strUpdateError, strPrimaryKeyAllreadyExists, strAddError, strAddOk, strCompleted As String
-    Protected Sub form1_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles form1.Load
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         fillUpStringFields()
 
         If Not IsPostBack Then
             Dim idlid As Integer = Session("gebruiker")
             ViewState("ID_Lid") = idlid
             validateToegang()
-            LoadData()
+            LoadData(txtfilter.Text)
         End If
     End Sub
 
@@ -45,10 +45,10 @@ Partial Class K_Andere
                 Case "pagGebruikers"
                     pagGebruikers.Visible = True
                 Case "pagBeheer"
-                    myBtn1.Visible = True
+                    myBtn2.Visible = True
                     beheer.Visible = True
                 Case "pagVergoedingen"
-                    myBtn2.Visible = True
+                    myBtn1.Visible = True
                     vergoeding.Visible = True
             End Select
         Next
@@ -105,9 +105,9 @@ Partial Class K_Andere
         End If
     End Function
 
-    Private Sub LoadData()
+    Private Sub LoadData(ByVal strfilter As String)
         Try
-            Dim myList As List(Of Handelingen) = myBalOlympia.gethandelingbygebruiker(getDefaultSortExpressionLabel1, ViewState("ID_Lid"), Vergoedingen.Andere)
+            Dim myList As List(Of Handelingen) = myBalOlympia.Gethandelingbygebruiker(getDefaultSortExpressionLabel1, ViewState("ID_Lid"), Vergoedingen.Andere, strfilter)
             dtgrid.DataSource = myList
             dtgrid.DataBind()
             ResultCount = myList.Count
@@ -142,7 +142,7 @@ Partial Class K_Andere
 
                         If i_Result >= 1 Then
                             ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strAddOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
-                            LoadData()
+                            LoadData(txtfilter.Text)
                         End If
                     Catch ex As Exception
                         If ex.Message = "119" Then
@@ -158,7 +158,7 @@ Partial Class K_Andere
                     }
                     i_Result = myBalOlympia.Deletehandeling(myhandeling)
 
-                    LoadData()
+                    LoadData(txtfilter.Text)
                     ' UC_MessageChild.setMessage(strDeleteOk, CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
 
                 Case "UPDATE"
@@ -187,17 +187,17 @@ Partial Class K_Andere
 
                     btnINSERTAdd.Visible = True
                     dtgrid.EditItemIndex = -1
-                    LoadData()
+                    LoadData(txtfilter.Text)
 
                 Case "CANCEL"
                     dtgrid.EditItemIndex = -1
                     dtgrid.ShowFooter = False
-                    LoadData()
+                    LoadData(txtfilter.Text)
                     btnINSERTAdd.Visible = True
 
                 Case "EDIT"
                     dtgrid.EditItemIndex = e.Item.ItemIndex
-                    LoadData()
+                    LoadData(txtfilter.Text)
                     btnINSERTAdd.Visible = False
 
             End Select
@@ -248,16 +248,29 @@ Partial Class K_Andere
         End Try
     End Sub
 
-    Protected Sub btnCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTCancel.Click
+    Protected Sub BtnCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTCancel.Click
         dtgrid.ShowFooter = False
         btnINSERTAdd.Visible = True
         btnINSERTCancel.Visible = False
     End Sub
 
-    Private Sub btnINSERTAdd_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTAdd.Click
+    Private Sub BtnINSERTAdd_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTAdd.Click
         dtgrid.ShowFooter = True
         btnINSERTAdd.Visible = False
         btnINSERTCancel.Visible = True
+    End Sub
+
+    Private Sub Cbopsteller_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbopsteller.SelectedIndexChanged
+        LoadData(txtfilter.Text)
+    End Sub
+
+    Private Sub BtnFilter_Click(sender As Object, e As EventArgs) Handles btnFilter.Click
+        LoadData(txtfilter.Text)
+    End Sub
+
+    Private Sub BtnWisFilter_Click(sender As Object, e As EventArgs) Handles btnWisFilter.Click
+        txtfilter.Text = ""
+        LoadData(txtfilter.Text)
     End Sub
 
 End Class

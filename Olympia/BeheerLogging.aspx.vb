@@ -3,11 +3,11 @@ Imports Olympia.BALOlympia
 
 Partial Class BeheerLogging
     Inherits Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
+    Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
     Private strHeaderTitle, strDBError, strPagingTot, strPagingRecordsFound As String
 
-    Protected Sub form1_Load(ByVal sender As Object, ByVal e As EventArgs) Handles form1.Load
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         fillUpStringFields()
         If Not IsPostBack Then
             validateToegang()
@@ -44,10 +44,10 @@ Partial Class BeheerLogging
                 Case "pagGebruikers"
                     pagGebruikers.Visible = True
                 Case "pagBeheer"
-                    myBtn1.Visible = True
+                    myBtn2.Visible = True
                     beheer.Visible = True
                 Case "pagVergoedingen"
-                    myBtn2.Visible = True
+                    myBtn1.Visible = True
                     vergoeding.Visible = True
             End Select
         Next
@@ -123,7 +123,7 @@ Partial Class BeheerLogging
         Try
             myList = myBalOlympia.getLogging(getDefaultSortExpression, calExtStart.SelectedDate.Value, calExtEnd.SelectedDate.Value, cbTypes.SelectedItem.Value, txtInfo.Text)
         Catch ex As Exception
-            UC_Message.setMessage(strDBError, CustomMessage.TypeMessage.Fataal, ex)
+            'UC_Message.setMessage(strDBError, CustomMessage.TypeMessage.Fataal, ex)
         End Try
         Return myList
     End Function
@@ -154,7 +154,7 @@ Partial Class BeheerLogging
         Try
             Dim i_Result As Integer
             If i_Result >= 1 Then
-                UC_Message.setMessage(String.Format("Bewerking succesvol uitgevoerd ({0} record(s) bijgewerkt)", i_Result), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
+                'UC_Message.setMessage(String.Format("Bewerking succesvol uitgevoerd ({0} record(s) bijgewerkt)", i_Result), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
             End If
 
             dtgDataGrid.ShowFooter = False
@@ -162,7 +162,7 @@ Partial Class BeheerLogging
             setRowsDataGridItemVisible(True)
             LoadData(getDefaultSortExpression)
         Catch ex As Exception
-            UC_Message.setMessage("Er is een fout opgetreden tijdens de bewerking", CustomMessage.TypeMessage.Fataal, ex)
+            'UC_Message.setMessage("Er is een fout opgetreden tijdens de bewerking", CustomMessage.TypeMessage.Fataal, ex)
         End Try
     End Sub
 

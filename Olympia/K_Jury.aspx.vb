@@ -3,20 +3,20 @@ Imports Olympia.BALOlympia
 
 Partial Class K_Jury
     Inherits Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
+    Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
     Private strDeleteConfirm, strDeleteError, strDeleteOk, strDBError, strPagingTot, strHeaderTitle, strPagingRecordsFound, strInsertBeschrijving, strUpdateOk, _
         strUpdateError, strPrimaryKeyAllreadyExists, strAddError, strAddOk, strCompleted As String
 
-    Protected Sub form1_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles form1.Load
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         fillUpStringFields()
 
         If Not IsPostBack Then
             Dim idlid As Integer = Session("gebruiker")
             ViewState("ID_Lid") = idlid
-            validateToegang()
             loadDBPicklists()
-            LoadData()
+            validateToegang()
+            LoadData(txtfilter.Text)
         End If
     End Sub
 
@@ -26,6 +26,7 @@ Partial Class K_Jury
         Select Case i
             Case Rechten_Lid.schrijven
                 'do nothing
+                cbopsteller.SelectedValue = Session("Gebruiker")
             Case Rechten_Lid.lezen
                 btnINSERTAdd.Visible = False
             Case Else
@@ -37,13 +38,6 @@ Partial Class K_Jury
                 Response.Redirect("start.aspx?Error=AD")
         End Select
 
-        pagAanwezigheden.Visible = False
-        pagGebruikers.Visible = False
-        myBtn1.Visible = False
-        beheer.Visible = False
-        myBtn2.Visible = False
-        vergoeding.Visible = False
-
         Dim mygebruikersToegangen As New List(Of Rechten)
         mygebruikersToegangen = myBalOlympia.CheckToegangenGebruiker(Session("Gebruiker"))
         Dim mytoegang As New Rechten
@@ -54,10 +48,10 @@ Partial Class K_Jury
                 Case "pagGebruikers"
                     pagGebruikers.Visible = True
                 Case "pagBeheer"
-                    myBtn1.Visible = True
+                    myBtn2.Visible = True
                     beheer.Visible = True
                 Case "pagVergoedingen"
-                    myBtn2.Visible = True
+                    myBtn1.Visible = True
                     vergoeding.Visible = True
             End Select
         Next
@@ -77,11 +71,10 @@ Partial Class K_Jury
     Private Sub loadDBPicklists()
         Try
             'Trainers
-            cbopsteller.DataSource = myBalOlympia.getTrainers("naam ASC")
-            cbopsteller.DataTextField = "VolledigeNaam"
+            cbopsteller.DataSource = myBalOlympia.GetGebruikers("naam ASC", "")
+            cbopsteller.DataTextField = "Naam"
             cbopsteller.DataValueField = "IDLid"
             cbopsteller.DataBind()
-            cbopsteller.Items.Insert(0, New ListItem("", 0)) 'Standaard invoegen op de eerste plaats
 
         Catch ex As Exception
             'UC_Message.setMessage(strDbError, CustomMessage.TypeMessage.Fataal, ex)
@@ -140,9 +133,9 @@ Partial Class K_Jury
         End If
     End Function
 
-    Private Sub LoadData()
+    Private Sub LoadData(ByVal strfilter As String)
         Try
-            Dim myList As List(Of Handelingen) = myBalOlympia.gethandelingbygebruiker(getDefaultSortExpressionLabel1, cbopsteller.SelectedValue, Vergoedingen.Jury)
+            Dim myList As List(Of Handelingen) = myBalOlympia.Gethandelingbygebruiker(getDefaultSortExpressionLabel1, cbopsteller.SelectedValue, Vergoedingen.Jury, strfilter)
             dtgrid.DataSource = myList
             dtgrid.DataBind()
             ResultCount = myList.Count
@@ -174,10 +167,10 @@ Partial Class K_Jury
                         dtgrid.ShowFooter = False
                         btnINSERTAdd.Visible = True
                         btnINSERTCancel.Visible = False
-
+                        LoadData(txtfilter.Text)
                         If i_Result >= 1 Then
                             ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strAddOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
-                            LoadData()
+
                         End If
                     Catch ex As Exception
                         If ex.Message = "119" Then
@@ -188,20 +181,33 @@ Partial Class K_Jury
                     End Try
 
                 Case "DELETE"
-                    Dim myhandeling As New Handelingen With {
-                        .Id = dtgrid.DataKeys(e.Item.ItemIndex)
-                    }
-                    i_Result = myBalOlympia.Deletehandeling(myhandeling)
+                    Dim myhandeling As New Handelingen
+                    myhandeling.Id = dtgrid.DataKeys(e.Item.ItemIndex)
+                    Dim txtDatum As Label = e.Item.FindControl("lblDatum")
+                    Dim txtInfo As Label = e.Item.FindControl("lblInfo")
+                    myhandeling.Datum = txtDatum.Text
+                    myhandeling.Info = txtInfo.Text
+                    Try
+                        i_Result = myBalOlympia.Deletehandeling(myhandeling)
+                        If i_Result > 0 Then
+                            ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strAddOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
+                            Dim mylogging As New Logging
+                            mylogging.Gebruiker.IdLid = Session("Gebruiker")
+                            mylogging.EventLogging = "Delete Vergoeding Jury - " & txtDatum.Text & ": " & txtInfo.Text
+                            mylogging.Type = 2
+                            myBalOlympia.InsertLogging(mylogging)
+                            LoadData(txtfilter.Text)
+                        End If
+                    Catch ex As Exception
 
-                    LoadData()
-                    ' UC_MessageChild.setMessage(strDeleteOk, CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
+                    End Try
 
                 Case "UPDATE"
-                    Try
-                        Dim myhandeling As New Handelingen With {
-                            .Id = dtgrid.DataKeys(e.Item.ItemIndex)
-                        }
-                        Dim txteditDatum As TextBox = e.Item.FindControl("txteditDatum")
+
+                    Dim myhandeling As New Handelingen
+                    myhandeling.Id = dtgrid.DataKeys(e.Item.ItemIndex)
+
+                    Dim txteditDatum As TextBox = e.Item.FindControl("txteditDatum")
                         Dim drpEditGroep As DropDownList = e.Item.FindControl("drpEditGroep")
                         Dim txteditinfo As HtmlTextArea = e.Item.FindControl("txteditinfo")
                         Dim txteditaantal As TextBox = e.Item.FindControl("txteditaantal")
@@ -212,27 +218,34 @@ Partial Class K_Jury
                         myhandeling.Actie.Id = Vergoedingen.Jury
                         myhandeling.Info = txteditinfo.InnerText
                         myhandeling.Aantal = txteditaantal.Text
-                        i_Result = myBalOlympia.Updatehandeling(myhandeling)
-                        If i_Result = 1 Then
-                            ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strUpdateOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
+                        Try
+                            i_Result = myBalOlympia.Updatehandeling(myhandeling)
+                        If i_Result > 0 Then
+                            ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strAddOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
+                            Dim mylogging As New Logging
+                            mylogging.Gebruiker.IdLid = Session("Gebruiker")
+                            mylogging.EventLogging = "Update Vergoeding Jury - " & txteditDatum.Text & ": " & txteditinfo.InnerText
+                            mylogging.Type = 2
+                            myBalOlympia.InsertLogging(mylogging)
                         End If
                     Catch ex As Exception
-                        ' UC_Message.setMessage(strUpdateError, CustomMessage.TypeMessage.Fataal, ex)
-                    End Try
-
-                    btnINSERTAdd.Visible = True
+                            ' UC_Message.setMessage(strUpdateError, CustomMessage.TypeMessage.Fataal, ex)
+                        End Try
                     dtgrid.EditItemIndex = -1
-                    LoadData()
+                    dtgrid.ShowFooter = False
+                    btnINSERTAdd.Visible = True
+                    LoadData(txtfilter.Text)
+
 
                 Case "CANCEL"
                     dtgrid.EditItemIndex = -1
                     dtgrid.ShowFooter = False
-                    LoadData()
+                    LoadData(txtfilter.Text)
                     btnINSERTAdd.Visible = True
 
                 Case "EDIT"
                     dtgrid.EditItemIndex = e.Item.ItemIndex
-                    LoadData()
+                    LoadData(txtfilter.Text)
                     btnINSERTAdd.Visible = False
 
             End Select
@@ -283,20 +296,29 @@ Partial Class K_Jury
         End Try
     End Sub
 
-    Protected Sub btnCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTCancel.Click
+    Protected Sub BtnCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTCancel.Click
         dtgrid.ShowFooter = False
         btnINSERTAdd.Visible = True
         btnINSERTCancel.Visible = False
     End Sub
 
-    Private Sub btnINSERTAdd_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTAdd.Click
+    Private Sub BtnINSERTAdd_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTAdd.Click
         dtgrid.ShowFooter = True
         btnINSERTAdd.Visible = False
         btnINSERTCancel.Visible = True
     End Sub
 
-    Private Sub cbopsteller_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbopsteller.SelectedIndexChanged
-        LoadData()
+    Private Sub Cbopsteller_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbopsteller.SelectedIndexChanged
+        LoadData(txtfilter.Text)
+    End Sub
+
+    Private Sub BtnFilter_Click(sender As Object, e As EventArgs) Handles btnFilter.Click
+        LoadData(txtfilter.Text)
+    End Sub
+
+    Private Sub BtnWisFilter_Click(sender As Object, e As EventArgs) Handles btnWisFilter.Click
+        txtfilter.Text = ""
+        LoadData(txtfilter.Text)
     End Sub
 
 End Class

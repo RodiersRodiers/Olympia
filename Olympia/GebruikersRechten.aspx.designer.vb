@@ -12,7 +12,7 @@ Option Explicit On
 
 
 Partial Public Class GebruikersRechten
-
+    
     '''<summary>
     '''lbllogin control.
     '''</summary>
@@ -21,7 +21,97 @@ Partial Public Class GebruikersRechten
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lbllogin As Global.System.Web.UI.WebControls.Label
-
+    
+    '''<summary>
+    '''pagAanwezigheden control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pagAanwezigheden As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    
+    '''<summary>
+    '''myBtn1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents myBtn1 As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    
+    '''<summary>
+    '''vergoeding control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents vergoeding As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    
+    '''<summary>
+    '''v_jury control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents v_jury As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    
+    '''<summary>
+    '''v_wedstrijd control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents v_wedstrijd As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    
+    '''<summary>
+    '''v_verplaatsing control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents v_verplaatsing As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    
+    '''<summary>
+    '''v_andere control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents v_andere As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    
+    '''<summary>
+    '''pagGebruikers control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents pagGebruikers As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    
+    '''<summary>
+    '''myBtn2 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents myBtn2 As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    
+    '''<summary>
+    '''beheer control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents beheer As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    
     '''<summary>
     '''form1 control.
     '''</summary>
@@ -30,7 +120,7 @@ Partial Public Class GebruikersRechten
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents form1 As Global.System.Web.UI.HtmlControls.HtmlForm
-
+    
     '''<summary>
     '''myUCScript1 control.
     '''</summary>
@@ -39,7 +129,7 @@ Partial Public Class GebruikersRechten
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents myUCScript1 As Global.Olympia.CustomScriptControl
-
+    
     '''<summary>
     '''lblPageTitle control.
     '''</summary>
@@ -48,7 +138,7 @@ Partial Public Class GebruikersRechten
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lblPageTitle As Global.System.Web.UI.WebControls.Label
-
+    
     '''<summary>
     '''lblgebruiker control.
     '''</summary>
@@ -57,7 +147,7 @@ Partial Public Class GebruikersRechten
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lblgebruiker As Global.System.Web.UI.WebControls.Label
-
+    
     '''<summary>
     '''btnINSERTAdd control.
     '''</summary>
@@ -66,7 +156,7 @@ Partial Public Class GebruikersRechten
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents btnINSERTAdd As Global.System.Web.UI.WebControls.Button
-
+    
     '''<summary>
     '''btnINSERTCancel control.
     '''</summary>
@@ -75,7 +165,7 @@ Partial Public Class GebruikersRechten
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents btnINSERTCancel As Global.System.Web.UI.WebControls.Button
-
+    
     '''<summary>
     '''dtgLabel1 control.
     '''</summary>

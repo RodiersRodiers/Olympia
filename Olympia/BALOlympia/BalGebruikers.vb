@@ -179,7 +179,6 @@ Namespace BALOlympia
 
         Public Function GetGebruiker(ByVal IDLid As Integer) As Gebruikers
             Dim mygebruiker As New Gebruikers
-
             Try
                 Dim dt As DataTable = myDalGebruikers.getGebruiker(IDLid)
                 For Each myRow As DataRow In dt.Rows
@@ -201,13 +200,11 @@ Namespace BALOlympia
             Catch ex As Exception
                 Throw
             End Try
-
             Return mygebruiker
         End Function
 
         Public Function GetTrainers(ByVal sort As String) As List(Of Gebruikers)
             Dim myList As New List(Of Gebruikers)
-
             Try
                 Dim dt As DataTable = myDalGebruikers.getTrainers(sort)
                 For Each myRow As DataRow In dt.Rows
@@ -222,13 +219,31 @@ Namespace BALOlympia
             Catch ex As Exception
                 Throw
             End Try
-
             Return myList
         End Function
-
+        Public Function GetGebruikersOpenHandeling(ByVal sort As String, ByVal filter As String, ByVal intopen As Integer) As List(Of Gebruikers)
+            Dim myList As New List(Of Gebruikers)
+            Try
+                Dim dt As DataTable = myDalGebruikers.GetGebruikersOpenHandeling(sort, filter, intopen)
+                For Each myRow As DataRow In dt.Rows
+                    Dim mygebruiker As New Gebruikers With {
+                        .Naam = myRow("Naam").ToString,
+                        .Voornaam = myRow("Voornaam").ToString,
+                        .Email = myRow("Email").ToString,
+                        .GSM = myRow("GSM").ToString,
+                        .Paswoord = myRow("Password").ToString,
+                        .IdLid = myRow("ID_Lid"),
+                        .VolledigeNaam = myRow("Validate").ToString
+                    }
+                    myList.Add(mygebruiker)
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
+            Return myList
+        End Function
         Public Function GetGebruikers(ByVal sort As String, ByVal filter As String) As List(Of Gebruikers)
             Dim myList As New List(Of Gebruikers)
-
             Try
                 Dim dt As DataTable = myDalGebruikers.getGebruikers(sort, filter)
                 For Each myRow As DataRow In dt.Rows
@@ -245,28 +260,23 @@ Namespace BALOlympia
             Catch ex As Exception
                 Throw
             End Try
-
             Return myList
         End Function
         Public Function InsertGebruiker(ByVal mygebruiker As Gebruikers) As Integer
-
             Try
                 Return myDalGebruikers.InsertGebruiker(mygebruiker)
             Catch ex As Exception
                 Throw
             Finally
-
             End Try
         End Function
 
         Public Function UpdateGebruiker(ByVal mygebruiker As Gebruikers) As Integer
-
             Try
                 Return myDalGebruikers.UpdateGebruiker(mygebruiker)
             Catch ex As Exception
                 Throw
             Finally
-
             End Try
         End Function
 
@@ -632,18 +642,17 @@ Namespace BALOlympia
 
 
 
-        Public Function GetAllhandelingenbygebruiker(ByVal sort As String, ByVal idlid As Integer) As List(Of Handelingen)
+        Public Function GetAllhandelingenbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As List(Of Handelingen)
             Dim myList As New List(Of Handelingen)
 
             Try
-                Dim dt As DataTable = myDalGebruikers.getAllhandelingenbygebruiker(sort, idlid)
+                Dim dt As DataTable = myDalGebruikers.GetAllhandelingenbygebruiker(sort, idlid, strfilter)
                 For Each myRow As DataRow In dt.Rows
-                    Dim myhandeling As New Handelingen With {
-                        .Id = myRow("id"),
-                        .Datum = myRow("datum")
-                    }
-                    myhandeling.Groep.Id = myRow("groepid").ToString
-                    myhandeling.Groep.beschrijving = myRow("groepbeschrijving").ToString
+                    Dim myhandeling As New Handelingen
+                    myhandeling.Id = myRow("id")
+                    myhandeling.Datum = myRow("datum")
+                    'myhandeling.Groep.Id = myRow("groepid").ToString
+                    'myhandeling.Groep.beschrijving = myRow("groepbeschrijving").ToString
                     myhandeling.Discipline.Id = myRow("Disciplineid")
                     myhandeling.Discipline.beschrijving = myRow("Disciplinebeschrijving").ToString
                     myhandeling.Gebruiker.IdLid = myRow("gebruikerid")
@@ -663,16 +672,15 @@ Namespace BALOlympia
 
             Return myList
         End Function
-        Public Function Gethandelingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal idactie As Integer) As List(Of Handelingen)
+        Public Function Gethandelingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal idactie As Integer, ByVal strfilter As String) As List(Of Handelingen)
             Dim myList As New List(Of Handelingen)
 
             Try
-                Dim dt As DataTable = myDalGebruikers.gethandelingbygebruiker(sort, idlid, idactie)
+                Dim dt As DataTable = myDalGebruikers.Gethandelingbygebruiker(sort, idlid, idactie, strfilter)
                 For Each myRow As DataRow In dt.Rows
-                    Dim myhandeling As New Handelingen With {
-                        .Id = myRow("id"),
-                        .Datum = myRow("datum")
-                    }
+                    Dim myhandeling As New Handelingen
+                    myhandeling.Id = myRow("id")
+                    myhandeling.Datum = myRow("datum")
                     myhandeling.Discipline.Id = myRow("Disciplineid")
                     myhandeling.Discipline.beschrijving = myRow("Disciplinebeschrijving").ToString
                     myhandeling.Gebruiker.IdLid = myRow("gebruikerid")

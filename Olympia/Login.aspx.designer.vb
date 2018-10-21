@@ -12,7 +12,7 @@ Option Explicit On
 
 
 Partial Public Class LoginOlympia
-
+    
     '''<summary>
     '''form1 control.
     '''</summary>
@@ -21,16 +21,16 @@ Partial Public Class LoginOlympia
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents form1 As Global.System.Web.UI.HtmlControls.HtmlForm
-
+    
     '''<summary>
-    '''lbtn_Registreer control.
+    '''LnkbRegistreer control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lbtn_Registreer As Global.System.Web.UI.WebControls.LinkButton
-
+    Protected WithEvents LnkbRegistreer As Global.System.Web.UI.WebControls.LinkButton
+    
     '''<summary>
     '''lblGebruiker control.
     '''</summary>
@@ -39,7 +39,7 @@ Partial Public Class LoginOlympia
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lblGebruiker As Global.System.Web.UI.WebControls.Label
-
+    
     '''<summary>
     '''txtGebruiker control.
     '''</summary>
@@ -48,7 +48,7 @@ Partial Public Class LoginOlympia
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents txtGebruiker As Global.System.Web.UI.WebControls.TextBox
-
+    
     '''<summary>
     '''rfvtxtGebruiker control.
     '''</summary>
@@ -57,7 +57,7 @@ Partial Public Class LoginOlympia
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents rfvtxtGebruiker As Global.System.Web.UI.WebControls.RequiredFieldValidator
-
+    
     '''<summary>
     '''lblPassword control.
     '''</summary>
@@ -66,7 +66,7 @@ Partial Public Class LoginOlympia
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lblPassword As Global.System.Web.UI.WebControls.Label
-
+    
     '''<summary>
     '''txtPassword control.
     '''</summary>
@@ -75,7 +75,7 @@ Partial Public Class LoginOlympia
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents txtPassword As Global.System.Web.UI.WebControls.TextBox
-
+    
     '''<summary>
     '''rfvtxtPassword control.
     '''</summary>
@@ -84,7 +84,7 @@ Partial Public Class LoginOlympia
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents rfvtxtPassword As Global.System.Web.UI.WebControls.RequiredFieldValidator
-
+    
     '''<summary>
     '''btn_Login control.
     '''</summary>
@@ -93,7 +93,7 @@ Partial Public Class LoginOlympia
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents btn_Login As Global.System.Web.UI.WebControls.Button
-
+    
     '''<summary>
     '''lnkbprivacy control.
     '''</summary>

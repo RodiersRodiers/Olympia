@@ -17,7 +17,7 @@ Public Class GebruikerDetail
         End If
     End Sub
 
-    Private Sub initPicklists()
+    Private Sub InitPicklists()
         Try
             cbGeslacht.Items.Clear()
             cbGeslacht.Items.Add(New ListItem("M", 1))
@@ -26,8 +26,8 @@ Public Class GebruikerDetail
             ' UC_Message.setMessage(strDBError, CustomMessage.TypeMessage.Fataal, ex)
         End Try
     End Sub
-    Private Sub setMultiLanguages()
-        Dim mygebruiker As Gebruikers = myBalOlympia.getGebruiker(Session("Gebruiker"))
+    Private Sub SetMultiLanguages()
+        Dim mygebruiker As Gebruikers = myBalOlympia.GetGebruiker(Session("Gebruiker"))
         lbllogin.Text = "u bent ingelogd als " & mygebruiker.Naam & " " & mygebruiker.Voornaam & " (" & mygebruiker.GebDatum & ")"
 
         lblPageTitle.Text = "Gebruikers > Beheer Algemeen"
@@ -46,7 +46,6 @@ Public Class GebruikerDetail
         btn_Changepw.Text = "Verander Paswoord"
         btn_Annuleer.Text = "Annuleer"
         btn_Opslaan.Text = "Opslaan"
-        btn_Edit.Text = "aanpassen"
         btnRechten.Text = "Rechten"
         btnOverzicht.Text = "Overzicht"
 
@@ -87,19 +86,18 @@ Public Class GebruikerDetail
         End Try
     End Sub
 
-    Private Sub btn_Opslaan_Click(sender As Object, e As EventArgs) Handles btn_Opslaan.Click
+    Private Sub Btn_Opslaan_Click(sender As Object, e As EventArgs) Handles btn_Opslaan.Click
         Dim i_Result As Integer
-        Dim mygebruiker As New Gebruikers With {
-            .Naam = txtNaam.Text,
-            .Voornaam = txtVoornaam.Text,
-            .Email = txtEmail.Text,
-            .GSM = txtGSM.Text
-        }
+        Dim mygebruiker As New Gebruikers
+        mygebruiker.Naam = txtNaam.Text
+        mygebruiker.Voornaam = txtVoornaam.Text
+        mygebruiker.Email = txtEmail.Text
+        mygebruiker.GSM = txtGSM.Text
 
         If txtGebDatum.Text <> "" Then
             mygebruiker.GebDatum = txtGebDatum.Text
         Else
-            mygebruiker.GebDatum = myBalOlympia.getEmptyDate
+            mygebruiker.GebDatum = myBalOlympia.GetEmptyDate
         End If
 
         mygebruiker.Geslacht = cbGeslacht.SelectedItem.Text
@@ -112,15 +110,21 @@ Public Class GebruikerDetail
         mygebruiker.IdLid = ViewState("ID_Lid")
         Try
             Dim mylogging As New Logging
-            mylogging.Gebruiker.IdLid = ViewState("ID_Lid")
-            mylogging.EventLogging = "Aanpassen gebruiker " & txtNaam.Text & " " & txtVoornaam.Text
-            mylogging.Type = TypeLogging.gebruikers
 
-            myBalOlympia.InsertLogging(mylogging)
             If mygebruiker.IdLid > 0 Then
                 i_Result = myBalOlympia.UpdateGebruiker(mygebruiker)
+                mylogging.Gebruiker.IdLid = Session("Gebruiker")
+                mylogging.EventLogging = "Aanpassen gebruiker " & txtNaam.Text & " " & txtVoornaam.Text
+                mylogging.Type = TypeLogging.gebruikers
+                myBalOlympia.InsertLogging(mylogging)
             Else
+                mygebruiker.Paswoord = "pw"
+                mygebruiker.Active = 1
                 i_Result = myBalOlympia.InsertGebruiker(mygebruiker)
+                mylogging.Gebruiker.IdLid = Session("Gebruiker")
+                mylogging.EventLogging = "Toevoegen gebruiker " & txtNaam.Text & " " & txtVoornaam.Text
+                mylogging.Type = TypeLogging.gebruikers
+                myBalOlympia.InsertLogging(mylogging)
             End If
             If i_Result = 1 Then
                 ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strUpdateOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
@@ -130,16 +134,16 @@ Public Class GebruikerDetail
         End Try
     End Sub
 
-    Private Sub btn_Changepw_Click(sender As Object, e As EventArgs) Handles btn_Changepw.Click
+    Private Sub Btn_Changepw_Click(sender As Object, e As EventArgs) Handles btn_Changepw.Click
 
     End Sub
 
-    Private Sub btnRechten_Click(sender As Object, e As EventArgs) Handles btnRechten.Click
+    Private Sub BtnRechten_Click(sender As Object, e As EventArgs) Handles btnRechten.Click
         Response.Redirect("GebruikersRechten.aspx?ID_lid=" & ViewState("ID_Lid"))
     End Sub
 
 
-    Private Sub btnOverzicht_Click(sender As Object, e As EventArgs) Handles btnOverzicht.Click
+    Private Sub BtnOverzicht_Click(sender As Object, e As EventArgs) Handles btnOverzicht.Click
         Response.Redirect("GebruikersOverzicht.aspx?ID_lid=" & ViewState("ID_Lid"))
     End Sub
 End Class

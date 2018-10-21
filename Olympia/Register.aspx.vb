@@ -3,13 +3,12 @@ Imports Olympia.BALOlympia
 
 Public Class RegisterOlympia
     Inherits Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
+    Private myBalOlympia As New BalGebruikers
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         setMultiLanguages()
-
     End Sub
-    Private Sub setMultiLanguages()
+    Private Sub SetMultiLanguages()
         lblEmail.Text = "Email"
         lblNaam.Text = "Naam"
         lblVoornaam.Text = "Voornaam"
@@ -20,11 +19,11 @@ Public Class RegisterOlympia
         lnkbprivacy.Text = "Privacy Policy"
     End Sub
 
-    Private Sub btn_Annuleer_Click(sender As Object, e As EventArgs) Handles btn_Annuleer.Click
+    Private Sub Btn_Annuleer_Click(sender As Object, e As EventArgs) Handles btn_Annuleer.Click
         Response.Redirect("Login.aspx", False)
     End Sub
 
-    Private Sub btn_Registreer_Click(sender As Object, e As EventArgs) Handles btn_Registreer.Click
+    Private Sub Btn_Registreer_Click(sender As Object, e As EventArgs) Handles btn_Registreer.Click
         Dim mygebruiker As New Gebruikers
 
         If txtNaam.Text = "" Then
@@ -101,22 +100,22 @@ Public Class RegisterOlympia
             Return
         End If
 
-            Dim i As New Integer
-            Dim ii As New Integer
-            i = myBalOlympia.InsertGebruiker(mygebruiker)
-            If i = 1 Then
-                ii = myBalOlympia.getAuthGebruiker(mygebruiker)
-                Dim mylogging As New Logging
+        Dim i As New Integer
+        Dim ii As New Integer
+        i = myBalOlympia.InsertGebruiker(mygebruiker)
+        If i = 1 Then
+            ii = myBalOlympia.GetAuthGebruiker(mygebruiker)
+            Dim mylogging As New Logging
             mylogging.Gebruiker.IdLid = ii
-                mylogging.EventLogging = "Registratie"
-                mylogging.Type = 1
+            mylogging.EventLogging = "Registratie"
+            mylogging.Type = 1
 
             myBalOlympia.InsertLogging(mylogging)
             Response.Redirect("Login.aspx", False)
-            End If
+        End If
     End Sub
 
-    Private Sub lnkbprivacy_Click(sender As Object, e As EventArgs) Handles lnkbprivacy.Click
+    Private Sub Lnkbprivacy_Click(sender As Object, e As EventArgs) Handles lnkbprivacy.Click
         Response.Redirect("Privacy.aspx", False)
     End Sub
 

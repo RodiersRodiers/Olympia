@@ -3,14 +3,12 @@ Imports Olympia.OBJOlympia
 Imports System.Data.OleDb
 Imports MySql.Data.MySqlClient
 
-
-
 Namespace DALOlympia
 
     Public Class DALBase
 
-        'Public conn As New MySqlConnection("Server=185.41.126.25;Port=9151;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
-        Public conn As New MySqlConnection("Server=mysql9.mijnhostingpartner.nl;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
+        Public conn As New MySqlConnection("Server=185.41.126.25;Port=9151;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
+        'Public conn As New MySqlConnection("Server=mysql9.mijnhostingpartner.nl;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
 
         Private myListParamColl As New List(Of MySqlParameter)
 
@@ -19,16 +17,19 @@ Namespace DALOlympia
             If objValue Is Nothing Then
                 objValue = ""
             End If
-            If myDBType = MySqlDbType.VarChar Then
+            If myDBType = MySqlDbType.String Then
                 Dim strObjectValue As String = TryCast(objValue, String)
-
                 strObjectValue = strObjectValue.Replace("<", "&lt;").Replace(">", "&gt;")
                 strObjectValue = Filtering.filterOutAsciAbove255(strObjectValue)
-                myparam.MySqlDbType = MySqlDbType.VarChar
+                myparam.MySqlDbType = MySqlDbType.String
                 myparam.Direction = ParameterDirection.Input
                 myparam.Value = strObjectValue
+            ElseIf myDBType = MySqlDbType.Date Then
+                myparam.MySqlDbType = MySqlDbType.Date
+                myparam.Direction = ParameterDirection.Input
+                myparam.Value = objValue
             Else
-                myparam.MySqlDbType = MySqlDbType.Int64
+                myparam.MySqlDbType = MySqlDbType.Int32
                 myparam.Direction = ParameterDirection.Input
                 myparam.Value = objValue
             End If
@@ -57,13 +58,13 @@ Namespace DALOlympia
         Public Sub GenerateDebugSQL(ByVal strSQL As String)
             ' /// Generate full output string
             Dim i As Integer = 0
-            Dim strOutput As New Text.StringBuilder
+            Dim strOutput As New StringBuilder
             Dim myParameter As MySqlParameter
             If Not myListParamColl Is Nothing Then
                 Dim s() As String = strSQL.Split("?")
                 For j As Integer = 0 To s.Count - 2
                     myParameter = returnParameter(i)
-                    If myParameter.MySqlDbType = MySqlDbType.VarChar Then
+                    If myParameter.MySqlDbType = MySqlDbType.String Then
                         strOutput.Append(s(j) & "'" & myParameter.Value & "' ")
                     Else
                         strOutput.Append(s(j) & "" & myParameter.Value & " ")

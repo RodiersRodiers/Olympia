@@ -1,27 +1,26 @@
 Imports Olympia.OBJOlympia
 Imports Olympia.BALOlympia
-Imports System.IO
-Imports System.Data.OleDb
+Imports System.Windows.Forms
 
 Partial Class Importgegevens
     Inherits Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
-    Private myDalOlympia As New Olympia.DALOlympia.DalGebruikers
+    Private myBalOlympia As New BalGebruikers
+    Private myDalOlympia As New DALOlympia.DalGebruikers
     Private ResultCount As Integer
-    Private strTekst1, strTekst2, strTelRep, strGeimporteerd, strImportEmtpy, strTekst3, strTekst6, _
-        strImportError, strImportOk, strverwerkingstijd, strTekst4, strTekst5, strSuccesOpslaan, strDBError, strDBErrorVerwerken, _
+    Private strTekst1, strTekst2, strTelRep, strGeimporteerd, strImportEmtpy, strTekst3, strTekst6,
+        strImportError, strImportOk, strverwerkingstijd, strTekst4, strTekst5, strSuccesOpslaan, strDBError, strDBErrorVerwerken,
         strEmptyDossierNaam, strEmptyDocNr, strEmptyEenheid, strEmptyEntiteit, strEmptyOnderwerp, strSheet99Error As String
 
-    Protected Sub form1_Load(ByVal sender As Object, ByVal e As EventArgs) Handles form1.Load
-        fillUpStringFields()
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+        FillUpStringFields()
         If Not IsPostBack() Then
-            validateToegang()
-            setMultiLanguages()
-            initPicklists()
+            ValidateToegang()
+            SetMultiLanguages()
+            InitPicklists()
         End If
     End Sub
 
-    Private Sub validateToegang()
+    Private Sub ValidateToegang()
         Dim i As Integer
         i = myBalOlympia.CheckToegangGebruiker(Session("Gebruiker"), 23)
         Select Case i
@@ -48,17 +47,17 @@ Partial Class Importgegevens
                 Case "pagGebruikers"
                     pagGebruikers.Visible = True
                 Case "pagBeheer"
-                    myBtn1.Visible = True
+                    myBtn2.Visible = True
                     beheer.Visible = True
                 Case "pagVergoedingen"
-                    myBtn2.Visible = True
+                    myBtn1.Visible = True
                     vergoeding.Visible = True
             End Select
         Next
     End Sub
 
-    Private Sub fillUpStringFields() 'Fill up the strings
-        Dim mygebruiker As Gebruikers = myBalOlympia.getGebruiker(Session("Gebruiker"))
+    Private Sub FillUpStringFields() 'Fill up the strings
+        Dim mygebruiker As Gebruikers = myBalOlympia.GetGebruiker(Session("Gebruiker"))
         lbllogin.Text = "u bent ingelogd als " & mygebruiker.Naam & " " & mygebruiker.Voornaam & " (" & mygebruiker.GebDatum & ")"
 
         strDBError = "Fout bij het ophalen van de gegevens"
@@ -84,14 +83,14 @@ Partial Class Importgegevens
         strSheet99Error = "Er is een fout opgetreden. Mogelijks is de naam van het werkblad in Excell verschillende van 1"
     End Sub
 
-    Private Sub setMultiLanguages() ' Fill up the object according to the language
+    Private Sub SetMultiLanguages() ' Fill up the object according to the language
         lblPageTitle.Text = "BEHEER > Import gegevens"
         lblType.Text = "Type"
         btnImport.Text = "Import"
         btnLoadList.Text = "Load File"
     End Sub
 
-    Private Sub initPicklists()
+    Private Sub InitPicklists()
         Try
             cbType.Items.Clear()
             cbType.Items.Add(New ListItem("", 0))
@@ -108,7 +107,7 @@ Partial Class Importgegevens
         End Try
     End Sub
 
-    Private Sub cbType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbType.SelectedIndexChanged
+    Private Sub CbType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbType.SelectedIndexChanged
         If cbType.SelectedValue = 0 Then
             btnLoadList.Visible = False
         Else
@@ -124,59 +123,62 @@ Partial Class Importgegevens
         End If
     End Sub
 
-    Private Sub loadDataExtr_Personen(ByVal strPath As String)
-        If Directory.Exists(strPath) Then
-            'read file (first 10)
-            Dim intAantal As Integer = 0
+    Private Sub LoadDataExtr_Personen(ByVal strPath As String)
 
-            Dim myFile As String = ("import.xls")
-            Dim myfileimport As New String(strPath & " " & myFile)
-
+        Dim dialog As New OpenFileDialog With {
+            .Filter = "Excel files |*.xls;*.xlsx",
+            .InitialDirectory = "C:\",
+            .Title = "Kies uw bestand :"
+        }
+        'Encrypt the selected file. I'll do this later. :)
+        If dialog.ShowDialog() = DialogResult.OK Then
             'Lezen van de file
-            Dim myListgebruikers As New List(Of Gebruikers)(myBalOlympia.readFileExcell(myfileimport))
+            Dim myListgebruikers As New List(Of Gebruikers)(myBalOlympia.ReadFileExcell(dialog.FileName))
 
             If myListgebruikers.Count > 0 Then
                 dtgDataGrid.DataSource = myListgebruikers
                 dtgDataGrid.DataBind()
                 btnImport.Visible = True
                 ResultCount = myListgebruikers.Count
+                MsgBox(" done ! ", MsgBoxStyle.Information)
             Else
                 '  UC_Message.setMessage(strTekst4, CustomMessage.TypeMessage.Fataal, New Exception("VALIDATION"))
             End If
         Else
             ' UC_Message.setMessage(strTekst5, CustomMessage.TypeMessage.Fataal, New Exception("VALIDATION"))
         End If
+
     End Sub
 
-    Private Sub dtgDataGrid_ItemDataBound(ByVal sender As Object, ByVal e As DataGridItemEventArgs) Handles dtgDataGrid.ItemDataBound
-        Try
-            If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
-                Dim lblNaam As Label = e.Item.FindControl("lblNaam")
-                Dim lblVoornaam As Label = e.Item.FindControl("lblVoornaam")
-                Dim lblGebDatum As Label = e.Item.FindControl("lblGebDatum")
-                Dim lblgeslacht As Label = e.Item.FindControl("lblgeslacht")
-                Dim lblEmail As Label = e.Item.FindControl("lblEmail")
-                Dim lblGsm As Label = e.Item.FindControl("lblGsm")
-                Dim lblRekNr As Label = e.Item.FindControl("lblRekNr")
-                Dim lblGemeente As Label = e.Item.FindControl("lblGemeente")
+    'Private Sub dtgDataGrid_ItemDataBound(ByVal sender As Object, ByVal e As DataGridItemEventArgs) Handles dtgDataGrid.ItemDataBound
+    '    Try
+    '        If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
+    '            Dim lblNaam As Label = e.Item.FindControl("lblNaam")
+    '            Dim lblVoornaam As Label = e.Item.FindControl("lblVoornaam")
+    '            Dim lblGebDatum As Label = e.Item.FindControl("lblGebDatum")
+    '            Dim lblgeslacht As Label = e.Item.FindControl("lblgeslacht")
+    '            Dim lblEmail As Label = e.Item.FindControl("lblEmail")
+    '            Dim lblGsm As Label = e.Item.FindControl("lblGsm")
+    '            Dim lblRekNr As Label = e.Item.FindControl("lblRekNr")
+    '            Dim lblGemeente As Label = e.Item.FindControl("lblGemeente")
 
-                Dim mygebruikersOverzicht As Gebruikers = e.Item.DataItem
-                lblNaam.Text = mygebruikersOverzicht.Naam
-                lblVoornaam.Text = mygebruikersOverzicht.Voornaam
-                lblGebDatum.Text = mygebruikersOverzicht.GebDatum
-                lblgeslacht.Text = mygebruikersOverzicht.Geslacht
-                lblEmail.Text = mygebruikersOverzicht.Email
-                lblGsm.Text = mygebruikersOverzicht.GSM
-                lblRekNr.Text = mygebruikersOverzicht.Rekeningnummer
-                lblGemeente.Text = mygebruikersOverzicht.Gemeente
-            End If
+    '            Dim mygebruikersOverzicht As Gebruikers = e.Item.DataItem
+    '            lblNaam.Text = mygebruikersOverzicht.Naam
+    '            lblVoornaam.Text = mygebruikersOverzicht.Voornaam
+    '            lblGebDatum.Text = mygebruikersOverzicht.GebDatum
+    '            lblgeslacht.Text = mygebruikersOverzicht.Geslacht
+    '            lblEmail.Text = mygebruikersOverzicht.Email
+    '            lblGsm.Text = mygebruikersOverzicht.GSM
+    '            lblRekNr.Text = mygebruikersOverzicht.Rekeningnummer
+    '            lblGemeente.Text = mygebruikersOverzicht.Gemeente
+    '        End If
 
-        Catch ex As Exception
-            Response.Write(" " & ex.StackTrace)
-        End Try
-    End Sub
+    '    Catch ex As Exception
+    '        Response.Write(" " & ex.StackTrace)
+    '    End Try
+    'End Sub
 
-    Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
+    Private Sub BtnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
         Try
 
             Dim dateStart As Date = Date.Now
@@ -185,31 +187,31 @@ Partial Class Importgegevens
             For Each myrow As DataGridItem In dtgDataGrid.Items
                 Dim sub_DateStart = Date.Now
 
-                Dim lblNaam As Label = myrow.FindControl("lblNaam")
-                Dim lblVoornaam As Label = myrow.FindControl("lblVoornaam")
-                Dim lblGebDatum As Label = myrow.FindControl("lblGebDatum")
-                Dim lblgeslacht As Label = myrow.FindControl("lblgeslacht")
-                Dim lblEmail As Label = myrow.FindControl("lblEmail")
-                Dim lblGsm As Label = myrow.FindControl("lblGsm")
-                Dim lblRekNr As Label = myrow.FindControl("lblRekNr")
-                Dim lblGemeente As Label = myrow.FindControl("lblGemeente")
+                'Dim lblNaam As Label = myrow.FindControl("lblNaam")
+                'Dim lblVoornaam As Label = myrow.FindControl("lblVoornaam")
+                'Dim lblGebDatum As Label = myrow.FindControl("lblGebDatum")
+                'Dim lblgeslacht As Label = myrow.FindControl("lblgeslacht")
+                'Dim lblEmail As Label = myrow.FindControl("lblEmail")
+                'Dim lblGsm As Label = myrow.FindControl("lblGsm")
+                'Dim lblRekNr As Label = myrow.FindControl("lblRekNr")
+                'Dim lblGemeente As Label = myrow.FindControl("lblGemeente")
 
-                Dim mygebruiker As New Gebruikers With {
-                    .Naam = lblNaam.Text,
-                    .Voornaam = lblVoornaam.Text,
-                    .GebDatum = lblGebDatum.Text,
-                    .Geslacht = lblgeslacht.Text,
-                    .Email = lblEmail.Text,
-                    .GSM = lblGsm.Text,
-                    .Rekeningnummer = lblRekNr.Text,
-                    .Gemeente = lblGemeente.Text,
-                    .Paswoord = "pw"
-                }
-                myList.Add(mygebruiker)
+                'Dim mygebruiker As New Gebruikers With {
+                '    .Naam = lblNaam.Text,
+                '    .Voornaam = lblVoornaam.Text,
+                '    .GebDatum = lblGebDatum.Text,
+                '    .Geslacht = lblgeslacht.Text,
+                '    .Email = lblEmail.Text,
+                '    .GSM = lblGsm.Text,
+                '    .Rekeningnummer = lblRekNr.Text,
+                '    .Gemeente = lblGemeente.Text,
+                '    .Paswoord = "pw"
+                '}
+                'myList.Add(mygebruiker)
 
             Next
 
-            myBalOlympia.doImportGebruikers(myList)
+            myBalOlympia.DoImportGebruikers(myList)
 
             If myList.Count > 0 Then
                 Try
@@ -231,12 +233,12 @@ Partial Class Importgegevens
         End Try
     End Sub
 
-    Private Sub btnLoadList_Click(sender As Object, e As EventArgs) Handles btnLoadList.Click
+    Private Sub BtnLoadList_Click(sender As Object, e As EventArgs) Handles btnLoadList.Click
         Select Case cbType.SelectedItem.Value
             Case TypeImportExt.Trainingsgroepen
 
             Case TypeImportExt.Gebruikers
-                loadDataExtr_Personen("c:/")
+                LoadDataExtr_Personen("c:/")
             Case TypeImportExt.Wedstrijden
 
         End Select

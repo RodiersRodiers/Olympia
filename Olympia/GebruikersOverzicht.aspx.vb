@@ -3,18 +3,17 @@ Imports Olympia.BALOlympia
 
 Partial Class GebruikersOverzicht
     Inherits Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
+    Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
     Private strDeleteConfirm, strDeleteError, strDeleteOk, strDBError, strPagingTot, strHeaderTitle, strPagingRecordsFound, strInsertBeschrijving, strUpdateOk, _
         strUpdateError, strPrimaryKeyAllreadyExists, strAddError, strAddOk, strCompleted As String
-
-    Protected Sub form1_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles form1.Load
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         fillUpStringFields()
         If Not IsPostBack Then
             Dim idlid As Integer = Request.QueryString("ID_lid")
             ViewState("ID_Lid") = idlid
             setMultiLanguages()
-            LoadData()
+            LoadData(txtfilter.Text)
         End If
     End Sub
 
@@ -73,9 +72,9 @@ Partial Class GebruikersOverzicht
         End If
     End Function
 
-    Private Sub LoadData()
+    Private Sub LoadData(ByVal myfilter As String)
         Try
-            Dim myList As List(Of Handelingen) = myBalOlympia.getAllhandelingenbygebruiker(getDefaultSortExpression, ViewState("ID_Lid"))
+            Dim myList As List(Of Handelingen) = myBalOlympia.GetAllhandelingenbygebruiker(getDefaultSortExpression, ViewState("ID_Lid"), myfilter)
             dtgDataGrid.DataSource = myList
             dtgDataGrid.DataBind()
             ResultCount = myList.Count
@@ -117,7 +116,7 @@ Partial Class GebruikersOverzicht
 
                         If i_Result >= 1 Then
                             ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strAddOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
-                            LoadData()
+                            LoadData(txtfilter.Text)
                         End If
                     Catch ex As Exception
                         If ex.Message = "119" Then
@@ -133,14 +132,12 @@ Partial Class GebruikersOverzicht
                     }
                     i_Result = myBalOlympia.Deletehandeling(myhandeling)
 
-                    LoadData()
+                    LoadData(txtfilter.Text)
                     ' UC_MessageChild.setMessage(strDeleteOk, CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
 
                 Case "UPDATE"
                     Try
-                        Dim myhandeling As New Handelingen With {
-                            .Id = dtgDataGrid.DataKeys(e.Item.ItemIndex)
-                        }
+                        Dim myhandeling As New Handelingen
                         Dim txteditDatum As TextBox = e.Item.FindControl("txteditDatum")
                         Dim drpEditGroep As DropDownList = e.Item.FindControl("drpEditGroep")
                         Dim drpEditActie As DropDownList = e.Item.FindControl("drpEditActie")
@@ -148,7 +145,7 @@ Partial Class GebruikersOverzicht
                         Dim txteditaantal As TextBox = e.Item.FindControl("txteditaantal")
                         Dim txteditBedrag As TextBox = e.Item.FindControl("txteditBedrag")
                         Dim chkbEditok As CheckBox = e.Item.FindControl("chkbEditok")
-
+                        myhandeling.Id = dtgDataGrid.DataKeys(e.Item.ItemIndex)
                         myhandeling.Datum = txteditDatum.Text
                         myhandeling.Discipline.Id = drpEditGroep.SelectedValue
                         myhandeling.Actie.Id = drpEditActie.SelectedValue
@@ -168,17 +165,17 @@ Partial Class GebruikersOverzicht
 
                     btnINSERTAdd.Visible = True
                     dtgDataGrid.EditItemIndex = -1
-                    LoadData()
+                    LoadData(txtfilter.Text)
 
                 Case "CANCEL"
                     dtgDataGrid.EditItemIndex = -1
                     dtgDataGrid.ShowFooter = False
-                    LoadData()
+                    LoadData(txtfilter.Text)
                     btnINSERTAdd.Visible = True
 
                 Case "EDIT"
                     dtgDataGrid.EditItemIndex = e.Item.ItemIndex
-                    LoadData()
+                    LoadData(txtfilter.Text)
                     btnINSERTAdd.Visible = False
 
             End Select
@@ -281,7 +278,7 @@ Partial Class GebruikersOverzicht
             End If
         End If
         UpdateColumnHeaders(dtgDataGrid)
-        LoadData()
+        LoadData(txtfilter.Text)
     End Sub
 
     Sub UpdateColumnHeaders(ByVal dg As DataGrid)
@@ -310,7 +307,7 @@ Partial Class GebruikersOverzicht
 
     Private Sub dtgDataGrid_PageIndexChanged(ByVal source As Object, ByVal e As DataGridPageChangedEventArgs) Handles dtgDataGrid.PageIndexChanged
         dtgDataGrid.CurrentPageIndex = e.NewPageIndex
-        LoadData()
+        LoadData(txtfilter.Text)
         doShowPage()
     End Sub
 
@@ -333,7 +330,7 @@ Partial Class GebruikersOverzicht
             Case Else 'The First Page button was clicked
                 dtgDataGrid.CurrentPageIndex = Convert.ToInt32(arg)
         End Select
-        LoadData()
+        LoadData("")
     End Sub
 
     Sub Prev_Buttons()
@@ -377,7 +374,7 @@ Partial Class GebruikersOverzicht
         If IsNumeric(txtCurrentPage.Text) Then
             If txtCurrentPage.Text <= dtgDataGrid.PageCount And txtCurrentPage.Text > 0 Then
                 dtgDataGrid.CurrentPageIndex = txtCurrentPage.Text - 1
-                LoadData()
+                LoadData(txtfilter.Text)
                 doShowPage()
             Else
                 If txtCurrentPage.Text = 0 Then
@@ -389,6 +386,15 @@ Partial Class GebruikersOverzicht
         Else
             txtCurrentPage.Text = dtgDataGrid.CurrentPageIndex + 1
         End If
+    End Sub
+
+    Private Sub btnWisFilter_Click(sender As Object, e As EventArgs) Handles btnWisFilter.Click
+        txtfilter.Text = ""
+        LoadData(txtfilter.Text)
+    End Sub
+
+    Private Sub btnFilter_Click(sender As Object, e As EventArgs) Handles btnFilter.Click
+        LoadData(txtfilter.Text)
     End Sub
 
 #End Region

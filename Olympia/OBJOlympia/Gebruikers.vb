@@ -219,7 +219,7 @@ Namespace OBJOlympia
         Private PFX_Discipline As pic_Disciplines
         Private PFX_Groep As pic_Trainingsgroepen
         Private PFX_actie As pic_Acties
-        Private PFX_Aantal As Integer
+        Private PFX_Aantal As String
         Private PFX_Bedrag As String
         Private PFX_info As String
         Private PFX_validate As Integer
@@ -280,11 +280,11 @@ Namespace OBJOlympia
                 PFX_actie = value
             End Set
         End Property
-        Public Property Aantal() As Integer
+        Public Property Aantal() As String
             Get
                 Return PFX_Aantal
             End Get
-            Set(ByVal value As Integer)
+            Set(ByVal value As String)
                 PFX_Aantal = value
             End Set
         End Property

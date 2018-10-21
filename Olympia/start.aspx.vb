@@ -7,19 +7,12 @@ Partial Class Start
     Private ResultCount As Integer
     Private strHeaderTitle, strDBError, strPagingTot, strPagingRecordsFound As String
 
-    Protected Sub form1_Load(ByVal sender As Object, ByVal e As EventArgs) Handles form1.Load
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         setMultiLanguages()
         validateToegang()
     End Sub
 
     Private Sub validateToegang()
-        pagAanwezigheden.Visible = False
-        pagGebruikers.Visible = False
-        myBtn1.Visible = False
-        beheer.Visible = False
-        myBtn2.Visible = False
-        vergoeding.Visible = False
-
         Dim mygebruikersToegangen As New List(Of Rechten)
         mygebruikersToegangen = myBalOlympia.CheckToegangenGebruiker(Session("Gebruiker"))
         Dim mytoegang As New Rechten
@@ -30,10 +23,10 @@ Partial Class Start
                 Case "pagGebruikers"
                     pagGebruikers.Visible = True
                 Case "pagBeheer"
-                    myBtn1.Visible = True
+                    myBtn2.Visible = True
                     beheer.Visible = True
                 Case "pagVergoedingen"
-                    myBtn2.Visible = True
+                    myBtn1.Visible = True
                     vergoeding.Visible = True
             End Select
         Next

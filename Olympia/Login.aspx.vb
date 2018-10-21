@@ -8,23 +8,22 @@ Public Class LoginOlympia
         setMultiLanguages()
     End Sub
 
-    Private Sub setMultiLanguages()
-
+    Private Sub SetMultiLanguages()
         lblGebruiker.Text = "Gebruiker"
         lblPassword.Text = "Paswoord"
         btn_Login.Text = "Login"
-        lbtn_Registreer.Text = "Registreer"
+        LnkbRegistreer.Text = "Registreer"
         lnkbprivacy.Text = "Privacy Policy"
     End Sub
 
 
-    Private Sub btn_Login_Click(sender As Object, e As EventArgs) Handles btn_Login.Click
+    Private Sub Btn_Login_Click(sender As Object, e As EventArgs) Handles btn_Login.Click
         Dim mygebruiker As New Gebruikers With {
             .Email = txtGebruiker.Text.Trim,
             .Paswoord = txtPassword.Text.Trim
         }
 
-        Dim ii As Integer = myBalOlympia.checkemail(mygebruiker)
+        Dim ii As Integer = myBalOlympia.Checkemail(mygebruiker)
         If ii > 0 Then
             mygebruiker.IdLid = ii
             Dim i As Integer = myBalOlympia.GetAuthGebruiker(mygebruiker)
@@ -45,15 +44,13 @@ Public Class LoginOlympia
             MsgBox("U bent nog niet gekend, registreer u eerst !")
             Return
         End If
-
-
     End Sub
 
-    Private Sub lbtn_Registreer_Click(sender As Object, e As EventArgs) Handles lbtn_Registreer.Click
+    Private Sub LnkbRegistreer_Click(sender As Object, e As EventArgs) Handles LnkbRegistreer.Click
         Response.Redirect("Register.aspx", False)
     End Sub
 
-    Private Sub lnkbprivacy_Click(sender As Object, e As EventArgs) Handles lnkbprivacy.Click
+    Private Sub LnkbPrivacy_Click(sender As Object, e As EventArgs) Handles lnkbprivacy.Click
         Response.Redirect("Privacy.aspx", False)
     End Sub
 End Class

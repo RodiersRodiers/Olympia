@@ -1,19 +1,15 @@
-﻿Imports System.Data.Sql
-Imports System.Data.SqlClient
-Imports Olympia.OBJOlympia
+﻿Imports Olympia.OBJOlympia
 Imports Olympia.BALOlympia
 
 Public Class BeheerGebruikers
-    Inherits System.Web.UI.Page
-    Private myBalOlympia As New Olympia.BALOlympia.BalGebruikers
+    Inherits Page
+    Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
-
-
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles form1.Load
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         setMultiLanguages()
         If Not IsPostBack Then
             validateToegang()
-            LoadData(getDefaultSortExpression, txtfilter.Text)
+            LoadData(getDefaultSortExpression, txtfilter.Text, ckbxOpen.Checked)
         End If
 
     End Sub
@@ -45,10 +41,10 @@ Public Class BeheerGebruikers
                 Case "pagGebruikers"
                     pagGebruikers.Visible = True
                 Case "pagBeheer"
-                    myBtn1.Visible = True
+                    myBtn2.Visible = True
                     beheer.Visible = True
                 Case "pagVergoedingen"
-                    myBtn2.Visible = True
+                    myBtn1.Visible = True
                     vergoeding.Visible = True
             End Select
         Next
@@ -58,7 +54,7 @@ Public Class BeheerGebruikers
 
         Dim mygebruiker As Gebruikers = myBalOlympia.getGebruiker(Session("Gebruiker"))
         lbllogin.Text = "u bent ingelogd als " & mygebruiker.Naam & " " & mygebruiker.Voornaam & " (" & mygebruiker.GebDatum & ")"
-
+        lblOpen.Text = "Openstaand"
         lblFilter.Text = "Filter"
         btnFilter.Text = "Zoek"
         btnWisFilter.Text = "Wis Filter"
@@ -89,25 +85,22 @@ Public Class BeheerGebruikers
         End If
     End Function
 
-    Private Sub LoadData(ByVal sort As String, ByVal filter As String)
+    Private Sub LoadData(ByVal sort As String, ByVal filter As String, ByVal intOpen As Integer)
         Try
-
             Dim mygebruikersList As New List(Of Gebruikers)
-            mygebruikersList = myBalOlympia.getGebruikers(sort, filter)
-
+            mygebruikersList = myBalOlympia.GetGebruikersOpenHandeling(sort, filter, intOpen)
             dtgDataGrid.DataSource = mygebruikersList
             dtgDataGrid.DataBind()
             ResultCount = mygebruikersList.Count
             lblresult.Text = ResultCount & " Gebruikers gevonden"
             doShowPage()
         Catch ex As Exception
-
         End Try
     End Sub
 
     Private Sub dtgDataGrid_CancelCommand(ByVal source As Object, ByVal e As DataGridCommandEventArgs) Handles dtgDataGrid.CancelCommand
         dtgDataGrid.EditItemIndex = -1
-        LoadData(getDefaultSortExpression, txtfilter.Text)
+        LoadData(getDefaultSortExpression, txtfilter.Text, ckbxOpen.Checked)
     End Sub
 
     Private Sub dtgDataGrid_ItemDataBound(ByVal sender As Object, ByVal e As DataGridItemEventArgs) Handles dtgDataGrid.ItemDataBound
@@ -120,6 +113,10 @@ Public Class BeheerGebruikers
                 Dim lblGSM As Label = e.Item.FindControl("lblGSM")
                 Dim mygebruikersOverzicht As Gebruikers = e.Item.DataItem
                 Dim lnkOpen As LinkButton = e.Item.FindControl("lnkOpen")
+
+                If Not mygebruikersOverzicht.VolledigeNaam Like "" Then
+                    e.Item.BackColor = Drawing.Color.Pink
+                End If
 
                 lnkOpen.CommandArgument = mygebruikersOverzicht.IdLid
                 lblId.Text = mygebruikersOverzicht.IdLid
@@ -152,12 +149,26 @@ Public Class BeheerGebruikers
 
         End Select
 
-        LoadData(getDefaultSortExpression, txtfilter.Text)
+        LoadData(getDefaultSortExpression, txtfilter.Text, ckbxOpen.Checked)
     End Sub
 
     Private Sub btn_nieuw_Click(sender As Object, e As EventArgs) Handles btn_nieuw.Click
-        Response.Redirect("BeheerGebruikerDetail.aspx?ID_lid=0")
+        Response.Redirect("GebruikerDetail.aspx?ID_lid=0")
     End Sub
+
+    Private Sub btnFilter_Click(sender As Object, e As EventArgs) Handles btnFilter.Click
+        LoadData(getDefaultSortExpression, txtfilter.Text, ckbxOpen.Checked)
+    End Sub
+
+    Private Sub btnWisFilter_Click(sender As Object, e As EventArgs) Handles btnWisFilter.Click
+        txtfilter.Text = ""
+        LoadData(getDefaultSortExpression, txtfilter.Text, ckbxOpen.Checked)
+    End Sub
+
+    Private Sub ckbxOpen_CheckedChanged(sender As Object, e As EventArgs) Handles ckbxOpen.CheckedChanged
+        LoadData(getDefaultSortExpression, txtfilter.Text, ckbxOpen.Checked)
+    End Sub
+
 
 #Region "DATAGRID - Sorting" ' To move to original class
 
@@ -179,7 +190,7 @@ Public Class BeheerGebruikers
             End If
         End If
         UpdateColumnHeaders(dtgDataGrid)
-        LoadData(getDefaultSortExpression, txtfilter.Text)
+        LoadData(getDefaultSortExpression, txtfilter.Text, ckbxOpen.Checked)
     End Sub
 
     Sub UpdateColumnHeaders(ByVal dg As DataGrid)
@@ -208,7 +219,7 @@ Public Class BeheerGebruikers
 
     Private Sub dtgDataGrid_PageIndexChanged(ByVal source As Object, ByVal e As DataGridPageChangedEventArgs) Handles dtgDataGrid.PageIndexChanged
         dtgDataGrid.CurrentPageIndex = e.NewPageIndex
-        LoadData(getDefaultSortExpression, txtfilter.Text)
+        LoadData(getDefaultSortExpression, txtfilter.Text, ckbxOpen.Checked)
         doShowPage()
     End Sub
 
@@ -231,7 +242,7 @@ Public Class BeheerGebruikers
             Case Else 'The First Page button was clicked
                 dtgDataGrid.CurrentPageIndex = Convert.ToInt32(arg)
         End Select
-        LoadData(getDefaultSortExpression, txtfilter.Text)
+        LoadData(getDefaultSortExpression, txtfilter.Text, ckbxOpen.Checked)
     End Sub
 
     Sub Prev_Buttons()
@@ -275,7 +286,7 @@ Public Class BeheerGebruikers
         If IsNumeric(txtCurrentPage.Text) Then
             If txtCurrentPage.Text <= dtgDataGrid.PageCount And txtCurrentPage.Text > 0 Then
                 dtgDataGrid.CurrentPageIndex = txtCurrentPage.Text - 1
-                LoadData(getDefaultSortExpression, txtfilter.Text)
+                LoadData(getDefaultSortExpression, txtfilter.Text, ckbxOpen.Checked)
                 doShowPage()
             Else
                 If txtCurrentPage.Text = 0 Then
@@ -291,12 +302,4 @@ Public Class BeheerGebruikers
 
 #End Region
 
-
-    Private Sub btnFilter_Click(sender As Object, e As EventArgs) Handles btnFilter.Click
-        LoadData(getDefaultSortExpression, txtfilter.Text)
-    End Sub
-
-    Private Sub btnWisFilter_Click(sender As Object, e As EventArgs) Handles btnWisFilter.Click
-        LoadData(getDefaultSortExpression, "")
-    End Sub
 End Class
