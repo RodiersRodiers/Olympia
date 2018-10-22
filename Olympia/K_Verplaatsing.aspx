@@ -151,7 +151,7 @@
                                                 </FooterTemplate>
                                             </asp:TemplateColumn>
 
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="aantal" HeaderStyle-Width="50" HeaderText="Km">
+                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-HorizontalAlign="center" ItemStyle-HorizontalAlign="Center" SortExpression="aantal" HeaderStyle-Width="50" HeaderText="Km">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblaantal" Width="50" runat="server"></asp:Label>
                                                 </ItemTemplate>

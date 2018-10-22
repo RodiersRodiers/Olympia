@@ -173,13 +173,17 @@
                             </tr>
 
                             <tr>
-                                <td colspan="2" style="align-content: flex-start">
+                                <td style="align-content: flex-start">
                                     <asp:Button ID="btnRechten" runat="server" />
                                     
                                     <br />
                                 </td>
                                 <td>
 <asp:Button ID="btnOverzicht" runat="server" />
+
+                                </td>
+                                <td>
+<asp:Button ID="btnrapport" runat="server" />
 
                                 </td>
                             </tr>

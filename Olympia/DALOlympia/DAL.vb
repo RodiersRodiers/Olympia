@@ -7,7 +7,10 @@ Namespace DALOlympia
 
     Public Class DALBase
 
+        'lokaal
         Public conn As New MySqlConnection("Server=185.41.126.25;Port=9151;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
+
+        'online
         'Public conn As New MySqlConnection("Server=mysql9.mijnhostingpartner.nl;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
 
         Private myListParamColl As New List(Of MySqlParameter)
@@ -63,7 +66,7 @@ Namespace DALOlympia
             If Not myListParamColl Is Nothing Then
                 Dim s() As String = strSQL.Split("?")
                 For j As Integer = 0 To s.Count - 2
-                    myParameter = returnParameter(i)
+                    myParameter = ReturnParameter(i)
                     If myParameter.MySqlDbType = MySqlDbType.String Then
                         strOutput.Append(s(j) & "'" & myParameter.Value & "' ")
                     Else
@@ -128,7 +131,7 @@ Namespace DALOlympia
                     Next
                 End If
 
-                generateDebugSQL(strSQL)
+                GenerateDebugSQL(strSQL)
                 conn.Open()
                 intResult = myCommand.ExecuteNonQuery.ToString
                 conn.Close()
@@ -154,7 +157,7 @@ Namespace DALOlympia
                     Next
                 End If
 
-                generateDebugSQL(strSQL)
+                GenerateDebugSQL(strSQL)
                 conn.Open()
                 intResult = myCommand.ExecuteScalar
                 conn.Close()

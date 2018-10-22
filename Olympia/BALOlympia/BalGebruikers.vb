@@ -690,6 +690,7 @@ Namespace BALOlympia
                     myhandeling.Actie.beschrijving = myRow("actiebeschrijving").ToString
                     myhandeling.Info = myRow("Info").ToString
                     myhandeling.Aantal = myRow("Aantal").ToString
+                    myhandeling.Validate = myRow("Validate")
                     myList.Add(myhandeling)
                 Next
             Catch ex As Exception

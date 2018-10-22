@@ -48,6 +48,7 @@ Public Class GebruikerDetail
         btn_Opslaan.Text = "Opslaan"
         btnRechten.Text = "Rechten"
         btnOverzicht.Text = "Overzicht"
+        btnrapport.Text = "Rapport"
 
     End Sub
 
@@ -145,5 +146,9 @@ Public Class GebruikerDetail
 
     Private Sub BtnOverzicht_Click(sender As Object, e As EventArgs) Handles btnOverzicht.Click
         Response.Redirect("GebruikersOverzicht.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
+
+    Private Sub btnrapport_Click(sender As Object, e As EventArgs) Handles btnrapport.Click
+        Response.Redirect("GebruikersRapport.aspx?ID_lid=" & ViewState("ID_Lid"))
     End Sub
 End Class

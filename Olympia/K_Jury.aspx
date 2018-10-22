@@ -97,8 +97,7 @@
                                                 <asp:Button ID="btnINSERTCancel" Visible="false" runat="server" />
                                                 <br />
                                             </td>
-                                <td ><font color="blue"> Aantal = aantal dagdelen <br />
-                                    Info = Locatie, niveau, aantal deelnemers vd club <br />
+                                <td ><font color="blue"> Info = Locatie, niveau, aantal deelnemers vd club <br />
                                     Indien wedstrijd over meerdere dagen -> per dag een nieuwe lijn aanmaken</font></td>
                             </tr>
 
@@ -152,7 +151,7 @@
                                                 </FooterTemplate>
                                             </asp:TemplateColumn>
 
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="aantal" HeaderStyle-Width="50" HeaderText="Aantal">
+                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-HorizontalAlign="center" ItemStyle-HorizontalAlign="Center" SortExpression="aantal" HeaderStyle-Width="50" HeaderText="Dagdelen">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblaantal" Width="50" runat="server"></asp:Label>
                                                 </ItemTemplate>

@@ -156,6 +156,7 @@
     <Import Include="System.Web.UI.HtmlControls" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="GebruikersRapport.aspx" />
     <Content Include="GebruikersRechten.aspx" />
     <Content Include="CustomScriptControl.ascx" />
     <Content Include="OlympiaService.asmx" />
@@ -233,6 +234,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GebruikersRapport.aspx.designer.vb">
+      <DependentUpon>GebruikersRapport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GebruikersRapport.aspx.vb">
+      <DependentUpon>GebruikersRapport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="GebruikersRechten.aspx.designer.vb">
       <DependentUpon>GebruikersRechten.aspx</DependentUpon>
     </Compile>

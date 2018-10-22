@@ -97,8 +97,7 @@
                                                 <asp:Button ID="btnINSERTCancel" Visible="false" runat="server" />
                                                 <br />
                                             </td>
-                                <td ><font color="blue"> Aantal = Bedrag <br />
-                                    Info = omschrijving kost <br />
+                                <td ><font color="blue"> Info = omschrijving kost <br />
                                     Kosten dienen steeds aangetoond te worden dmv een ticket of factuur</font></td>
                             </tr>
 
@@ -152,7 +151,7 @@
                                                 </FooterTemplate>
                                             </asp:TemplateColumn>
 
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="aantal" HeaderStyle-Width="50" HeaderText="Aantal">
+                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="aantal" HeaderStyle-Width="50" HeaderText="Bedrag">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblaantal" Width="50" runat="server"></asp:Label>
                                                 </ItemTemplate>

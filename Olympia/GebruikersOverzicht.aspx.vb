@@ -210,10 +210,9 @@ Partial Class GebruikersOverzicht
                 lblAantal.Text = myhandeling.Aantal
                 If myhandeling.Validate Then
                     lblok.Text = "X"
-                    lblok.CssClass = "RCCUOK"
                 Else
                     lblok.Text = " "
-                    lblok.CssClass = "CTIIncomplete"
+                    e.Item.BackColor = Drawing.Color.Red
                 End If
             End If
 

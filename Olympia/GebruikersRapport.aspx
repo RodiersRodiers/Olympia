@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" ValidateRequest="true" AutoEventWireup="false" CodeBehind="GebruikersOverzicht.aspx.vb" Inherits="Olympia.GebruikersOverzicht" %>
+﻿<%@ Page Language="VB" ValidateRequest="true" AutoEventWireup="false" CodeBehind="GebruikersRapport.aspx.vb" Inherits="Olympia.GebruikersRapport" %>
 
 <!DOCTYPE html>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -75,9 +75,7 @@
                                     <table>
                                         <tr>
                                             <td>
-                                                <asp:Button ID="btnINSERTAdd" runat="server" />
-                                                <asp:Button ID="btnINSERTCancel" Visible="false" runat="server" />
-                                                                                              </td>
+                                               
                                             <td width="320"></td>
                                             <td style="background-color: ButtonFace">
                                                 <asp:Label ID="lblFilter" runat="server"></asp:Label>
@@ -105,9 +103,9 @@
                                         RowSelectionEnabled="true" HorizontalAlign="Center" RowClickEventCommandName="dtgDataGrid_EditCommand"
                                         runat="server" AutoGenerateColumns="false" CssClass="navigateable" GridLines="Horizontal"
                                         Width="95%" PageSize="40" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false"
-                                        PagerStyle-Visible="false" AllowSorting="true" AlternatingItemStyle-BackColor="Wheat" DataKeyField="ID" ShowFooter="false">
+                                        PagerStyle-Visible="false"  DataKeyField="ID" ShowFooter="false">
                                         <ItemStyle CssClass="datagridItem" />
-                                        <FooterStyle CssClass="datagridItem" />
+                                        
                                         <Columns>
                                             <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-Width="80" SortExpression="Datum" HeaderText="Datum">
                                                 <ItemTemplate>
@@ -115,140 +113,42 @@
                                                     <asp:Label ID="lblLidID" Visible="false" runat="server"></asp:Label>
                                                     <asp:Label ID="lblID" Visible="false" runat="server"></asp:Label>
                                                 </ItemTemplate>
-                                                <EditItemTemplate>
-                                                    <asp:TextBox ID="txtEditDatum" Width="85" runat="server"></asp:TextBox>
-                                                    <asp:CalendarExtender ID="calDocumentDatum" runat="server" TargetControlID="txtEditDatum"
-                                                        Animated="false" Format="dd/MM/yyyy" />
-                                                </EditItemTemplate>
-                                                <FooterTemplate>
-                                                    <asp:TextBox ID="txtInsertDatum" Width="85" runat="server"></asp:TextBox>
-                                                    <asp:CalendarExtender ID="calDocumentDatum" runat="server" TargetControlID="txtInsertDatum"
-                                                        Animated="false" Format="dd/MM/yyyy" />
-                                                </FooterTemplate>
                                             </asp:TemplateColumn>
 
                                               <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="A.id" HeaderText="Actie">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblActie" Width="100" runat="server"></asp:Label>
                                                 </ItemTemplate>
-                                                <EditItemTemplate>
-                                                    <asp:DropDownList ID="drpEditActie" Width="100" runat="server"></asp:DropDownList>
-                                                </EditItemTemplate>
-                                                <FooterTemplate>
-                                                    <asp:DropDownList ID="drpInsertActie" Width="100" runat="server"></asp:DropDownList>
-                                                </FooterTemplate>
                                             </asp:TemplateColumn>
 
                                             <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="D.id" HeaderText="Groep">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblgroep" Width="100" runat="server"></asp:Label>
                                                 </ItemTemplate>
-                                                <EditItemTemplate>
-                                                    <asp:DropDownList ID="drpEditGroep" Width="100" runat="server"></asp:DropDownList>
-                                                </EditItemTemplate>
-                                                <FooterTemplate>
-                                                    <asp:DropDownList ID="drpInsertGroep" Width="100" runat="server"></asp:DropDownList>
-                                                </FooterTemplate>
+
                                             </asp:TemplateColumn>
 
                                             <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" ItemStyle-HorizontalAlign="Center" SortExpression="aantal" HeaderStyle-Width="60" HeaderText="Aantal">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblaantal" Width="60" runat="server"></asp:Label>
                                                 </ItemTemplate>
-                                                <EditItemTemplate>
-                                                    <asp:TextBox ID="txteditaantal" Width="60" runat="server"></asp:TextBox>
-                                                </EditItemTemplate>
-                                                <FooterTemplate>
-                                                    <asp:TextBox ID="txtInsertaantal" Width="60" runat="server"></asp:TextBox>
-                                                </FooterTemplate>
                                             </asp:TemplateColumn>
 
                                             <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-HorizontalAlign="center" ItemStyle-HorizontalAlign="Center" SortExpression="bedrag" HeaderStyle-Width="60" HeaderText="Bedrag">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblBedrag" Width="60" runat="server"></asp:Label>
                                                 </ItemTemplate>
-                                                <EditItemTemplate>
-                                                    <asp:TextBox ID="txteditBedrag" Width="60" runat="server"></asp:TextBox>
-                                                </EditItemTemplate>
-                                                <FooterTemplate>
-                                                    <asp:TextBox ID="txtInsertBedrag" Width="60" runat="server"></asp:TextBox>
-                                                </FooterTemplate>
-                                            </asp:TemplateColumn>
-
-                                                <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-HorizontalAlign="center" ItemStyle-HorizontalAlign="Center" SortExpression="Validate" HeaderStyle-Width="60" HeaderText="OK">
-                                                <ItemTemplate>
-                                                    <asp:Label ID="lblok"  Width="60" Font-Bold="true" runat="server">
-                                            </asp:Label>
-                                        </ItemTemplate>
-                                        <EditItemTemplate>
-                                            <asp:CheckBox ID="chkbEditok" runat="server" />
-                                        </EditItemTemplate>
-                                        <FooterTemplate>
-                                            <asp:CheckBox ID="chkbInsertok" runat="server" />
-                                        </FooterTemplate>
                                             </asp:TemplateColumn>
 
                                             <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="info" HeaderStyle-Width="300" HeaderText="Info">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblinfo" Width="300" runat="server"></asp:Label>
                                                 </ItemTemplate>
-                                                <EditItemTemplate>
-                                                    <textarea id="txtEditInfo" runat="server" cols="30" rows="2"></textarea>
-                                                </EditItemTemplate>
-                                                <FooterTemplate>
-                                                    <textarea id="txtInsertInfo" runat="server" cols="30" rows="2"></textarea>
-                                                </FooterTemplate>
-                                            </asp:TemplateColumn>
-
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" Visible="true" HeaderStyle-Width="60" ItemStyle-HorizontalAlign="Center">
-                                                <ItemTemplate>
-                                                    <asp:LinkButton ID="lnkbEdit" CssClass="activation" ToolTip="Edit" runat="Server" Text="<img src='../images/edit.gif' alt='edit' border=0>" CommandName="EDIT" />
-                                                </ItemTemplate>
-                                                <EditItemTemplate>
-                                                    <asp:LinkButton ID="lnkbUpdate" ToolTip="Update" runat="Server" Text="<img src='../images/update.gif' alt='update' border=0>" CommandName="UPDATE" />
-                                                    <asp:LinkButton ID="lnkbCancel" ToolTip="Cancel" runat="Server" Text="<img src='../images/cancel.gif' alt='edit' border=0>" CommandName="CANCEL" />
-                                                </EditItemTemplate>
-                                            </asp:TemplateColumn>
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" Visible="true" HeaderStyle-Width="60" ItemStyle-HorizontalAlign="Center">
-                                                <ItemTemplate>
-                                                    <asp:ConfirmButtonExtender ID="cbeDelete" runat="server" TargetControlID="btnDelete" ConfirmText="Bent u zeker dat u deze discipline wilt verwijderen ?" />
-                                                    <asp:LinkButton ID="btnDelete" ToolTip="Verwijderen" runat="server" Text="<img src='../images/database_delete.png' alt='Delete' border=0>" CommandName="DELETE" />
-                                                </ItemTemplate>
-                                                <FooterTemplate>
-                                                    <asp:ImageButton ID="ImagebtnAdd" ImageUrl="../images/add.gif" runat="server" ToolTip="Add" CommandName="INSERT" />
-                                                </FooterTemplate>
                                             </asp:TemplateColumn>
                                         </Columns>
                                     </asp:DataGrid>
                                     <br />
                                     <br />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td valign="top">
-                                    <table width="100%" class="datagridPaging">
-                                        <tr>
-                                            <td style="width: 33%; vertical-align:middle;align-content:flex-start" class="datagridBleuHook">&nbsp;
-                                            </td>
-                                            <td align="center" valign="bottom">
-                                                <asp:ImageButton ID="imgbFirstbutton" ImageUrl="../images/firstRecord.gif" CommandArgument="0"
-                                                    runat="server" OnClick="PagerButtonClick" />&nbsp;&nbsp;
-                                        <asp:ImageButton ID="imgbPrevbutton" ImageUrl="../images/previousRecord.gif" CommandArgument="prev"
-                                            runat="server" OnClick="PagerButtonClick" />&nbsp;&nbsp;
-                                        <asp:ImageButton ID="imgbNextbutton" ImageUrl="../images/nextRecord.gif" CommandArgument="next"
-                                            runat="server" OnClick="PagerButtonClick" />&nbsp;&nbsp;
-                                        <asp:ImageButton ID="imgbLastbutton" ImageUrl="../images/lastRecord.gif" CommandArgument="last"
-                                            runat="server" OnClick="PagerButtonClick" />
-                                            </td>
-                                            <td style="width: 33%; vertical-align: bottom" align="right" class="datagridBleuHook">&nbsp;
-                                <asp:Label ID="lblPagina" Font-Size="Smaller" runat="server"></asp:Label>&nbsp;
-                                        <asp:TextBox ID="txtCurrentPage" Font-Size="Smaller" Width="20" MaxLength="4" runat="server"></asp:TextBox>
-
-                                                <asp:Label ID="lblExtraPaging" Font-Size="Smaller" runat="server"></asp:Label>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                            </td>
-                                        </tr>
-                                    </table>
                                 </td>
                             </tr>
                         </table>

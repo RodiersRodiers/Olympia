@@ -164,6 +164,7 @@ Partial Class K_Wedstrijd
                     myhandeling.Aantal = txtInsertaantal.Text
                     myhandeling.Gebruiker.IdLid = cbopsteller.SelectedValue
 
+
                     Try
                         i_Result = myBalOlympia.Inserthandeling(myhandeling)
                         If i_Result > 0 Then
@@ -270,6 +271,12 @@ Partial Class K_Wedstrijd
                 lblgroep.Text = myhandeling.Discipline.beschrijving
                 lblinfo.Text = myhandeling.Info
                 lblAantal.Text = myhandeling.Aantal
+                If myhandeling.Validate = False Then
+                    e.Item.BackColor = Drawing.Color.LightPink
+                Else
+                    e.Item.FindControl("lnkbEdit").Visible = False
+                    e.Item.FindControl("btnDelete").Visible = False
+                End If
             End If
 
             If e.Item.ItemType = ListItemType.EditItem Then

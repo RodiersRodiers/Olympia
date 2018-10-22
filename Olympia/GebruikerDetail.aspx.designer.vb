@@ -444,4 +444,13 @@ Partial Public Class GebruikerDetail
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents btnOverzicht As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''btnrapport control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnrapport As Global.System.Web.UI.WebControls.Button
 End Class
