@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register TagPrefix="uc3" TagName="UCMessage" Src="CustomMessage.ascx" %>
+<%@ Register TagPrefix="uc1" TagName="UCScript" Src="CustomScriptControl.ascx" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head runat="server">
@@ -24,7 +25,6 @@
         </div>
     </div>
     <nav class="w3-sidebar w3-bar-block w3-white w3-top" style="z-index: 3; width: 250px" id="mySidebar">
-
         <div class="w3-padding-16 w3-large w3-text-grey" style="font-weight: bold">
             <img src="images/figuur vrouw.png" alt="" style="width: 230px; height: 200px;" />
             <a onclick="window.location.href='Start.aspx'" href="#" class="w3-bar-item w3-button">Mijn Profiel</a>
@@ -32,8 +32,9 @@
 
             <a onclick="w3.toggleShow('#vergoeding')" href="#" class="w3-button w3-block w3-left-align" visible="false" runat="server" id="myBtn1">Vergoedingen <i class="fa fa-caret-down"></i></a>
             <div id="vergoeding" visible="false" runat="server" class="w3-bar-block w3-padding-large w3-medium ">
-                <a id="v_jury" runat="server" onclick="window.location.href='K_Jury.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Jury</a>
-                <a id="v_wedstrijd" runat="server" onclick="window.location.href='K_Wedstrijd.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Wedstrijd</a>
+                <a id="v_lesgever" runat="server" onclick="window.location.href='K_Lesgever.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Lesgever</a>
+                
+                <a id="v_wedstrijd" runat="server" onclick="window.location.href='K_Wedstrijd.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Wedstrijd/Jury</a>
                 <a id="v_verplaatsing" runat="server" onclick="window.location.href='K_Verplaatsing.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Verplaatsing</a>
                 <a id="v_andere" runat="server" onclick="window.location.href='K_Andere.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Andere</a>
             </div>
@@ -62,7 +63,7 @@
                 <tr>
                     <td style="vertical-align: top; align-content: center">
                         <!-- CONTENT -->
-                        <table style="width: 85%">
+                        <table style="width: 90">
                             <tr>
                                 <td style="align-content: flex-start">
                                     <asp:Label ID="lblPageTitle" CssClass="PageTitle" runat="server"></asp:Label>
@@ -98,7 +99,7 @@
                                                 <br />
                                             </td>
                                             <td><font color="blue"> Info = Locatie, niveau, aantal deelnemers vd club <br />
-                                             Indien wedstrijd over meerdere dagen -> per dag een nieuwe lijn aanmaken</font></td>
+                                             Wedstrijd over meerdere dagen = per dag nieuwe lijn</font></td>
                                         </tr>
                                     </table>
                                 </td>
@@ -112,11 +113,11 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <asp:DataGrid ID="dtgrid" RowHighlightColor="#cccccc" RowClickColor="#ebe0fb"
+                                    <asp:DataGrid ID="dtgDataGrid" RowHighlightColor="#cccccc" RowClickColor="#ebe0fb"
                                         RowSelectionEnabled="true" HorizontalAlign="Center" RowClickEventCommandName="dtgDataGrid_EditCommand"
                                         runat="server" AutoGenerateColumns="false" CssClass="navigateable" GridLines="Horizontal"
-                                        Width="75%" PageSize="40" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false"
-                                        PagerStyle-Visible="false" AllowSorting="true" AlternatingItemStyle-BackColor="Wheat" DataKeyField="ID" ShowFooter="false">
+                                        Width="85%" PageSize="40" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false"
+                                        PagerStyle-Visible="false" AllowSorting="true" AlternatingItemStyle-BackColor="WhiteSmoke" DataKeyField="ID" ShowFooter="false">
                                         <ItemStyle CssClass="datagridItem" />
                                         <FooterStyle CssClass="datagridItem" />
                                         <Columns>
@@ -138,27 +139,48 @@
                                                 </FooterTemplate>
                                             </asp:TemplateColumn>
 
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="ID_Discipline" HeaderText="Groep">
+                                                <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderText="a.id">
                                                 <ItemTemplate>
-                                                    <asp:Label ID="lblgroep" Width="200" runat="server"></asp:Label>
+                                                    <asp:Label ID="lblAard" Width="100" runat="server"></asp:Label>
                                                 </ItemTemplate>
                                                 <EditItemTemplate>
-                                                    <asp:DropDownList ID="drpEditGroep" Width="200" runat="server"></asp:DropDownList>
+                                                    <asp:DropDownList ID="drpEditAard" Width="100" runat="server"></asp:DropDownList>
                                                 </EditItemTemplate>
                                                 <FooterTemplate>
-                                                    <asp:DropDownList ID="drpInsertGroep" Width="200" runat="server"></asp:DropDownList>
+                                                    <asp:DropDownList ID="drpInsertAard" Width="100" runat="server"></asp:DropDownList>
                                                 </FooterTemplate>
                                             </asp:TemplateColumn>
 
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-HorizontalAlign="center" ItemStyle-HorizontalAlign="Center" SortExpression="aantal" HeaderStyle-Width="70" HeaderText="Dagdelen">
+                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="d.id" HeaderText="Groep">
                                                 <ItemTemplate>
-                                                    <asp:Label ID="lblaantal" Width="50" runat="server"></asp:Label>
+                                                    <asp:Label ID="lblgroep" Width="150" runat="server"></asp:Label>
                                                 </ItemTemplate>
                                                 <EditItemTemplate>
-                                                    <asp:TextBox ID="txteditaantal" Width="50" runat="server"></asp:TextBox>
+                                                    <asp:DropDownList ID="drpEditGroep" Width="150" runat="server"></asp:DropDownList>
                                                 </EditItemTemplate>
                                                 <FooterTemplate>
-                                                    <asp:TextBox ID="txtInsertaantal" Width="50" runat="server"></asp:TextBox>
+                                                    <asp:DropDownList ID="drpInsertGroep" Width="150" runat="server"></asp:DropDownList>
+                                                </FooterTemplate>
+                                            </asp:TemplateColumn>
+
+                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-HorizontalAlign ="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="150" HeaderText="Dagdelen">
+                                                <ItemTemplate>
+                                                    VM NM AV <br />
+                                                    <asp:CheckBox ID="chkbVM" Enabled="false" runat="server" /> &nbsp;
+                                                    <asp:CheckBox ID="chkbNM" Enabled="false" runat="server" /> &nbsp;
+                                                    <asp:CheckBox ID="chkbAV" Enabled="false" runat="server" /> 
+                                                </ItemTemplate>
+                                                <EditItemTemplate>
+                                                      VM NM AV <br />
+                                                    <asp:CheckBox ID="chkbEditVM" runat="server" /> &nbsp;
+                                                    <asp:CheckBox ID="chkbEditNM" runat="server" /> &nbsp;
+                                                    <asp:CheckBox ID="chkbEditAV" runat="server" /> 
+                                                </EditItemTemplate>
+                                                <FooterTemplate>
+                                                      VM NM AV <br />
+                                                    <asp:CheckBox ID="chkbInsertVM" runat="server" /> &nbsp;
+                                                    <asp:CheckBox ID="chkbInsertNM" runat="server" /> &nbsp;
+                                                    <asp:CheckBox ID="chkbInsertAV" runat="server" /> 
                                                 </FooterTemplate>
                                             </asp:TemplateColumn>
 
@@ -193,9 +215,36 @@
                                                 </FooterTemplate>
                                             </asp:TemplateColumn>
                                         </Columns>
-                                    </asp:DataGrid>
+                                        </asp:DataGrid>
                                     <br />
                                     <br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top">
+                                    <table width="100%" class="datagridPaging">
+                                        <tr>
+                                            <td style="width: 33%; vertical-align:middle;align-content:flex-start" class="datagridBleuHook">&nbsp;
+                                            </td>
+                                            <td align="center" valign="bottom">
+                                                <asp:ImageButton ID="imgbFirstbutton" ImageUrl="../images/firstRecord.gif" CommandArgument="0"
+                                                    runat="server" OnClick="PagerButtonClick" />&nbsp;&nbsp;
+                                        <asp:ImageButton ID="imgbPrevbutton" ImageUrl="../images/previousRecord.gif" CommandArgument="prev"
+                                            runat="server" OnClick="PagerButtonClick" />&nbsp;&nbsp;
+                                        <asp:ImageButton ID="imgbNextbutton" ImageUrl="../images/nextRecord.gif" CommandArgument="next"
+                                            runat="server" OnClick="PagerButtonClick" />&nbsp;&nbsp;
+                                        <asp:ImageButton ID="imgbLastbutton" ImageUrl="../images/lastRecord.gif" CommandArgument="last"
+                                            runat="server" OnClick="PagerButtonClick" />
+                                            </td>
+                                            <td style="width: 33%; vertical-align: bottom" align="right" class="datagridBleuHook">&nbsp;
+                                <asp:Label ID="lblPagina" Font-Size="Smaller" runat="server"></asp:Label>&nbsp;
+                                        <asp:TextBox ID="txtCurrentPage" Font-Size="Smaller" Width="20" MaxLength="4" runat="server"></asp:TextBox>
+
+                                                <asp:Label ID="lblExtraPaging" Font-Size="Smaller" runat="server"></asp:Label>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>

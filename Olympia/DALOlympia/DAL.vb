@@ -63,7 +63,7 @@ Namespace DALOlympia
             Dim i As Integer = 0
             Dim strOutput As New StringBuilder
             Dim myParameter As MySqlParameter
-            If Not myListParamColl Is Nothing Then
+            If myListParamColl.Count > 0 Then
                 Dim s() As String = strSQL.Split("?")
                 For j As Integer = 0 To s.Count - 2
                     myParameter = ReturnParameter(i)
@@ -76,6 +76,7 @@ Namespace DALOlympia
                 Next
             Else
                 strOutput.Append(strSQL)
+                Debug.WriteLine("SQL -> " & strSQL.ToString)
             End If
             Debug.WriteLine("SQL -> " & strOutput.ToString)
         End Sub
@@ -190,6 +191,15 @@ Namespace DALOlympia
             Dim strconnectionExcel As String = Builder.ConnectionString
             Return strconnectionExcel
 
+        End Function
+
+
+        Public Shared Function GetEmptyDate() As Date
+            Return New Date(1900, 1, 1)
+        End Function
+
+        Public Shared Function ConvertDatumToDbTimeStamp(ByVal dteIn As DateTime) As String
+            Return dteIn.ToString("yyyy-MM-dd HH:mm:ss")
         End Function
 
     End Class

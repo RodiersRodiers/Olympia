@@ -16,7 +16,8 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MyType>Custom</MyType>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>44300</IISExpressSSLPort>
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
@@ -159,6 +160,7 @@
     <Content Include="GebruikersRapport.aspx" />
     <Content Include="GebruikersRechten.aspx" />
     <Content Include="CustomScriptControl.ascx" />
+    <Content Include="K_Lesgever.aspx" />
     <Content Include="OlympiaService.asmx" />
     <Content Include="K_Andere.aspx" />
     <Content Include="K_Verplaatsing.aspx" />
@@ -168,7 +170,7 @@
     <Content Include="Importgegevens.aspx" />
     <Content Include="Meldingen.aspx" />
     <Content Include="Aanwezigheden.aspx" />
-    <Content Include="BeheerAndere.aspx" />
+    <Content Include="BeheerVergoedingen.aspx" />
     <Content Include="GebruikerDetail.aspx" />
     <Content Include="BeheerDisciplines.aspx" />
     <Content Include="BeheerLogging.aspx" />
@@ -255,6 +257,13 @@
       <DependentUpon>CustomScriptControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="K_Lesgever.aspx.designer.vb">
+      <DependentUpon>K_Lesgever.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="K_Lesgever.aspx.vb">
+      <DependentUpon>K_Lesgever.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="OlympiaService.asmx.vb">
       <DependentUpon>OlympiaService.asmx</DependentUpon>
       <SubType>Component</SubType>
@@ -320,11 +329,11 @@
       <DependentUpon>Aanwezigheden.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="BeheerAndere.aspx.designer.vb">
-      <DependentUpon>BeheerAndere.aspx</DependentUpon>
+    <Compile Include="BeheerVergoedingen.aspx.designer.vb">
+      <DependentUpon>BeheerVergoedingen.aspx</DependentUpon>
     </Compile>
-    <Compile Include="BeheerAndere.aspx.vb">
-      <DependentUpon>BeheerAndere.aspx</DependentUpon>
+    <Compile Include="BeheerVergoedingen.aspx.vb">
+      <DependentUpon>BeheerVergoedingen.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="GebruikerDetail.aspx.designer.vb">

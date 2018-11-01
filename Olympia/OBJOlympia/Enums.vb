@@ -8,6 +8,7 @@ Namespace OBJOlympia
         Wedstrijd = 12
         Verplaatsingen = 13
         Andere = 14
+        Lesgever = 15
     End Enum
 
     Public Enum Disciplines

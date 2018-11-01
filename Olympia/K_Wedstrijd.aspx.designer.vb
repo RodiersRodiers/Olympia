@@ -50,13 +50,13 @@ Partial Public Class K_Wedstrijd
     Protected WithEvents vergoeding As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''v_jury control.
+    '''v_lesgever control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents v_jury As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    Protected WithEvents v_lesgever As Global.System.Web.UI.HtmlControls.HtmlAnchor
     
     '''<summary>
     '''v_wedstrijd control.
@@ -221,11 +221,74 @@ Partial Public Class K_Wedstrijd
     Protected WithEvents btnINSERTCancel As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
-    '''dtgrid control.
+    '''dtgDataGrid control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dtgrid As Global.System.Web.UI.WebControls.DataGrid
+    Protected WithEvents dtgDataGrid As Global.System.Web.UI.WebControls.DataGrid
+    
+    '''<summary>
+    '''imgbFirstbutton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgbFirstbutton As Global.System.Web.UI.WebControls.ImageButton
+    
+    '''<summary>
+    '''imgbPrevbutton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgbPrevbutton As Global.System.Web.UI.WebControls.ImageButton
+    
+    '''<summary>
+    '''imgbNextbutton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgbNextbutton As Global.System.Web.UI.WebControls.ImageButton
+    
+    '''<summary>
+    '''imgbLastbutton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgbLastbutton As Global.System.Web.UI.WebControls.ImageButton
+    
+    '''<summary>
+    '''lblPagina control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblPagina As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''txtCurrentPage control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtCurrentPage As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''lblExtraPaging control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblExtraPaging As Global.System.Web.UI.WebControls.Label
 End Class

@@ -1,20 +1,20 @@
 Imports Olympia.OBJOlympia
 Imports Olympia.BALOlympia
 
-Partial Class K_Jury
+Partial Class K_Lesgever
     Inherits Page
     Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
-    Private strDeleteConfirm, strDeleteError, strDeleteOk, strDBError, strPagingTot, strHeaderTitle, strPagingRecordsFound, strInsertBeschrijving, strUpdateOk, _
+    Private strDeleteConfirm, strDeleteError, strDeleteOk, strDBError, strPagingTot, strHeaderTitle, strPagingRecordsFound, strInsertBeschrijving, strUpdateOk,
         strUpdateError, strPrimaryKeyAllreadyExists, strAddError, strAddOk, strCompleted As String
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
-        fillUpStringFields()
+        FillUpStringFields()
 
         If Not IsPostBack Then
             Dim idlid As Integer = Session("gebruiker")
             ViewState("ID_Lid") = idlid
-            loadDBPicklists()
+            LoadDBPicklists()
             validateToegang()
             LoadData(txtfilter.Text)
         End If
@@ -22,7 +22,7 @@ Partial Class K_Jury
 
     Private Sub validateToegang()
         Dim i As Integer
-        i = myBalOlympia.CheckToegangGebruiker(Session("Gebruiker"), 11) 'Jury
+        i = myBalOlympia.CheckToegangGebruiker(Session("Gebruiker"), 15) 'Lesgever
         Select Case i
             Case Rechten_Lid.schrijven
                 'do nothing
@@ -32,7 +32,7 @@ Partial Class K_Jury
             Case Else
                 Dim mylogging As New Logging
                 mylogging.Gebruiker.IdLid = Session("Gebruiker")
-                mylogging.EventLogging = "Vergoeding Jury toegang geweigerd (Domein: 11) "
+                mylogging.EventLogging = "Vergoeding Lesgevers toegang geweigerd (Domein: 15) "
                 mylogging.Type = TypeLogging.vergoedingen
                 myBalOlympia.InsertLogging(mylogging)
                 Response.Redirect("start.aspx?Error=AD")
@@ -66,26 +66,28 @@ Partial Class K_Jury
                 cbopsteller.Enabled = False
                 cbopsteller.SelectedValue = Session("Gebruiker")
         End Select
+
     End Sub
 
-    Private Sub loadDBPicklists()
+    Private Sub LoadDBPicklists()
         Try
             'Trainers
             cbopsteller.DataSource = myBalOlympia.GetGebruikers("naam ASC", "")
             cbopsteller.DataTextField = "Naam"
             cbopsteller.DataValueField = "IDLid"
             cbopsteller.DataBind()
+            'cbopsteller.Items.Insert(0, New ListItem("", 0)) 'Standaard invoegen op de eerste plaats
 
         Catch ex As Exception
             'UC_Message.setMessage(strDbError, CustomMessage.TypeMessage.Fataal, ex)
         End Try
     End Sub
 
-    Private Sub fillUpStringFields() 'Fill up the strings
-        Dim mygebruiker As Gebruikers = myBalOlympia.getGebruiker(Session("Gebruiker"))
+    Private Sub FillUpStringFields() 'Fill up the strings
+        Dim mygebruiker As Gebruikers = myBalOlympia.GetGebruiker(Session("Gebruiker"))
         lbllogin.Text = "u bent ingelogd als " & mygebruiker.Naam & " " & mygebruiker.Voornaam & " (" & mygebruiker.GebDatum & ")"
 
-        lblPageTitle.Text = "Jury"
+        lblPageTitle.Text = "Vergoeding Lesgever"
         lblFilter.Text = "Filter"
         lblOpsteller.Text = "Gebruiker"
         btnFilter.Text = "Zoek"
@@ -135,7 +137,7 @@ Partial Class K_Jury
 
     Private Sub LoadData(ByVal strfilter As String)
         Try
-            Dim myList As List(Of Handelingen) = myBalOlympia.Gethandelingbygebruiker(getDefaultSortExpressionLabel1, cbopsteller.SelectedValue, strfilter)
+            Dim myList As List(Of Handelingen) = myBalOlympia.GetLesgeverVergoedingbygebruiker(getDefaultSortExpressionLabel1, cbopsteller.SelectedValue, Vergoedingen.Lesgever, strfilter)
             dtgrid.DataSource = myList
             dtgrid.DataBind()
             ResultCount = myList.Count
@@ -154,31 +156,32 @@ Partial Class K_Jury
                     Dim drpInsertGroep As DropDownList = e.Item.FindControl("drpInsertGroep")
                     Dim txtInsertInfo As HtmlTextArea = e.Item.FindControl("txtInsertInfo")
                     Dim txtInsertaantal As TextBox = e.Item.FindControl("txtInsertaantal")
-                    myhandeling.Discipline.Id = drpInsertGroep.SelectedValue
-                    myhandeling.Groep.Id = 0
-                    myhandeling.Actie.Id = Vergoedingen.Jury
+                    myhandeling.Groep.Id = drpInsertGroep.SelectedValue
+                    myhandeling.Discipline.Id = myBalOlympia.GetDisciplinebyGroep(drpInsertGroep.SelectedValue)
+                    myhandeling.Actie.Id = Vergoedingen.Lesgever
                     myhandeling.Datum = txtInsertDatum.Text
                     myhandeling.Info = txtInsertInfo.InnerText
-                    myhandeling.Aantal = txtInsertaantal.text
-                    myhandeling.Gebruiker.IdLid = ViewState("ID_Lid")
+                    myhandeling.Aantal = txtInsertaantal.Text
+                    myhandeling.Gebruiker.IdLid = cbopsteller.SelectedValue
+
 
                     Try
                         i_Result = myBalOlympia.Inserthandeling(myhandeling)
-                        dtgrid.ShowFooter = False
-                        btnINSERTAdd.Visible = True
-                        btnINSERTCancel.Visible = False
-                        LoadData(txtfilter.Text)
-                        If i_Result >= 1 Then
+                        If i_Result > 0 Then
                             ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strAddOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
-
+                            Dim mylogging As New Logging
+                            mylogging.Gebruiker.IdLid = Session("Gebruiker")
+                            mylogging.EventLogging = "Insert Vergoeding Lesgever - " & txtInsertDatum.Text & ": " & drpInsertGroep.Text
+                            mylogging.Type = 2
+                            myBalOlympia.InsertLogging(mylogging)
+                            LoadData(txtfilter.Text)
                         End If
                     Catch ex As Exception
-                        If ex.Message = "119" Then
-                            ' UC_Message.setMessage(strDuplicate, CustomMessage.TypeMessage.Fout, New Exception("VALIDATION"))
-                        Else
-                            '  UC_Message.setMessage(strAddError, CustomMessage.TypeMessage.Fout, New Exception("VALIDATION"))
-                        End If
+
                     End Try
+                    dtgrid.ShowFooter = False
+                    btnINSERTAdd.Visible = True
+                    btnINSERTCancel.Visible = False
 
                 Case "DELETE"
                     Dim myhandeling As New Handelingen
@@ -193,7 +196,7 @@ Partial Class K_Jury
                             ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strAddOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
                             Dim mylogging As New Logging
                             mylogging.Gebruiker.IdLid = Session("Gebruiker")
-                            mylogging.EventLogging = "Delete Vergoeding Jury - " & txtDatum.Text & ": " & txtInfo.Text
+                            mylogging.EventLogging = "Delete Vergoeding Lesgever - " & txtDatum.Text & ": " & txtInfo.Text
                             mylogging.Type = 2
                             myBalOlympia.InsertLogging(mylogging)
                             LoadData(txtfilter.Text)
@@ -203,39 +206,35 @@ Partial Class K_Jury
                     End Try
 
                 Case "UPDATE"
-
                     Dim myhandeling As New Handelingen
                     myhandeling.Id = dtgrid.DataKeys(e.Item.ItemIndex)
-
                     Dim txteditDatum As TextBox = e.Item.FindControl("txteditDatum")
-                        Dim drpEditGroep As DropDownList = e.Item.FindControl("drpEditGroep")
-                        Dim txteditinfo As HtmlTextArea = e.Item.FindControl("txteditinfo")
-                        Dim txteditaantal As TextBox = e.Item.FindControl("txteditaantal")
-
-                        myhandeling.Datum = txteditDatum.Text
-                        myhandeling.Discipline.Id = drpEditGroep.SelectedValue
-                        myhandeling.Groep.Id = 0
-                        myhandeling.Actie.Id = Vergoedingen.Jury
-                        myhandeling.Info = txteditinfo.InnerText
-                        myhandeling.Aantal = txteditaantal.Text
-                        Try
-                            i_Result = myBalOlympia.Updatehandeling(myhandeling)
+                    Dim drpEditGroep As DropDownList = e.Item.FindControl("drpEditGroep")
+                    Dim txteditinfo As HtmlTextArea = e.Item.FindControl("txteditinfo")
+                    Dim txteditaantal As TextBox = e.Item.FindControl("txteditaantal")
+                    myhandeling.Datum = txteditDatum.Text
+                    myhandeling.Groep.Id = drpEditGroep.SelectedValue
+                    myhandeling.Discipline.Id = myBalOlympia.GetDisciplinebyGroep(drpEditGroep.SelectedValue)
+                    myhandeling.Actie.Id = Vergoedingen.Lesgever
+                    myhandeling.Info = txteditinfo.InnerText
+                    myhandeling.Aantal = txteditaantal.Text
+                    Try
+                        i_Result = myBalOlympia.Updatehandeling(myhandeling)
                         If i_Result > 0 Then
                             ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strAddOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
                             Dim mylogging As New Logging
                             mylogging.Gebruiker.IdLid = Session("Gebruiker")
-                            mylogging.EventLogging = "Update Vergoeding Jury - " & txteditDatum.Text & ": " & txteditinfo.InnerText
+                            mylogging.EventLogging = "Update Vergoeding Lesgever - " & txteditDatum.Text & ": " & drpEditGroep.Text
                             mylogging.Type = 2
                             myBalOlympia.InsertLogging(mylogging)
                         End If
                     Catch ex As Exception
-                            ' UC_Message.setMessage(strUpdateError, CustomMessage.TypeMessage.Fataal, ex)
-                        End Try
+                        ' UC_Message.setMessage(strUpdateError, CustomMessage.TypeMessage.Fataal, ex)
+                    End Try
                     dtgrid.EditItemIndex = -1
                     dtgrid.ShowFooter = False
                     btnINSERTAdd.Visible = True
                     LoadData(txtfilter.Text)
-
 
                 Case "CANCEL"
                     dtgrid.EditItemIndex = -1
@@ -247,7 +246,6 @@ Partial Class K_Jury
                     dtgrid.EditItemIndex = e.Item.ItemIndex
                     LoadData(txtfilter.Text)
                     btnINSERTAdd.Visible = False
-
             End Select
 
         Catch ex As Exception
@@ -270,10 +268,10 @@ Partial Class K_Jury
                 lblId.Text = myhandeling.Id
                 lblLidID.Text = myhandeling.Gebruiker.IdLid
                 lblDatum.Text = myhandeling.Datum
-                lblgroep.Text = myhandeling.Discipline.beschrijving
+                lblgroep.Text = myhandeling.Groep.beschrijving
                 lblinfo.Text = myhandeling.Info
                 lblAantal.Text = myhandeling.Aantal
-                If myhandeling.Validate = False Then
+                If myhandeling.Validate = 0 Then
                     e.Item.BackColor = Drawing.Color.LightPink
                 Else
                     e.Item.FindControl("lnkbEdit").Visible = False
@@ -289,12 +287,12 @@ Partial Class K_Jury
                 txteditinfo.InnerText = myhandeling.Info
                 txteditaantal.Text = myhandeling.Aantal
                 Dim drpEditGroep As DropDownList = e.Item.FindControl("drpEditGroep")
-                DoFillUpDropDown(e.Item.FindControl("drpEditGroep"), myBalOlympia.getDisciplines("beschrijving").ToArray, "Id", "Beschrijving", myhandeling.Discipline.Id, "")
+                DoFillUpDropDown(e.Item.FindControl("drpEditGroep"), myBalOlympia.GetTrainingsgroepen("beschrijving").ToArray, "Id", "Beschrijving", myhandeling.Discipline.Id, "")
             End If
 
             If e.Item.ItemType = ListItemType.Footer Then
                 Dim drpInsertGroep As DropDownList = e.Item.FindControl("drpInsertGroep")
-                DoFillUpDropDown(e.Item.FindControl("drpInsertGroep"), myBalOlympia.getDisciplines("beschrijving").ToArray, "Id", "Beschrijving", "", "")
+                DoFillUpDropDown(e.Item.FindControl("drpInsertGroep"), myBalOlympia.GetTrainingsgroepen("beschrijving").ToArray, "Id", "Beschrijving", "", "")
             End If
 
         Catch ex As Exception
@@ -326,5 +324,4 @@ Partial Class K_Jury
         txtfilter.Text = ""
         LoadData(txtfilter.Text)
     End Sub
-
 End Class

@@ -28,14 +28,37 @@ Public Class LoginOlympia
             mygebruiker.IdLid = ii
             Dim i As Integer = myBalOlympia.GetAuthGebruiker(mygebruiker)
             If i > 0 Then
-                Dim mylogging As New Logging
-                mylogging.Gebruiker.IdLid = i
-                mylogging.EventLogging = "Login"
-                mylogging.Type = 1
+                Dim mygebruikers As New Gebruikers
+                mygebruikers.IdLid = i
 
-                Session("gebruiker") = i
-                myBalOlympia.InsertLogging(mylogging)
-                Response.Redirect("start.aspx", False)
+                If txtPassword.Text.Trim Like "pw" Then
+                    'verander paswoord
+                    Dim strnewpw, strconfirmpw As String
+                    strnewpw = InputBox("U dient uw paswoord te veranderen, geef een nieuw paswoord met minstens 5 karakters waarvan minstens 1 hoofdletter en 1 gewone letter en 1 cijfer :", "Verander paswoord !")
+                    If strnewpw.Length < 5 Or Not strnewpw.Contains(vbUpperCase) Then
+                        MsgBox("Paswoord voldoet niet aan de voorwaarden !", vbCritical)
+                    Else
+
+                        strconfirmpw = InputBox("Bevestig nieuw paswoord :", "Verander paswoord !")
+                        If strnewpw = strconfirmpw Then
+                            mygebruikers.Paswoord = strnewpw
+                            myBalOlympia.Changepw(mygebruikers)
+                            MsgBox("Bedankt paswoord werd aangepast !", vbInformation)
+                        Else
+                            MsgBox("Paswoorden komen niet overeen !", vbCritical)
+
+                        End If
+                    End If
+                Else
+                    Dim mylogging As New Logging
+                    mylogging.Gebruiker.IdLid = i
+                    mylogging.EventLogging = "Login"
+                    mylogging.Type = 1
+
+                    Session("gebruiker") = i
+                    myBalOlympia.InsertLogging(mylogging)
+                    Response.Redirect("start.aspx", False)
+                End If
             Else
                 MsgBox("Verkeerd paswoord !")
                 Return

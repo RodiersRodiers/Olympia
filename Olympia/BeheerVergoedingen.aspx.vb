@@ -1,18 +1,17 @@
 Imports Olympia.OBJOlympia
 Imports Olympia.BALOlympia
 
-Partial Class BeheerAndere
+Partial Class BeheerVergoedingen
     Inherits Page
     Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
-    Private strDeleteConfirm, strDeleteError, strDeleteOk, strDBError, strPagingTot, strHeaderTitle, strPagingRecordsFound, strInsertBeschrijving, strUpdateOk, _
+    Private strDeleteConfirm, strDeleteError, strDeleteOk, strDBError, strPagingTot, strHeaderTitle, strPagingRecordsFound, strInsertBeschrijving, strUpdateOk,
         strUpdateError, strPrimaryKeyAllreadyExists, strAddError, strAddOk, strCompleted As String
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         fillUpStringFields()
         If Not IsPostBack Then
             validateToegang()
-            setMultiLanguages()
         End If
     End Sub
 
@@ -52,16 +51,12 @@ Partial Class BeheerAndere
         Next
     End Sub
 
-    Private Sub setMultiLanguages()
-        lblPageTitle.Text = "Beheer > Andere"
-    End Sub
-
     Private Sub fillUpStringFields() 'Fill up the strings
-        Dim mygebruiker As Gebruikers = myBalOlympia.getGebruiker(Session("Gebruiker"))
+        Dim mygebruiker As Gebruikers = myBalOlympia.GetGebruiker(Session("Gebruiker"))
         lbllogin.Text = "u bent ingelogd als " & mygebruiker.Naam & " " & mygebruiker.Voornaam & " (" & mygebruiker.GebDatum & ")"
 
-        lblPageTitle.Text = "Beheer > Andere"
-        strHeaderTitle = "Overzicht Disciplines"
+        lblPageTitle.Text = "Beheer > Vergoedingen"
+        strHeaderTitle = "Beheer > Vergoedingen"
 
         strInsertBeschrijving = "Beschrijving Verplicht "
 

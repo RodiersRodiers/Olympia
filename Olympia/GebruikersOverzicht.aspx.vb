@@ -13,10 +13,57 @@ Partial Class GebruikersOverzicht
             Dim idlid As Integer = Request.QueryString("ID_lid")
             ViewState("ID_Lid") = idlid
             setMultiLanguages()
+            validateToegang
             LoadData(txtfilter.Text)
         End If
     End Sub
+    Private Sub validateToegang()
+        Dim i As Integer
+        i = myBalOlympia.CheckToegangGebruiker(Session("Gebruiker"), 2) 'gebruikers
+        Select Case i
+            Case Rechten_Lid.schrijven
+                'do nothing
 
+            Case Rechten_Lid.lezen
+
+            Case Else
+                Dim mylogging As New Logging
+                mylogging.Gebruiker.IdLid = Session("Gebruiker")
+                mylogging.EventLogging = "Gebruikersoverzicht toegang geweigerd (Domein: 2) "
+                mylogging.Type = TypeLogging.vergoedingen
+                myBalOlympia.InsertLogging(mylogging)
+                Response.Redirect("start.aspx?Error=AD")
+        End Select
+
+        Dim mygebruikersToegangen As New List(Of Rechten)
+        mygebruikersToegangen = myBalOlympia.CheckToegangenGebruiker(Session("Gebruiker"))
+        Dim mytoegang As New Rechten
+        For Each mytoegang In mygebruikersToegangen
+            Select Case mytoegang.Actie.beschrijving
+                Case "pagAanwezigheden"
+                    pagAanwezigheden.Visible = True
+                Case "pagGebruikers"
+                    pagGebruikers.Visible = True
+                Case "pagBeheer"
+                    myBtn2.Visible = True
+                    beheer.Visible = True
+                Case "pagVergoedingen"
+                    myBtn1.Visible = True
+                    vergoeding.Visible = True
+            End Select
+        Next
+
+        i = myBalOlympia.CheckToegangGebruiker(Session("Gebruiker"), 20) 'beheerder
+        Select Case i
+            Case Rechten_Lid.schrijven
+                'do nothing
+            Case Rechten_Lid.lezen
+
+            Case Else
+
+        End Select
+
+    End Sub
     Private Sub fillUpStringFields() 'Fill up the strings
         lblPageTitle.Text = "Gebruikers > Overzicht"
         lblFilter.Text = "Filter"
@@ -66,7 +113,7 @@ Partial Class GebruikersOverzicht
 
     Private Function getDefaultSortExpression() As String
         If ViewState("SortExpression") Is Nothing Then
-            Return "datum asc"
+            Return "datum desc"
         Else
             Return String.Format("{0} {1}", ViewState("SortExpression"), ViewState("SortDirection"))
         End If
@@ -74,7 +121,8 @@ Partial Class GebruikersOverzicht
 
     Private Sub LoadData(ByVal myfilter As String)
         Try
-            Dim myList As List(Of Handelingen) = myBalOlympia.GetAllhandelingenbygebruiker(getDefaultSortExpression, ViewState("ID_Lid"), myfilter)
+            Dim EmptyDate As Date = New Date(1900, 1, 1)
+            Dim myList As List(Of Handelingen) = myBalOlympia.GetAllhandelingenbygebruiker(getDefaultSortExpression, ViewState("ID_Lid"), myfilter, EmptyDate, EmptyDate)
             dtgDataGrid.DataSource = myList
             dtgDataGrid.DataBind()
             ResultCount = myList.Count
@@ -90,17 +138,16 @@ Partial Class GebruikersOverzicht
                 Case "INSERT"
                     Dim myhandeling As New Handelingen
                     Dim txtInsertDatum As TextBox = e.Item.FindControl("txtInsertDatum")
+                    Dim drpInsertDiscipline As DropDownList = e.Item.FindControl("drpInsertDiscipline")
                     Dim drpInsertGroep As DropDownList = e.Item.FindControl("drpInsertGroep")
                     Dim drpInsertActie As DropDownList = e.Item.FindControl("drpInsertActie")
                     Dim txtInsertInfo As HtmlTextArea = e.Item.FindControl("txtInsertInfo")
                     Dim txtInsertaantal As TextBox = e.Item.FindControl("txtInsertaantal")
                     Dim txtInsertBedrag As TextBox = e.Item.FindControl("txtInsertBedrag")
-
                     Dim chkbInsertok As CheckBox = e.Item.FindControl("chkbInsertok")
                     myhandeling.Validate = chkbInsertok.Checked
-
-                    myhandeling.Discipline.Id = drpInsertGroep.SelectedValue
-                    myhandeling.Groep.Id = 0
+                    myhandeling.Discipline.Id = drpInsertDiscipline.SelectedValue
+                    myhandeling.Groep.Id = drpInsertGroep.SelectedValue
                     myhandeling.Actie.Id = drpInsertActie.SelectedValue
                     myhandeling.Datum = txtInsertDatum.Text
                     myhandeling.Info = txtInsertInfo.InnerText
@@ -139,6 +186,7 @@ Partial Class GebruikersOverzicht
                     Try
                         Dim myhandeling As New Handelingen
                         Dim txteditDatum As TextBox = e.Item.FindControl("txteditDatum")
+                        Dim drpEditDiscipline As DropDownList = e.Item.FindControl("drpEditDiscipline")
                         Dim drpEditGroep As DropDownList = e.Item.FindControl("drpEditGroep")
                         Dim drpEditActie As DropDownList = e.Item.FindControl("drpEditActie")
                         Dim txteditinfo As HtmlTextArea = e.Item.FindControl("txteditinfo")
@@ -147,9 +195,9 @@ Partial Class GebruikersOverzicht
                         Dim chkbEditok As CheckBox = e.Item.FindControl("chkbEditok")
                         myhandeling.Id = dtgDataGrid.DataKeys(e.Item.ItemIndex)
                         myhandeling.Datum = txteditDatum.Text
-                        myhandeling.Discipline.Id = drpEditGroep.SelectedValue
+                        myhandeling.Discipline.Id = drpEditDiscipline.SelectedValue
+                        myhandeling.Groep.Id = drpEditGroep.SelectedValue
                         myhandeling.Actie.Id = drpEditActie.SelectedValue
-                        myhandeling.Groep.Id = 0
                         myhandeling.Info = txteditinfo.InnerText
                         myhandeling.Aantal = txteditaantal.Text
                         myhandeling.Bedrag = txteditBedrag.Text
@@ -193,6 +241,7 @@ Partial Class GebruikersOverzicht
                 Dim lblLidID As Label = e.Item.FindControl("lblLidID")
                 Dim lblDatum As Label = e.Item.FindControl("lblDatum")
                 Dim lblgroep As Label = e.Item.FindControl("lblgroep")
+                Dim lbldiscipline As Label = e.Item.FindControl("lbldiscipline")
                 Dim lblActie As Label = e.Item.FindControl("lblActie")
                 Dim lblinfo As Label = e.Item.FindControl("lblinfo")
                 Dim lblAantal As Label = e.Item.FindControl("lblAantal")
@@ -203,7 +252,8 @@ Partial Class GebruikersOverzicht
                 lblId.Text = myhandeling.Id
                 lblLidID.Text = myhandeling.Gebruiker.IdLid
                 lblDatum.Text = myhandeling.Datum
-                lblgroep.Text = myhandeling.Discipline.beschrijving
+                lbldiscipline.Text = myhandeling.Discipline.beschrijving
+                lblgroep.Text = myhandeling.Groep.beschrijving
                 lblActie.Text = myhandeling.Actie.beschrijving
                 lblinfo.Text = myhandeling.Info
                 lblBedrag.Text = myhandeling.Bedrag
@@ -212,7 +262,7 @@ Partial Class GebruikersOverzicht
                     lblok.Text = "X"
                 Else
                     lblok.Text = " "
-                    e.Item.BackColor = Drawing.Color.Red
+                    e.Item.BackColor = Drawing.Color.LightPink
                 End If
             End If
 
@@ -228,14 +278,18 @@ Partial Class GebruikersOverzicht
                 txteditBedrag.Text = myhandeling.Bedrag
                 chkbEditok.Checked = myhandeling.Validate
                 Dim drpEditGroep As DropDownList = e.Item.FindControl("drpEditGroep")
+                Dim drpEditdiscipline As DropDownList = e.Item.FindControl("drpEditdiscipline")
                 Dim drpEditActie As DropDownList = e.Item.FindControl("drpEditActie")
-                DoFillUpDropDown(e.Item.FindControl("drpEditGroep"), myBalOlympia.getDisciplines("beschrijving").ToArray, "Id", "Beschrijving", myhandeling.Discipline.Id, "")
+                DoFillUpDropDown(e.Item.FindControl("drpEditdiscipline"), myBalOlympia.GetDisciplines("beschrijving").ToArray, "Id", "Beschrijving", myhandeling.Discipline.Id, "")
+                DoFillUpDropDown(e.Item.FindControl("drpEditGroep"), myBalOlympia.GetTrainingsgroepen("beschrijving").ToArray, "Id", "Beschrijving", myhandeling.Groep.Id, "")
                 DoFillUpDropDown(e.Item.FindControl("drpEditActie"), myBalOlympia.getActies("beschrijving").ToArray, "Id", "Beschrijving", myhandeling.Actie.Id, "")
             End If
 
             If e.Item.ItemType = ListItemType.Footer Then
+                Dim drpInsertDiscipline As DropDownList = e.Item.FindControl("drpInsertDiscipline")
+                DoFillUpDropDown(e.Item.FindControl("drpInsertDiscipline"), myBalOlympia.GetDisciplines("beschrijving").ToArray, "Id", "Beschrijving", "", "")
                 Dim drpInsertGroep As DropDownList = e.Item.FindControl("drpInsertGroep")
-                DoFillUpDropDown(e.Item.FindControl("drpInsertGroep"), myBalOlympia.getDisciplines("beschrijving").ToArray, "Id", "Beschrijving", "", "")
+                DoFillUpDropDown(e.Item.FindControl("drpInsertGroep"), myBalOlympia.GetTrainingsgroepen("beschrijving").ToArray, "Id", "Beschrijving", "", "")
                 Dim drpInsertActie As DropDownList = e.Item.FindControl("drpInsertActie")
                 DoFillUpDropDown(e.Item.FindControl("drpEditActie"), myBalOlympia.getActies("beschrijving").ToArray, "Id", "Beschrijving", "", "")
             End If

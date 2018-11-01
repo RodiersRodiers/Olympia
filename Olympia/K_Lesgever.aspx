@@ -1,9 +1,8 @@
-﻿<%@ Page Language="VB" ValidateRequest="true" AutoEventWireup="false" CodeBehind="GebruikersOverzicht.aspx.vb" Inherits="Olympia.GebruikersOverzicht" %>
+﻿<%@ Page Language="VB" ValidateRequest="true" AutoEventWireup="false" CodeBehind="K_Lesgever.aspx.vb" Inherits="Olympia.K_Lesgever" %>
 
 <!DOCTYPE html>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register TagPrefix="uc3" TagName="UCMessage" Src="CustomMessage.ascx" %>
-<%@ Register TagPrefix="uc1" TagName="UCScript" Src="CustomScriptControl.ascx" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head runat="server">
@@ -21,8 +20,8 @@
         <font size="32"><b>Curato</b></font>
         <br />
         <div class="w3-right">
-        <asp:Label ID="lbllogin" runat="server"></asp:Label>&nbsp;
-            </div>
+            <asp:Label ID="lbllogin" runat="server"></asp:Label>&nbsp;
+        </div>
     </div>
     <nav class="w3-sidebar w3-bar-block w3-white w3-top" style="z-index: 3; width: 250px" id="mySidebar">
         <div class="w3-padding-16 w3-large w3-text-grey" style="font-weight: bold">
@@ -33,8 +32,7 @@
             <a onclick="w3.toggleShow('#vergoeding')" href="#" class="w3-button w3-block w3-left-align" visible="false" runat="server" id="myBtn1">Vergoedingen <i class="fa fa-caret-down"></i></a>
             <div id="vergoeding" visible="false" runat="server" class="w3-bar-block w3-padding-large w3-medium ">
                 <a id="v_lesgever" runat="server" onclick="window.location.href='K_Lesgever.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Lesgever</a>
-                <a id="v_jury" runat="server" onclick="window.location.href='K_Jury.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Jury</a>
-                <a id="v_wedstrijd" runat="server" onclick="window.location.href='K_Wedstrijd.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Wedstrijd</a>
+                <a id="v_wedstrijd" runat="server" onclick="window.location.href='K_Wedstrijd.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Wedstrijd/Jury</a>
                 <a id="v_verplaatsing" runat="server" onclick="window.location.href='K_Verplaatsing.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Verplaatsing</a>
                 <a id="v_andere" runat="server" onclick="window.location.href='K_Andere.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Andere</a>
             </div>
@@ -46,7 +44,7 @@
                 <a onclick="window.location.href='beheerdisciplines.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Trainingsgroepen</a>
                 <a onclick="window.location.href='beheerlogging.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Logging</a>
                 <a onclick="window.location.href='Importgegevens.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Import</a>
-                                <a onclick="window.location.href='BeheerVergoedingen.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Vergoedingen</a>      </div>
+                               <a onclick="window.location.href='BeheerVergoedingen.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Vergoedingen</a>    </div>
 
             <a onclick="window.location.href='meldingen.aspx'" href="#" class="w3-bar-item w3-button">Meldingen</a>
             <a onclick="window.location.href='login.aspx'" href="#" class="w3-bar-item w3-button w3-padding">Uitloggen</a>
@@ -56,28 +54,30 @@
     <!-- !PAGE CONTENT! -->
     <div class="w3-main" style="margin-left: 250px">
         <form id="form1" runat="server">
-            <uc1:UCScript ID="myUCScript1" runat="server" />
+            <asp:ScriptManager ID="ScriptManager1" EnablePageMethods="true" runat="server"></asp:ScriptManager>
+
             <table style="width: 100%">
                 <tr>
                     <td style="vertical-align: top; align-content: center">
                         <!-- CONTENT -->
                         <table style="width: 85%">
                             <tr>
-                                <td colspan="4">
+                                <td style="align-content: flex-start">
                                     <asp:Label ID="lblPageTitle" CssClass="PageTitle" runat="server"></asp:Label>
                                     <br />
-                                      <asp:Label ID="lblgebruiker" runat="server"></asp:Label>
+                                    <br />
                                 </td>
                             </tr>
                             <tr>
-                               <td>
-                                    <table>
+                                <td>
+                                    <table >
                                         <tr>
                                             <td>
-                                                <asp:Button ID="btnINSERTAdd" runat="server" />
-                                                <asp:Button ID="btnINSERTCancel" Visible="false" runat="server" />
-                                                                                              </td>
-                                            <td width="320"></td>
+                                                <asp:Label ID="lblOpsteller" Font-Bold="true" runat="server" />
+                                                &nbsp;
+                                                <asp:ComboBox ID="cbopsteller" AutoPostBack="true" runat="server"></asp:ComboBox>
+                                            </td>
+                                            <td width="50"></td>
                                             <td style="background-color: ButtonFace">
                                                 <asp:Label ID="lblFilter" runat="server"></asp:Label>
                                                 <asp:TextBox ID="txtfilter" runat="server"></asp:TextBox>&nbsp;
@@ -87,6 +87,16 @@
                                                 <asp:Button ID="btnWisFilter" runat="server" />
                                                 <br />
                                             </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="2" >
+                                                <asp:Button ID="btnINSERTAdd" runat="server" />
+                                                <asp:Button ID="btnINSERTCancel" Visible="false" runat="server" />
+                                                <br />
+                                            </td>
+                                            <td><font color="blue"> Info = persoonlijke opmerking <br />
+                                             Min = bijv. 1.5 uur = 90</font></td>
                                         </tr>
                                     </table>
                                 </td>
@@ -100,17 +110,17 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <asp:DataGrid ID="dtgDataGrid" RowHighlightColor="#cccccc" RowClickColor="#ebe0fb"
+                                    <asp:DataGrid ID="dtgrid" RowHighlightColor="#cccccc" RowClickColor="#ebe0fb"
                                         RowSelectionEnabled="true" HorizontalAlign="Center" RowClickEventCommandName="dtgDataGrid_EditCommand"
                                         runat="server" AutoGenerateColumns="false" CssClass="navigateable" GridLines="Horizontal"
-                                        Width="95%" PageSize="40" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false"
+                                        Width="75%" PageSize="40" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false"
                                         PagerStyle-Visible="false" AllowSorting="true" AlternatingItemStyle-BackColor="WhiteSmoke" DataKeyField="ID" ShowFooter="false">
                                         <ItemStyle CssClass="datagridItem" />
                                         <FooterStyle CssClass="datagridItem" />
                                         <Columns>
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-Width="80" SortExpression="Datum" HeaderText="Datum">
+                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-Width="85" SortExpression="Datum" HeaderText="Datum">
                                                 <ItemTemplate>
-                                                    <asp:Label ID="lblDatum" Width="80" runat="server"></asp:Label>
+                                                    <asp:Label ID="lblDatum" Width="85" runat="server"></asp:Label>
                                                     <asp:Label ID="lblLidID" Visible="false" runat="server"></asp:Label>
                                                     <asp:Label ID="lblID" Visible="false" runat="server"></asp:Label>
                                                 </ItemTemplate>
@@ -126,75 +136,28 @@
                                                 </FooterTemplate>
                                             </asp:TemplateColumn>
 
-                                              <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="A.id" HeaderText="Actie">
+                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="ID_Discipline" HeaderText="Groep">
                                                 <ItemTemplate>
-                                                    <asp:Label ID="lblActie" Width="100" runat="server"></asp:Label>
+                                                    <asp:Label ID="lblgroep" Width="200" runat="server"></asp:Label>
                                                 </ItemTemplate>
                                                 <EditItemTemplate>
-                                                    <asp:DropDownList ID="drpEditActie" Width="100" runat="server"></asp:DropDownList>
+                                                    <asp:DropDownList ID="drpEditGroep" Width="200" runat="server"></asp:DropDownList>
                                                 </EditItemTemplate>
                                                 <FooterTemplate>
-                                                    <asp:DropDownList ID="drpInsertActie" Width="100" runat="server"></asp:DropDownList>
-                                                </FooterTemplate>
-                                            </asp:TemplateColumn>
-                                                                                        <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="D.id" HeaderText="discipline">
-                                                <ItemTemplate>
-                                                    <asp:Label ID="lbldiscipline" Width="100" runat="server"></asp:Label>
-                                                </ItemTemplate>
-                                                <EditItemTemplate>
-                                                    <asp:DropDownList ID="drpEditdiscipline" Width="100" runat="server"></asp:DropDownList>
-                                                </EditItemTemplate>
-                                                <FooterTemplate>
-                                                    <asp:DropDownList ID="drpInsertdiscipline" Width="100" runat="server"></asp:DropDownList>
-                                                </FooterTemplate>
-                                            </asp:TemplateColumn>
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="T.id" HeaderText="Groep">
-                                                <ItemTemplate>
-                                                    <asp:Label ID="lblgroep" Width="100" runat="server"></asp:Label>
-                                                </ItemTemplate>
-                                                <EditItemTemplate>
-                                                    <asp:DropDownList ID="drpEditGroep" Width="100" runat="server"></asp:DropDownList>
-                                                </EditItemTemplate>
-                                                <FooterTemplate>
-                                                    <asp:DropDownList ID="drpInsertGroep" Width="100" runat="server"></asp:DropDownList>
+                                                    <asp:DropDownList ID="drpInsertGroep" Width="200" runat="server"></asp:DropDownList>
                                                 </FooterTemplate>
                                             </asp:TemplateColumn>
 
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" ItemStyle-HorizontalAlign="Center" SortExpression="aantal" HeaderStyle-Width="60" HeaderText="Aantal">
+                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-HorizontalAlign="center" ItemStyle-HorizontalAlign="Center" SortExpression="aantal" HeaderStyle-Width="70" HeaderText="Min">
                                                 <ItemTemplate>
-                                                    <asp:Label ID="lblaantal" Width="60" runat="server"></asp:Label>
+                                                    <asp:Label ID="lblaantal" Width="50" runat="server"></asp:Label>
                                                 </ItemTemplate>
                                                 <EditItemTemplate>
-                                                    <asp:TextBox ID="txteditaantal" Width="60" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txteditaantal" Width="50" runat="server"></asp:TextBox>
                                                 </EditItemTemplate>
                                                 <FooterTemplate>
-                                                    <asp:TextBox ID="txtInsertaantal" Width="60" runat="server"></asp:TextBox>
+                                                    <asp:TextBox ID="txtInsertaantal" Width="50" runat="server"></asp:TextBox>
                                                 </FooterTemplate>
-                                            </asp:TemplateColumn>
-
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-HorizontalAlign="center" ItemStyle-HorizontalAlign="Center" SortExpression="bedrag" HeaderStyle-Width="60" HeaderText="Bedrag">
-                                                <ItemTemplate>
-                                                    <asp:Label ID="lblBedrag" Width="60" runat="server"></asp:Label>
-                                                </ItemTemplate>
-                                                <EditItemTemplate>
-                                                    <asp:TextBox ID="txteditBedrag" Width="60" runat="server"></asp:TextBox>
-                                                </EditItemTemplate>
-                                                <FooterTemplate>
-                                                    <asp:TextBox ID="txtInsertBedrag" Width="60" runat="server"></asp:TextBox>
-                                                </FooterTemplate>
-                                            </asp:TemplateColumn>
-
-                                                <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-HorizontalAlign="center" ItemStyle-HorizontalAlign="Center" SortExpression="Validate" HeaderStyle-Width="60" HeaderText="OK">
-                                                <ItemTemplate>
-                                                    <asp:Label ID="lblok"  Width="60" Font-Bold="true" runat="server">
-                                            </asp:Label>
-                                        </ItemTemplate>
-                                        <EditItemTemplate>
-                                            <asp:CheckBox ID="chkbEditok" runat="server" />
-                                        </EditItemTemplate>
-                                        <FooterTemplate>
-                                            <asp:CheckBox ID="chkbInsertok" runat="server" />
-                                        </FooterTemplate>
                                             </asp:TemplateColumn>
 
                                             <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="info" HeaderStyle-Width="300" HeaderText="Info">
@@ -220,7 +183,7 @@
                                             </asp:TemplateColumn>
                                             <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" Visible="true" HeaderStyle-Width="60" ItemStyle-HorizontalAlign="Center">
                                                 <ItemTemplate>
-                                                    <asp:ConfirmButtonExtender ID="cbeDelete" runat="server" TargetControlID="btnDelete" ConfirmText="Bent u zeker dat u deze discipline wilt verwijderen ?" />
+                                                    <asp:ConfirmButtonExtender ID="cbeDelete" runat="server" TargetControlID="btnDelete" ConfirmText="Bent u zeker dat u deze rij wilt verwijderen ?" />
                                                     <asp:LinkButton ID="btnDelete" ToolTip="Verwijderen" runat="server" Text="<img src='../images/database_delete.png' alt='Delete' border=0>" CommandName="DELETE" />
                                                 </ItemTemplate>
                                                 <FooterTemplate>
@@ -231,7 +194,7 @@
                                     </asp:DataGrid>
                                     <br />
                                     <br />
-                                </td>
+                                    </td>
                             </tr>
                             <tr>
                                 <td valign="top">
@@ -266,7 +229,7 @@
             </table>
         </form>
     </div>
-   <div class="w3-black w3-center w3-padding-16">
+     <div class="w3-black w3-center w3-padding-16">
         <b>Powered by Graecas Inc.</b>   
         <div class="w3-right">
 <b onclick="window.location.href='privacy.aspx'" >Privacy</b>&nbsp;

@@ -53,7 +53,6 @@ Namespace DALOlympia
         Public Function Checkemail(ByVal mygebruiker As Gebruikers) As Integer
             strSQL.Remove(0, strSQL.Length)
             strSQL.Append("SELECT ID_Lid from Gebruikers where email = ? ")
-
             Try
                 DoParameterAdd("@Email", mygebruiker.Email, MySqlDbType.String)
                 i = ExecuteDALScalar(strSQL.ToString)
@@ -63,6 +62,18 @@ Namespace DALOlympia
             Return i
         End Function
 
+        Public Function Changepw(ByVal mygebruiker As Gebruikers) As Integer
+            strSQL.Remove(0, strSQL.Length)
+            strSQL.Append("update Gebruikers set password = ? where ID_Lid = ? ")
+            Try
+                DoParameterAdd("@Paswoord", mygebruiker.Paswoord, MySqlDbType.String)
+                DoParameterAdd("@IdLid", mygebruiker.IdLid, MySqlDbType.Int32)
+                i = ExecuteDALScalar(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return i
+        End Function
         Public Function GetAuthGebruiker(ByVal mygebruiker As Gebruikers) As Integer
             strSQL.Remove(0, strSQL.Length)
             strSQL.Append("SELECT * from Gebruikers where ID_Lid = ? and password = ? ")
@@ -171,14 +182,14 @@ Namespace DALOlympia
                 strSQL.Append("left join handelingen h on h.ID_Lid = g.ID_Lid ")
                 strSQL.Append("where 1=1 ")
                 If intopen = -1 Then
-                    strSQL.Append(" AND h.validate = 0 ")
+                    strSQL.Append(" AND valid = 0 ")
                 End If
                 If Not strfilter Like "" Then
                     strSQL.Append(" AND (naam like ? or voornaam like ? ")
                     DoParameterAdd("@naam", "%" & strfilter & "%", MySqlDbType.String)
                     DoParameterAdd("@voornaam", "%" & strfilter & "%", MySqlDbType.String)
                 End If
-                strSQL.Append("group by g.ID_Lid ")
+                strSQL.Append("group by g.ID_Lid, valid ")
                 strSQL.Append("order by " & sort)
                 mydt = ReturnDALDataTable(strSQL.ToString)
             Catch ex As Exception
@@ -325,6 +336,32 @@ Namespace DALOlympia
 
             Return mydt
         End Function
+        Public Function GetActieIdbyBeschrijving(ByVal strbeschrijving As String) As Integer
+            Dim i As Integer = 0
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT ID from PIC_Acties where beschrijving = ? ")
+                DoParameterAdd("@strbeschrijving", strbeschrijving, MySqlDbType.String)
+                i = ExecuteDALScalar(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return i
+        End Function
+        Public Function GetActiesWedJur(ByVal sort As String) As DataTable
+            Dim mydt As New DataTable
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT * from PIC_Acties where id = 11 or id = 12 order by " & sort)
+
+                mydt = ReturnDALDataTable(strSQL.ToString)
+
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return mydt
+        End Function
 
 #Region "Disciplines"
 
@@ -340,6 +377,35 @@ Namespace DALOlympia
             End Try
 
             Return mydt
+        End Function
+
+        Public Function GetDisciplineIdbyBeschrijving(ByVal strbeschrijving As String) As Integer
+            Dim i As Integer = 0
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT ID from PIC_Disciplines where active=1 and beschrijving = ? ")
+                DoParameterAdd("@strbeschrijving", strbeschrijving, MySqlDbType.String)
+                i = ExecuteDALScalar(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return i
+        End Function
+
+
+        Public Function GetDisciplinebyGroep(ByVal idgroep As Integer) As Integer
+            Dim i As Integer = 0
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT ID_Discipline from PIC_trainingsgroepen where active=1 and ID = ? ")
+                DoParameterAdd("@ID", idgroep, MySqlDbType.Int32)
+                i = ExecuteDALScalar(strSQL.ToString)
+
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return i
         End Function
 
         Public Function InsertDiscipline(ByVal myDiscipline As pic_Disciplines) As Integer
@@ -403,7 +469,7 @@ Namespace DALOlympia
             Return mydt
         End Function
 
-        Public Function GetAllTrainingsGroepen(ByVal sort As String) As DataTable
+        Public Function GetTrainingsgroepen(ByVal sort As String) As DataTable
             Dim mydt As New DataTable
             Try
                 strSQL.Remove(0, strSQL.Length)
@@ -555,17 +621,27 @@ Namespace DALOlympia
 
 #Region "Handelingen"
 
-        Public Function GetAllhandelingenbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As DataTable
+        Public Function GetAllhandelingenbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String, ByVal datumlaag As Date, ByVal datumhoog As Date) As DataTable
             Dim mydt As New DataTable
+            Dim dtEmptyDate As Date = ConvertDatumToDbTimeStamp(GetEmptyDate)
             Try
                 strSQL.Remove(0, strSQL.Length)
-                strSQL.Append("SELECT H.ID, h.Validate,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal ")
+                strSQL.Append("SELECT H.ID, valid,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal, ")
+                strSQL.Append("T.id as groepid, t.beschrijving as groepbeschrijving ")
                 strSQL.Append("from Handelingen H ")
                 strSQL.Append("join gebruikers G on H.id_lid=G.id_lid ")
                 strSQL.Append("left join PIC_Disciplines D on D.id = H.id_Discipline ")
+                strSQL.Append("left join PIC_Trainingsgroepen T on T.id=H.id_groep ")
                 strSQL.Append("left join PIC_acties A on A.id=H.id_actie ")
                 strSQL.Append("where h.id_lid = ? ")
                 DoParameterAdd("@idlid", idlid, MySqlDbType.Int32)
+
+                If Not datumlaag = dtEmptyDate Then
+                    strSQL.Append("And ( h.datum between ? and ?) ")
+                    DoParameterAdd("@datumlaag", datumlaag.ToString("yyyy-MM-dd"), MySqlDbType.String)
+                    DoParameterAdd("@datumhoog", datumhoog.ToString("yyyy-MM-dd"), MySqlDbType.String)
+                End If
+
                 If Not strfilter Like "" Then
                     strSQL.Append(" AND h.info like ? ")
                     DoParameterAdd("@info", "%" & strfilter & "%", MySqlDbType.String)
@@ -580,11 +656,67 @@ Namespace DALOlympia
             Return mydt
         End Function
 
-        Public Function Gethandelingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal idactie As Integer, ByVal strfilter As String) As DataTable
+        Public Function Gethandelingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As DataTable
             Dim mydt As New DataTable
             Try
                 strSQL.Remove(0, strSQL.Length)
-                strSQL.Append("SELECT H.ID, h.Validate,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving,T.id as groepid,t.beschrijving as groepbeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal ")
+                strSQL.Append("SELECT dagvm, dagnm, dagav, H.ID, valid,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving,T.id as groepid,t.beschrijving as groepbeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal ")
+                strSQL.Append("from Handelingen H ")
+                strSQL.Append("join gebruikers G on H.id_lid=G.id_lid ")
+                strSQL.Append("left join PIC_Trainingsgroepen T on T.id=H.id_groep ")
+                strSQL.Append("left join PIC_Disciplines D on D.id = H.id_Discipline ")
+                strSQL.Append("left join PIC_acties A on A.id=H.id_actie ")
+                strSQL.Append("where 1=1  ")
+                strSQL.Append("AND h.id_lid = ? ")
+                DoParameterAdd("@idlid", idlid, MySqlDbType.Int32)
+                If Not strfilter Like "" Then
+                    strSQL.Append(" AND h.info like ? ")
+                    DoParameterAdd("@info", "%" & strfilter & "%", MySqlDbType.String)
+                End If
+
+                strSQL.Append("order by " & sort)
+                mydt = ReturnDALDataTable(strSQL.ToString)
+
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return mydt
+        End Function
+
+        Public Function GethandelingWedJurybygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As DataTable
+            Dim mydt As New DataTable
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT dagvm, dagnm, dagav, H.ID, valid,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving,T.id as groepid,t.beschrijving as groepbeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal ")
+                strSQL.Append("from Handelingen H ")
+                strSQL.Append("join gebruikers G on H.id_lid=G.id_lid ")
+                strSQL.Append("left join PIC_Trainingsgroepen T on T.id=H.id_groep ")
+                strSQL.Append("left join PIC_Disciplines D on D.id = H.id_Discipline ")
+                strSQL.Append("left join PIC_acties A on A.id=H.id_actie ")
+                strSQL.Append("where 1=1 AND (h.ID_actie = 11 or H.ID_actie =12) ")
+                strSQL.Append("AND h.id_lid = ? ")
+                DoParameterAdd("@idlid", idlid, MySqlDbType.Int32)
+                If Not strfilter Like "" Then
+                    strSQL.Append(" AND h.info like ? ")
+                    DoParameterAdd("@info", "%" & strfilter & "%", MySqlDbType.String)
+                End If
+
+                strSQL.Append("order by " & sort)
+                mydt = ReturnDALDataTable(strSQL.ToString)
+
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return mydt
+        End Function
+
+        Public Function GetLesgeverVergoedingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal idactie As Integer, ByVal strfilter As String) As DataTable
+            Dim mydt As New DataTable
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT H.ID, valid,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving,T.id as groepid,t.beschrijving as groepbeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal ")
                 strSQL.Append("from Handelingen H ")
                 strSQL.Append("join gebruikers G on H.id_lid=G.id_lid ")
                 strSQL.Append("left join PIC_Trainingsgroepen T on T.id=H.id_groep ")
@@ -608,12 +740,11 @@ Namespace DALOlympia
 
             Return mydt
         End Function
-
         Public Function InsertHandeling(ByVal myHandeling As Handelingen) As Integer
             Dim i As Integer = 0
             Try
                 strSQL.Remove(0, strSQL.Length)
-                strSQL.Append("INSERT INTO Handelingen (ID_Lid, Datum, ID_Groep,ID_Discipline, ID_Actie, Info, Aantal) values (?,?,?,?,?,?,?)")
+                strSQL.Append("INSERT INTO Handelingen (ID_Lid, Datum, ID_Groep,ID_Discipline, ID_Actie, Info, Aantal, dagvm, dagnm, dagav) values (?,?,?,?,?,?,?,?,?,?)")
                 DoParameterAdd("@ID_Lid", myHandeling.Gebruiker.IdLid, MySqlDbType.Int32)
                 DoParameterAdd("@Datum", myHandeling.Datum, MySqlDbType.Date)
                 DoParameterAdd("@ID_Groep", myHandeling.Groep.Id, MySqlDbType.Int32)
@@ -621,6 +752,9 @@ Namespace DALOlympia
                 DoParameterAdd("@ID_Actie", myHandeling.Actie.Id, MySqlDbType.Int32)
                 DoParameterAdd("@Info", myHandeling.Info, MySqlDbType.String)
                 DoParameterAdd("@Aantal", myHandeling.Aantal, MySqlDbType.String)
+                DoParameterAdd("@dagvm", myHandeling.dagVM, MySqlDbType.Int32)
+                DoParameterAdd("@dagnm", myHandeling.dagNM, MySqlDbType.Int32)
+                DoParameterAdd("@dagav", myHandeling.dagAV, MySqlDbType.Int32)
                 i = ExecuteDALCommand(strSQL.ToString)
             Catch ex As Exception
                 Throw
@@ -632,12 +766,15 @@ Namespace DALOlympia
             Dim i As Integer = 0
             Try
                 strSQL.Remove(0, strSQL.Length)
-                strSQL.Append("UPDATE Handelingen SET Datum = ?, ID_Discipline = ? ,ID_Groep= ? ,Info= ? , aantal= ?, validate=? where ID = ? ")
+                strSQL.Append("UPDATE Handelingen SET Datum = ?, ID_Discipline = ? ,ID_Groep= ? ,Info= ? , aantal= ?, dagvm=?,dagnm=?,dagav=?, valid=? where ID = ? ")
                 DoParameterAdd("@Datum", myHandeling.Datum, MySqlDbType.Date)
                 DoParameterAdd("@ID_Discipline", myHandeling.Discipline.Id, MySqlDbType.Int32)
                 DoParameterAdd("@ID_Groep", myHandeling.Groep.Id, MySqlDbType.Int32)
                 DoParameterAdd("@Info", myHandeling.Info, MySqlDbType.String)
                 DoParameterAdd("@Aantal", myHandeling.Aantal, MySqlDbType.String)
+                DoParameterAdd("@dagvm", myHandeling.dagVM, MySqlDbType.Int32)
+                DoParameterAdd("@dagnm", myHandeling.dagNM, MySqlDbType.Int32)
+                DoParameterAdd("@dagav", myHandeling.dagAV, MySqlDbType.Int32)
                 DoParameterAdd("@validate", myHandeling.Validate, MySqlDbType.Int32)
                 DoParameterAdd("@ID", myHandeling.Id, MySqlDbType.Int32)
                 i = ExecuteDALCommand(strSQL.ToString)
@@ -729,6 +866,71 @@ Namespace DALOlympia
             End Try
             Return i
         End Function
+#End Region
+
+#Region "vergoedingen"
+
+
+        Public Function GetLesgeverVergoeding(ByVal sort As String) As DataTable
+            Dim mydt As New DataTable
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT naam, voornaam, gebdatum,r.bedrag,r.datum, T.id as groepid,T.beschrijving as groepbeschrijving, ")
+                strSQL.Append("G.ID_Lid as gebruikerid  ")
+                strSQL.Append("from vergoedingen r")
+                strSQL.Append("left join gebruikers G on R.id_lid=G.id_lid ")
+                strSQL.Append("left join PIC_Trainingsgroepen T on T.id=R.id_groep ")
+                mydt = ReturnDALDataTable(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return mydt
+        End Function
+
+        Public Function InsertLesgeverVergoeding(ByVal myvergoeding As Lesgeververgoeding) As Integer
+            Dim i As Integer = 0
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("INSERT into vergoedingen (ID_Lid, datum, bedrag) VALUES (?,?,?)")
+                DoParameterAdd("@ID_Lid", myvergoeding.Gebruiker.IdLid, MySqlDbType.Int32)
+                DoParameterAdd("@datum", myvergoeding.Datum, MySqlDbType.Date)
+                DoParameterAdd("@bedrag", myvergoeding.Bedrag, MySqlDbType.Decimal)
+                i = ExecuteDALCommand(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return i
+        End Function
+
+        Public Function UpdateLesgeverVergoeding(ByVal myvergoeding As Lesgeververgoeding) As Integer
+            Dim i As Integer = 0
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("Update vergoedingen set ID_Lid=?, datum=?, bedrag=? where id = ?")
+                DoParameterAdd("@ID_Lid", myvergoeding.Gebruiker.IdLid, MySqlDbType.Int32)
+                DoParameterAdd("@datum", myvergoeding.Datum, MySqlDbType.Date)
+                DoParameterAdd("@bedrag", myvergoeding.Bedrag, MySqlDbType.Decimal)
+                DoParameterAdd("@ID", myvergoeding.Id, MySqlDbType.Int32)
+                i = ExecuteDALCommand(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return i
+        End Function
+
+        Public Function DeleteLesgeverVergoeding(ByVal myvergoeding As Lesgeververgoeding) As Integer
+            Dim i As Integer = 0
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("Delete from vergoedingen where id = ?")
+                DoParameterAdd("@ID", myvergoeding.Id, MySqlDbType.Int32)
+                i = ExecuteDALCommand(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return i
+        End Function
+
 #End Region
 
     End Class

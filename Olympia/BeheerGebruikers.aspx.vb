@@ -114,7 +114,7 @@ Public Class BeheerGebruikers
                 Dim mygebruikersOverzicht As Gebruikers = e.Item.DataItem
                 Dim lnkOpen As LinkButton = e.Item.FindControl("lnkOpen")
 
-                If Not mygebruikersOverzicht.VolledigeNaam Like "" Then
+                If mygebruikersOverzicht.Validate = 0 Then
                     e.Item.BackColor = Drawing.Color.Pink
                 End If
 

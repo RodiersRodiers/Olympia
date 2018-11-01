@@ -12,9 +12,59 @@ Public Class GebruikersRechten
             Dim idlid As Integer = Request.QueryString("ID_lid")
             ViewState("ID_Lid") = idlid
             setMultiLanguages()
+            validateToegang()
             LoadData(idlid)
         End If
     End Sub
+
+    Private Sub validateToegang()
+        Dim i As Integer
+        i = myBalOlympia.CheckToegangGebruiker(Session("Gebruiker"), 2) 'gebruikers
+        Select Case i
+            Case Rechten_Lid.schrijven
+                'do nothing
+
+            Case Rechten_Lid.lezen
+
+            Case Else
+                Dim mylogging As New Logging
+                mylogging.Gebruiker.IdLid = Session("Gebruiker")
+                mylogging.EventLogging = "Gebruikersrechten toegang geweigerd (Domein: 2) "
+                mylogging.Type = TypeLogging.vergoedingen
+                myBalOlympia.InsertLogging(mylogging)
+                Response.Redirect("start.aspx?Error=AD")
+        End Select
+
+        Dim mygebruikersToegangen As New List(Of Rechten)
+        mygebruikersToegangen = myBalOlympia.CheckToegangenGebruiker(Session("Gebruiker"))
+        Dim mytoegang As New Rechten
+        For Each mytoegang In mygebruikersToegangen
+            Select Case mytoegang.Actie.beschrijving
+                Case "pagAanwezigheden"
+                    pagAanwezigheden.Visible = True
+                Case "pagGebruikers"
+                    pagGebruikers.Visible = True
+                Case "pagBeheer"
+                    myBtn2.Visible = True
+                    beheer.Visible = True
+                Case "pagVergoedingen"
+                    myBtn1.Visible = True
+                    vergoeding.Visible = True
+            End Select
+        Next
+
+        i = myBalOlympia.CheckToegangGebruiker(Session("Gebruiker"), 20) 'beheerder
+        Select Case i
+            Case Rechten_Lid.schrijven
+                'do nothing
+            Case Rechten_Lid.lezen
+
+            Case Else
+
+        End Select
+
+    End Sub
+
     Private Sub fillUpStringFields()
 
     End Sub
@@ -166,7 +216,7 @@ Public Class GebruikersRechten
             Dim drpEditActie As DropDownList = e.Item.FindControl("drpEditActie")
             Dim drpEditToelating As DropDownList = e.Item.FindControl("drpEditToelating")
             Dim myrecht As Rechten = e.Item.DataItem
-            DoFillUpDropDown(e.Item.FindControl("drpEditGroep"), myBalOlympia.getAllTrainingsgroepen("beschrijving").ToArray, "Id", "Beschrijving", myrecht.Groep.Id, "")
+            DoFillUpDropDown(e.Item.FindControl("drpEditGroep"), myBalOlympia.GetTrainingsgroepen("beschrijving").ToArray, "Id", "Beschrijving", myrecht.Groep.Id, "")
             DoFillUpDropDown(e.Item.FindControl("drpEditActie"), myBalOlympia.getActies("beschrijving").ToArray, "Id", "Beschrijving", myrecht.Actie.Id, "")
 
             drpEditToelating.Items.Clear()
@@ -181,7 +231,7 @@ Public Class GebruikersRechten
             Dim drpInsertGroep As DropDownList = e.Item.FindControl("drpInsertGroep")
             Dim drpInsertActie As DropDownList = e.Item.FindControl("drpInsertActie")
             Dim drpInsertToelating As DropDownList = e.Item.FindControl("drpInsertToelating")
-            DoFillUpDropDown(e.Item.FindControl("drpInsertGroep"), myBalOlympia.getAllTrainingsgroepen("beschrijving").ToArray, "Id", "Beschrijving", "", "")
+            DoFillUpDropDown(e.Item.FindControl("drpInsertGroep"), myBalOlympia.GetTrainingsgroepen("beschrijving").ToArray, "Id", "Beschrijving", "", "")
             DoFillUpDropDown(e.Item.FindControl("drpInsertActie"), myBalOlympia.getActies("beschrijving").ToArray, "Id", "Beschrijving", "", "")
 
             drpInsertToelating.Items.Clear()

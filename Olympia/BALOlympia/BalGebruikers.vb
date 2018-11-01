@@ -28,15 +28,26 @@ Namespace BALOlympia
             Dim myDate As New Date(1900, 1, 1)
             Return myDate
         End Function
-        Public Function GetAuthGebruiker(ByVal mygebruiker As Gebruikers) As Integer
+        Public Function Changepw(ByVal mygebruiker As Gebruikers) As Integer
             Try
-                Return myDalGebruikers.getAuthGebruiker(mygebruiker)
+                Return myDalGebruikers.Changepw(mygebruiker)
             Catch ex As Exception
                 Throw
             Finally
 
             End Try
         End Function
+
+        Public Function GetAuthGebruiker(ByVal mygebruiker As Gebruikers) As Integer
+            Try
+                Return myDalGebruikers.GetAuthGebruiker(mygebruiker)
+            Catch ex As Exception
+                Throw
+            Finally
+
+            End Try
+        End Function
+
         Public Function Checkemail(ByVal mygebruiker As Gebruikers) As Integer
             Try
                 Return myDalGebruikers.checkemail(mygebruiker)
@@ -221,27 +232,7 @@ Namespace BALOlympia
             End Try
             Return myList
         End Function
-        Public Function GetGebruikersOpenHandeling(ByVal sort As String, ByVal filter As String, ByVal intopen As Integer) As List(Of Gebruikers)
-            Dim myList As New List(Of Gebruikers)
-            Try
-                Dim dt As DataTable = myDalGebruikers.GetGebruikersOpenHandeling(sort, filter, intopen)
-                For Each myRow As DataRow In dt.Rows
-                    Dim mygebruiker As New Gebruikers With {
-                        .Naam = myRow("Naam").ToString,
-                        .Voornaam = myRow("Voornaam").ToString,
-                        .Email = myRow("Email").ToString,
-                        .GSM = myRow("GSM").ToString,
-                        .Paswoord = myRow("Password").ToString,
-                        .IdLid = myRow("ID_Lid"),
-                        .VolledigeNaam = myRow("Validate").ToString
-                    }
-                    myList.Add(mygebruiker)
-                Next
-            Catch ex As Exception
-                Throw
-            End Try
-            Return myList
-        End Function
+
         Public Function GetGebruikers(ByVal sort As String, ByVal filter As String) As List(Of Gebruikers)
             Dim myList As New List(Of Gebruikers)
             Try
@@ -394,11 +385,40 @@ Namespace BALOlympia
             Try
                 Dim dt As DataTable = myDalGebruikers.getActies(sort)
                 For Each myRow As DataRow In dt.Rows
-                    Dim myactie As New pic_Acties With {
-                        .Id = myRow("Id").ToString,
-                        .beschrijving = myRow("beschrijving").ToString
-                    }
+                    Dim myactie As New pic_Acties
+                    myactie.Id = myRow("Id").ToString
+                    myactie.beschrijving = myRow("beschrijving").ToString
+                    myList.Add(myactie)
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
 
+            Return myList
+        End Function
+
+        Public Function GetActieIdbyBeschrijving(ByVal strbeschrijving As String) As Integer
+            Dim i As Integer
+
+            Try
+                i = myDalGebruikers.GetActieIdbyBeschrijving(strbeschrijving)
+
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return i
+        End Function
+
+        Public Function GetActiesWedJur(ByVal sort As String) As List(Of pic_Acties)
+            Dim myList As New List(Of pic_Acties)
+
+            Try
+                Dim dt As DataTable = myDalGebruikers.GetActiesWedJur(sort)
+                For Each myRow As DataRow In dt.Rows
+                    Dim myactie As New pic_Acties
+                    myactie.Id = myRow("Id").ToString
+                    myactie.beschrijving = myRow("beschrijving").ToString
                     myList.Add(myactie)
                 Next
             Catch ex As Exception
@@ -452,6 +472,31 @@ Namespace BALOlympia
             Return myList
         End Function
 
+        Public Function GetDisciplineIdbyBeschrijving(ByVal strbeschrijving As String) As Integer
+            Dim i As Integer
+
+            Try
+                i = myDalGebruikers.GetDisciplineIdbyBeschrijving(strbeschrijving)
+
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return i
+        End Function
+
+        Public Function GetDisciplinebyGroep(ByVal idGroep As Integer) As Integer
+            Dim i As Integer
+
+            Try
+                i = myDalGebruikers.GetDisciplinebyGroep(idGroep)
+
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return i
+        End Function
         Public Function InsertDiscipline(ByVal myDiscipline As pic_Disciplines) As Integer
             Try
                 Return myDalGebruikers.insertDiscipline(myDiscipline)
@@ -503,11 +548,11 @@ Namespace BALOlympia
             Return myList
         End Function
 
-        Public Function GetAllTrainingsgroepen(ByVal sort As String) As List(Of pic_Trainingsgroepen)
+        Public Function GetTrainingsgroepen(ByVal sort As String) As List(Of pic_Trainingsgroepen)
             Dim myList As New List(Of pic_Trainingsgroepen)
 
             Try
-                Dim dt As DataTable = myDalGebruikers.getAllTrainingsGroepen(sort)
+                Dim dt As DataTable = myDalGebruikers.GetTrainingsgroepen(sort)
                 For Each myRow As DataRow In dt.Rows
                     Dim myTrainingsgroepen As New pic_Trainingsgroepen With {
                         .Id = myRow("Id").ToString,
@@ -642,17 +687,17 @@ Namespace BALOlympia
 
 
 
-        Public Function GetAllhandelingenbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As List(Of Handelingen)
+        Public Function GetAllhandelingenbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String, ByVal datumlaag As Date, ByVal datumhoog As Date) As List(Of Handelingen)
             Dim myList As New List(Of Handelingen)
 
             Try
-                Dim dt As DataTable = myDalGebruikers.GetAllhandelingenbygebruiker(sort, idlid, strfilter)
+                Dim dt As DataTable = myDalGebruikers.GetAllhandelingenbygebruiker(sort, idlid, strfilter, datumlaag, datumhoog)
                 For Each myRow As DataRow In dt.Rows
                     Dim myhandeling As New Handelingen
                     myhandeling.Id = myRow("id")
                     myhandeling.Datum = myRow("datum")
-                    'myhandeling.Groep.Id = myRow("groepid").ToString
-                    'myhandeling.Groep.beschrijving = myRow("groepbeschrijving").ToString
+                    myhandeling.Groep.Id = myRow("groepid")
+                    myhandeling.Groep.beschrijving = myRow("groepbeschrijving").ToString
                     myhandeling.Discipline.Id = myRow("Disciplineid")
                     myhandeling.Discipline.beschrijving = myRow("Disciplinebeschrijving").ToString
                     myhandeling.Gebruiker.IdLid = myRow("gebruikerid")
@@ -663,7 +708,11 @@ Namespace BALOlympia
                     myhandeling.Info = myRow("Info").ToString
                     myhandeling.Aantal = myRow("Aantal").ToString
                     myhandeling.Bedrag = myRow("Bedrag").ToString
-                    myhandeling.Validate = myRow("Validate")
+                    If IsDBNull(myRow("valid")) Then
+                        myhandeling.Validate = 1
+                    Else
+                        myhandeling.Validate = myRow("valid")
+                    End If
                     myList.Add(myhandeling)
                 Next
             Catch ex As Exception
@@ -672,11 +721,68 @@ Namespace BALOlympia
 
             Return myList
         End Function
-        Public Function Gethandelingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal idactie As Integer, ByVal strfilter As String) As List(Of Handelingen)
+
+        Public Function GetGebruikersOpenHandeling(ByVal sort As String, ByVal filter As String, ByVal intopen As Integer) As List(Of Gebruikers)
+            Dim myList As New List(Of Gebruikers)
+
+            Try
+                Dim dt As DataTable = myDalGebruikers.GetGebruikersOpenHandeling(sort, filter, intopen)
+                For Each myRow As DataRow In dt.Rows
+                    Dim mygebruiker As New Gebruikers
+                    mygebruiker.Naam = myRow("Naam").ToString
+                    mygebruiker.Voornaam = myRow("Voornaam").ToString
+                    mygebruiker.Email = myRow("Email").ToString
+                    mygebruiker.GSM = myRow("GSM").ToString
+                    mygebruiker.IdLid = myRow("ID_Lid")
+                    If IsDBNull(myRow("valid")) Then
+                        mygebruiker.Validate = 1
+                    Else
+                        mygebruiker.Validate = myRow("valid")
+                    End If
+                    myList.Add(mygebruiker)
+                Next
+
+            Catch ex As Exception
+                Throw
+            End Try
+            Return myList
+        End Function
+
+        Public Function GetLesgeverVergoedingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal idactie As Integer, ByVal strfilter As String) As List(Of Handelingen)
             Dim myList As New List(Of Handelingen)
 
             Try
-                Dim dt As DataTable = myDalGebruikers.Gethandelingbygebruiker(sort, idlid, idactie, strfilter)
+                Dim dt As DataTable = myDalGebruikers.GetLesgeverVergoedingbygebruiker(sort, idlid, idactie, strfilter)
+                For Each myRow As DataRow In dt.Rows
+                    Dim myhandeling As New Handelingen
+                    myhandeling.Id = myRow("id")
+                    myhandeling.Datum = myRow("datum")
+                    myhandeling.Discipline.Id = myRow("Disciplineid")
+                    myhandeling.Discipline.beschrijving = myRow("Disciplinebeschrijving").ToString
+                    myhandeling.Groep.Id = myRow("GroepId").ToString
+                    myhandeling.Groep.beschrijving = myRow("GroepBeschrijving").ToString
+                    myhandeling.Gebruiker.IdLid = myRow("gebruikerid")
+                    myhandeling.Gebruiker.Naam = myRow("Naam").ToString
+                    myhandeling.Gebruiker.Voornaam = myRow("Voornaam").ToString
+                    myhandeling.Actie.Id = myRow("actieid")
+                    myhandeling.Actie.beschrijving = myRow("actiebeschrijving").ToString
+                    myhandeling.Info = myRow("Info").ToString
+                    myhandeling.Aantal = myRow("Aantal").ToString
+                    myhandeling.Validate = myRow("Valid")
+                    myList.Add(myhandeling)
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return myList
+        End Function
+
+        Public Function Gethandelingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As List(Of Handelingen)
+            Dim myList As New List(Of Handelingen)
+
+            Try
+                Dim dt As DataTable = myDalGebruikers.Gethandelingbygebruiker(sort, idlid, strfilter)
                 For Each myRow As DataRow In dt.Rows
                     Dim myhandeling As New Handelingen
                     myhandeling.Id = myRow("id")
@@ -690,7 +796,10 @@ Namespace BALOlympia
                     myhandeling.Actie.beschrijving = myRow("actiebeschrijving").ToString
                     myhandeling.Info = myRow("Info").ToString
                     myhandeling.Aantal = myRow("Aantal").ToString
-                    myhandeling.Validate = myRow("Validate")
+                    myhandeling.dagVM = myRow("dagvm").ToString
+                    myhandeling.dagNM = myRow("dagNM").ToString
+                    myhandeling.dagAV = myRow("dagAV").ToString
+                    myhandeling.Validate = myRow("Valid")
                     myList.Add(myhandeling)
                 Next
             Catch ex As Exception
@@ -699,6 +808,39 @@ Namespace BALOlympia
 
             Return myList
         End Function
+
+        Public Function GethandelingWedJurybygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As List(Of Handelingen)
+            Dim myList As New List(Of Handelingen)
+
+            Try
+                Dim dt As DataTable = myDalGebruikers.GethandelingWedJurybygebruiker(sort, idlid, strfilter)
+                For Each myRow As DataRow In dt.Rows
+                    Dim myhandeling As New Handelingen
+                    myhandeling.Id = myRow("id")
+                    myhandeling.Datum = myRow("datum")
+                    myhandeling.Discipline.Id = myRow("Disciplineid")
+                    myhandeling.Discipline.beschrijving = myRow("Disciplinebeschrijving").ToString
+                    myhandeling.Gebruiker.IdLid = myRow("gebruikerid")
+                    myhandeling.Gebruiker.Naam = myRow("Naam").ToString
+                    myhandeling.Gebruiker.Voornaam = myRow("Voornaam").ToString
+                    myhandeling.Actie.Id = myRow("actieid")
+                    myhandeling.Actie.beschrijving = myRow("actiebeschrijving").ToString
+                    myhandeling.Info = myRow("Info").ToString
+                    myhandeling.Aantal = myRow("Aantal").ToString
+                    myhandeling.dagVM = myRow("dagvm").ToString
+                    myhandeling.dagNM = myRow("dagNM").ToString
+                    myhandeling.dagAV = myRow("dagAV").ToString
+                    myhandeling.Validate = myRow("Valid")
+                    myList.Add(myhandeling)
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return myList
+        End Function
+
+
         Public Function Inserthandeling(ByVal myhandeling As Handelingen) As Integer
             Try
                 Return myDalGebruikers.insertHandeling(myhandeling)
@@ -721,6 +863,57 @@ Namespace BALOlympia
         Public Function Deletehandeling(ByVal myhandeling As Handelingen) As Integer
             Try
                 Return myDalGebruikers.DeleteHandeling(myhandeling)
+            Catch ex As Exception
+                Throw ex
+            Finally
+            End Try
+        End Function
+#End Region
+
+#Region "Vergoedingen"
+        Public Function GetLesgeverVergoeding(ByVal sort As String) As List(Of Lesgeververgoeding)
+            Dim myList As New List(Of Lesgeververgoeding)
+
+            Try
+                Dim dt As DataTable = myDalGebruikers.GetLesgeverVergoeding(sort)
+                For Each myRow As DataRow In dt.Rows
+                    Dim myvergoeding As New Lesgeververgoeding
+                    myvergoeding.Id = myRow("Id").ToString
+                    myvergoeding.Gebruiker.IdLid = myRow("beschrijving").ToString
+                    myvergoeding.Bedrag = myRow("beschrijving").ToString
+                    myvergoeding.Datum = myRow("active").ToString
+
+
+                    myList.Add(myvergoeding)
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return myList
+        End Function
+
+        Public Function InsertLesgeverVergoeding(ByVal myvergoeding As Lesgeververgoeding) As Integer
+            Try
+                Return myDalGebruikers.InsertLesgeverVergoeding(myvergoeding)
+            Catch ex As Exception
+                Throw ex
+            Finally
+            End Try
+        End Function
+
+        Public Function UpdateLesgeverVergoeding(ByVal myvergoeding As Lesgeververgoeding) As Integer
+            Try
+                Return myDalGebruikers.UpdateLesgeverVergoeding(myvergoeding)
+            Catch ex As Exception
+                Throw ex
+            Finally
+            End Try
+        End Function
+
+        Public Function DeleteLesgeverVergoeding(ByVal myvergoeding As Lesgeververgoeding) As Integer
+            Try
+                Return myDalGebruikers.DeleteLesgeverVergoeding(myvergoeding)
             Catch ex As Exception
                 Throw ex
             Finally

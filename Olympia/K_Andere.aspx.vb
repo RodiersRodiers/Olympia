@@ -107,7 +107,7 @@ Partial Class K_Andere
 
     Private Sub LoadData(ByVal strfilter As String)
         Try
-            Dim myList As List(Of Handelingen) = myBalOlympia.Gethandelingbygebruiker(getDefaultSortExpressionLabel1, ViewState("ID_Lid"), Vergoedingen.Andere, strfilter)
+            Dim myList As List(Of Handelingen) = myBalOlympia.Gethandelingbygebruiker(getDefaultSortExpressionLabel1, ViewState("ID_Lid"), strfilter)
             dtgrid.DataSource = myList
             dtgrid.DataBind()
             ResultCount = myList.Count

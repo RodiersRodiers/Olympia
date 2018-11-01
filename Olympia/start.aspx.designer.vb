@@ -50,13 +50,13 @@ Partial Public Class start
     Protected WithEvents vergoeding As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''v_jury control.
+    '''v_lesgever control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents v_jury As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    Protected WithEvents v_lesgever As Global.System.Web.UI.HtmlControls.HtmlAnchor
     
     '''<summary>
     '''v_wedstrijd control.

@@ -12,11 +12,58 @@ Public Class GebruikerDetail
         If Not IsPostBack Then
             Dim idlid As Integer = Request.QueryString("ID_lid")
             ViewState("ID_Lid") = idlid
-            initPicklists()
+            InitPicklists()
+            validateToegang()
             LoadData()
         End If
     End Sub
+    Private Sub validateToegang()
+        Dim i As Integer
+        i = myBalOlympia.CheckToegangGebruiker(Session("Gebruiker"), 2) 'Lesgever
+        Select Case i
+            Case Rechten_Lid.schrijven
+                'do nothing
 
+            Case Rechten_Lid.lezen
+
+            Case Else
+                Dim mylogging As New Logging
+                mylogging.Gebruiker.IdLid = Session("Gebruiker")
+                mylogging.EventLogging = "Gebruikersdetail toegang geweigerd (Domein: 2) "
+                mylogging.Type = TypeLogging.vergoedingen
+                myBalOlympia.InsertLogging(mylogging)
+                Response.Redirect("start.aspx?Error=AD")
+        End Select
+
+        Dim mygebruikersToegangen As New List(Of Rechten)
+        mygebruikersToegangen = myBalOlympia.CheckToegangenGebruiker(Session("Gebruiker"))
+        Dim mytoegang As New Rechten
+        For Each mytoegang In mygebruikersToegangen
+            Select Case mytoegang.Actie.beschrijving
+                Case "pagAanwezigheden"
+                    pagAanwezigheden.Visible = True
+                Case "pagGebruikers"
+                    pagGebruikers.Visible = True
+                Case "pagBeheer"
+                    myBtn2.Visible = True
+                    beheer.Visible = True
+                Case "pagVergoedingen"
+                    myBtn1.Visible = True
+                    vergoeding.Visible = True
+            End Select
+        Next
+
+        i = myBalOlympia.CheckToegangGebruiker(Session("Gebruiker"), 20) 'beheerder
+        Select Case i
+            Case Rechten_Lid.schrijven
+                'do nothing
+            Case Rechten_Lid.lezen
+
+            Case Else
+
+        End Select
+
+    End Sub
     Private Sub InitPicklists()
         Try
             cbGeslacht.Items.Clear()

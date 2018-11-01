@@ -11,7 +11,7 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class BeheerAndere
+Partial Public Class BeheerVergoedingen
     
     '''<summary>
     '''lbllogin control.
@@ -48,6 +48,15 @@ Partial Public Class BeheerAndere
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents vergoeding As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    
+    '''<summary>
+    '''v_lesgever control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents v_lesgever As Global.System.Web.UI.HtmlControls.HtmlAnchor
     
     '''<summary>
     '''v_jury control.

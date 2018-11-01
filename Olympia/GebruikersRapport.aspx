@@ -21,11 +21,10 @@
         <font size="32"><b>Curato</b></font>
         <br />
         <div class="w3-right">
-        <asp:Label ID="lbllogin" runat="server"></asp:Label>&nbsp;
-            </div>
+            <asp:Label ID="lbllogin" runat="server"></asp:Label>&nbsp;
+        </div>
     </div>
     <nav class="w3-sidebar w3-bar-block w3-white w3-top" style="z-index: 3; width: 250px" id="mySidebar">
-
         <div class="w3-padding-16 w3-large w3-text-grey" style="font-weight: bold">
             <img src="images/figuur vrouw.png" alt="" style="width: 230px; height: 200px;" />
             <a onclick="window.location.href='Start.aspx'" href="#" class="w3-bar-item w3-button">Mijn Profiel</a>
@@ -33,6 +32,7 @@
 
             <a onclick="w3.toggleShow('#vergoeding')" href="#" class="w3-button w3-block w3-left-align" visible="false" runat="server" id="myBtn1">Vergoedingen <i class="fa fa-caret-down"></i></a>
             <div id="vergoeding" visible="false" runat="server" class="w3-bar-block w3-padding-large w3-medium ">
+                <a id="v_lesgever" runat="server" onclick="window.location.href='K_Lesgever.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Lesgever</a>
                 <a id="v_jury" runat="server" onclick="window.location.href='K_Jury.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Jury</a>
                 <a id="v_wedstrijd" runat="server" onclick="window.location.href='K_Wedstrijd.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Wedstrijd</a>
                 <a id="v_verplaatsing" runat="server" onclick="window.location.href='K_Verplaatsing.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Verplaatsing</a>
@@ -46,7 +46,7 @@
                 <a onclick="window.location.href='beheerdisciplines.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Trainingsgroepen</a>
                 <a onclick="window.location.href='beheerlogging.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Logging</a>
                 <a onclick="window.location.href='Importgegevens.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Import</a>
-                <a onclick="window.location.href='beheerandere.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Andere</a>
+                <a onclick="window.location.href='BeheerVergoedingen.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Vergoedingen</a>
             </div>
 
             <a onclick="window.location.href='meldingen.aspx'" href="#" class="w3-bar-item w3-button">Meldingen</a>
@@ -67,25 +67,29 @@
                                 <td colspan="4">
                                     <asp:Label ID="lblPageTitle" CssClass="PageTitle" runat="server"></asp:Label>
                                     <br />
-                                      <asp:Label ID="lblgebruiker" runat="server"></asp:Label>
+                                    <asp:Label ID="lblgebruiker" runat="server"></asp:Label>
                                 </td>
                             </tr>
                             <tr>
-                               <td>
+                                <td>
                                     <table>
                                         <tr>
-                                            <td>
-                                               
-                                            <td width="320"></td>
-                                            <td style="background-color: ButtonFace">
-                                                <asp:Label ID="lblFilter" runat="server"></asp:Label>
-                                                <asp:TextBox ID="txtfilter" runat="server"></asp:TextBox>&nbsp;
-                                                <asp:FilteredTextBoxExtender ID="fte2" runat="server" FilterMode="InvalidChars"
-                                                    InvalidChars="<>&" TargetControlID="txtfilter" />
-                                                <asp:Button ID="btnFilter" runat="server" />
-                                                <asp:Button ID="btnWisFilter" runat="server" />
-                                                <br />
-                                            </td>
+                                            
+
+                                                <td width="320"></td>
+                                                <td style="background-color: ButtonFace">
+                                                    <asp:Label ID="lblFilter" runat="server"></asp:Label>
+                                                    <asp:TextBox ID="txtdatumlaag" Width="85" runat="server"></asp:TextBox>
+                                                    <asp:CalendarExtender ID="calDatumlaal" runat="server" TargetControlID="txtdatumlaag"
+                                                        Animated="false" Format="dd/MM/yyyy" />
+                                                    -
+                                                    <asp:TextBox ID="txtdatumhoog" Width="85" runat="server"></asp:TextBox>
+                                                    <asp:CalendarExtender ID="caldatumhoog" runat="server" TargetControlID="txtdatumhoog"
+                                                        Animated="false" Format="dd/MM/yyyy" />
+                                                    <asp:Button ID="btnFilter" runat="server" />
+                                                    <asp:Button ID="btnWisFilter" runat="server" />
+                                                    <br />
+                                                </td>
                                         </tr>
                                     </table>
                                 </td>
@@ -103,19 +107,19 @@
                                         RowSelectionEnabled="true" HorizontalAlign="Center" RowClickEventCommandName="dtgDataGrid_EditCommand"
                                         runat="server" AutoGenerateColumns="false" CssClass="navigateable" GridLines="Horizontal"
                                         Width="95%" PageSize="40" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false"
-                                        PagerStyle-Visible="false"  DataKeyField="ID" ShowFooter="false">
+                                        PagerStyle-Visible="false" DataKeyField="ID" ShowFooter="false">
                                         <ItemStyle CssClass="datagridItem" />
-                                        
+
                                         <Columns>
                                             <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-Width="80" SortExpression="Datum" HeaderText="Datum">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblDatum" Width="80" runat="server"></asp:Label>
                                                     <asp:Label ID="lblLidID" Visible="false" runat="server"></asp:Label>
-                                                    <asp:Label ID="lblID" Visible="false" runat="server"></asp:Label>
+
                                                 </ItemTemplate>
                                             </asp:TemplateColumn>
 
-                                              <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="A.id" HeaderText="Actie">
+                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="A.id" HeaderText="Actie">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblActie" Width="100" runat="server"></asp:Label>
                                                 </ItemTemplate>
@@ -157,12 +161,12 @@
             </table>
         </form>
     </div>
-   <div class="w3-black w3-center w3-padding-16">
-        <b>Powered by Graecas Inc.</b>   
+    <div class="w3-black w3-center w3-padding-16">
+        <b>Powered by Graecas Inc.</b>
         <div class="w3-right">
-<b onclick="window.location.href='privacy.aspx'" >Privacy</b>&nbsp;
-            </div>
-        
+            <b onclick="window.location.href='privacy.aspx'">Privacy</b>&nbsp;
+        </div>
+
     </div>
 
     <script>

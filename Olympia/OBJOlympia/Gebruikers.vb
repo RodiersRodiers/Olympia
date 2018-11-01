@@ -18,6 +18,7 @@ Namespace OBJOlympia
         Private PFX_straat As String
         Private PFX_huisnr As String
         Private PFX_info As String
+        Private PFX_validate As Integer
 
         Public Sub New()
            
@@ -110,6 +111,15 @@ Namespace OBJOlympia
             End Get
             Set(ByVal Value As Integer)
                 PFX_Active = Value
+            End Set
+        End Property
+
+        Public Property Validate() As Integer
+            Get
+                Return PFX_validate
+            End Get
+            Set(ByVal Value As Integer)
+                PFX_validate = Value
             End Set
         End Property
 
@@ -222,6 +232,9 @@ Namespace OBJOlympia
         Private PFX_Aantal As String
         Private PFX_Bedrag As String
         Private PFX_info As String
+        Private PFX_dagVM As Integer
+        Private PFX_dagNM As Integer
+        Private PFX_dagAV As Integer
         Private PFX_validate As Integer
 
         Public Sub New()
@@ -304,6 +317,30 @@ Namespace OBJOlympia
                 PFX_info = value
             End Set
         End Property
+        Public Property dagVM() As Integer
+            Get
+                Return PFX_dagVM
+            End Get
+            Set(ByVal value As Integer)
+                PFX_dagVM = value
+            End Set
+        End Property
+        Public Property dagNM() As Integer
+            Get
+                Return PFX_dagNM
+            End Get
+            Set(ByVal value As Integer)
+                PFX_dagNM = value
+            End Set
+        End Property
+        Public Property dagAV() As Integer
+            Get
+                Return PFX_dagAV
+            End Get
+            Set(ByVal value As Integer)
+                PFX_dagAV = value
+            End Set
+        End Property
         Public Property Validate() As Integer
             Get
                 Return PFX_validate
@@ -370,6 +407,55 @@ Namespace OBJOlympia
             End Get
             Set(ByVal value As Integer)
                 PFX_validate = value
+            End Set
+        End Property
+
+
+    End Class
+
+    Public Class Lesgeververgoeding
+        Private PFX_Id As Integer
+        Private PFX_gebruiker As Gebruikers
+        Private PFX_datum As Date
+        Private PFX_bedrag As Decimal
+
+        Public Sub New()
+            PFX_gebruiker = New Gebruikers
+        End Sub
+
+        Public Property Id() As Integer
+            Get
+                Return PFX_Id
+            End Get
+            Set(ByVal value As Integer)
+                PFX_Id = value
+            End Set
+        End Property
+
+        Public Property Gebruiker() As Gebruikers
+            Get
+                Return PFX_gebruiker
+            End Get
+            Set(ByVal value As Gebruikers)
+                PFX_gebruiker = value
+            End Set
+        End Property
+
+        Public Property Datum() As Date
+            Get
+                Return PFX_datum
+            End Get
+            Set(ByVal value As Date)
+                PFX_datum = value
+            End Set
+        End Property
+
+        Public Property Bedrag() As Decimal
+            Get
+                Return PFX_bedrag
+            End Get
+            Set(ByVal value As Decimal)
+                PFX_bedrag = value
             End Set
         End Property
 

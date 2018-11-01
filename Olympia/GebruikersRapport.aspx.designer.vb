@@ -50,6 +50,15 @@ Partial Public Class GebruikersRapport
     Protected WithEvents vergoeding As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
+    '''v_lesgever control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents v_lesgever As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    
+    '''<summary>
     '''v_jury control.
     '''</summary>
     '''<remarks>
@@ -158,22 +167,40 @@ Partial Public Class GebruikersRapport
     Protected WithEvents lblFilter As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''txtfilter control.
+    '''txtdatumlaag control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtfilter As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents txtdatumlaag As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''fte2 control.
+    '''calDatumlaal control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents fte2 As Global.AjaxControlToolkit.FilteredTextBoxExtender
+    Protected WithEvents calDatumlaal As Global.AjaxControlToolkit.CalendarExtender
+    
+    '''<summary>
+    '''txtdatumhoog control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtdatumhoog As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''caldatumhoog control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents caldatumhoog As Global.AjaxControlToolkit.CalendarExtender
     
     '''<summary>
     '''btnFilter control.
