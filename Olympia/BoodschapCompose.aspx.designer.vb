@@ -11,115 +11,7 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class K_Jury
-    
-    '''<summary>
-    '''lbllogin control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lbllogin As Global.System.Web.UI.WebControls.Label
-    
-    '''<summary>
-    '''pagAanwezigheden control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents pagAanwezigheden As Global.System.Web.UI.HtmlControls.HtmlAnchor
-    
-    '''<summary>
-    '''myBtn1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents myBtn1 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-    
-    '''<summary>
-    '''vergoeding control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents vergoeding As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-    
-    '''<summary>
-    '''v_lesgever control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents v_lesgever As Global.System.Web.UI.HtmlControls.HtmlAnchor
-    
-    '''<summary>
-    '''v_jury control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents v_jury As Global.System.Web.UI.HtmlControls.HtmlAnchor
-    
-    '''<summary>
-    '''v_wedstrijd control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents v_wedstrijd As Global.System.Web.UI.HtmlControls.HtmlAnchor
-    
-    '''<summary>
-    '''v_verplaatsing control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents v_verplaatsing As Global.System.Web.UI.HtmlControls.HtmlAnchor
-    
-    '''<summary>
-    '''v_andere control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents v_andere As Global.System.Web.UI.HtmlControls.HtmlAnchor
-    
-    '''<summary>
-    '''pagGebruikers control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents pagGebruikers As Global.System.Web.UI.HtmlControls.HtmlAnchor
-    
-    '''<summary>
-    '''myBtn2 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents myBtn2 As Global.System.Web.UI.HtmlControls.HtmlAnchor
-    
-    '''<summary>
-    '''beheer control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents beheer As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+Partial Public Class BoodschapCompose
     
     '''<summary>
     '''form1 control.
@@ -140,6 +32,15 @@ Partial Public Class K_Jury
     Protected WithEvents ScriptManager1 As Global.System.Web.UI.ScriptManager
     
     '''<summary>
+    '''lblVattingNummer control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblVattingNummer As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
     '''lblPageTitle control.
     '''</summary>
     '''<remarks>
@@ -149,92 +50,209 @@ Partial Public Class K_Jury
     Protected WithEvents lblPageTitle As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''lblOpsteller control.
+    '''lbleenheid control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblOpsteller As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lbleenheid As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''cbopsteller control.
+    '''lblTeam control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbopsteller As Global.AjaxControlToolkit.ComboBox
+    Protected WithEvents lblTeam As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''lblFilter control.
+    '''lblGebruiker control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblFilter As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents lblGebruiker As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''txtfilter control.
+    '''txtEenheid control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtfilter As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents txtEenheid As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''fte2 control.
+    '''hdCBEenheid control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents fte2 As Global.AjaxControlToolkit.FilteredTextBoxExtender
+    Protected WithEvents hdCBEenheid As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
-    '''btnFilter control.
+    '''AutoCompleteExtender3 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnFilter As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents AutoCompleteExtender3 As Global.AjaxControlToolkit.AutoCompleteExtender
     
     '''<summary>
-    '''btnWisFilter control.
+    '''hdCustIDEenheid control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnWisFilter As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents hdCustIDEenheid As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
-    '''btnINSERTAdd control.
+    '''fte6 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnINSERTAdd As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents fte6 As Global.AjaxControlToolkit.FilteredTextBoxExtender
     
     '''<summary>
-    '''btnINSERTCancel control.
+    '''cbTeam control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnINSERTCancel As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents cbTeam As Global.AjaxControlToolkit.ComboBox
     
     '''<summary>
-    '''dtgrid control.
+    '''cbDossierBeheerder control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dtgrid As Global.System.Web.UI.WebControls.DataGrid
+    Protected WithEvents cbDossierBeheerder As Global.AjaxControlToolkit.ComboBox
+    
+    '''<summary>
+    '''lnkAdd control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lnkAdd As Global.System.Web.UI.WebControls.LinkButton
+    
+    '''<summary>
+    '''lblOntvanger control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblOntvanger As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''txtStamnummers control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtStamnummers As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''txtOntvanger control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtOntvanger As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''lnkbDelete control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lnkbDelete As Global.System.Web.UI.WebControls.LinkButton
+    
+    '''<summary>
+    '''hddStamnummerSession control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hddStamnummerSession As Global.System.Web.UI.WebControls.HiddenField
+    
+    '''<summary>
+    '''lblOnderwerp control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblOnderwerp As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''txtOnderwerp control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtOnderwerp As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''fte1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents fte1 As Global.AjaxControlToolkit.FilteredTextBoxExtender
+    
+    '''<summary>
+    '''lblInhoud control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblInhoud As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''txtAreaInhoud control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtAreaInhoud As Global.System.Web.UI.HtmlControls.HtmlTextArea
+    
+    '''<summary>
+    '''lblmaxkar control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblmaxkar As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''lnkSend control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lnkSend As Global.System.Web.UI.WebControls.LinkButton
 End Class

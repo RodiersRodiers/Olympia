@@ -33,8 +33,7 @@
             <a onclick="w3.toggleShow('#vergoeding')" href="#" class="w3-button w3-block w3-left-align" visible="false" runat="server" id="myBtn1">Vergoedingen <i class="fa fa-caret-down"></i></a>
             <div id="vergoeding" visible="false" runat="server" class="w3-bar-block w3-padding-large w3-medium ">
                 <a id="v_lesgever" runat="server" onclick="window.location.href='K_Lesgever.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Lesgever</a>
-                <a id="v_jury" runat="server" onclick="window.location.href='K_Jury.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Jury</a>
-                <a id="v_wedstrijd" runat="server" onclick="window.location.href='K_Wedstrijd.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Wedstrijd</a>
+                 <a id="v_wedstrijd" runat="server" onclick="window.location.href='K_Wedstrijd.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Wedstrijd</a>
                 <a id="v_verplaatsing" runat="server" onclick="window.location.href='K_Verplaatsing.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Verplaatsing</a>
                 <a id="v_andere" runat="server" onclick="window.location.href='K_Andere.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Andere</a>
             </div>
@@ -49,8 +48,7 @@
                 <a onclick="window.location.href='beheerandere.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Andere</a>
             </div>
 
-            <a onclick="window.location.href='meldingen.aspx'" href="#" class="w3-bar-item w3-button">Meldingen</a>
-            <a onclick="window.location.href='login.aspx'" href="#" class="w3-bar-item w3-button w3-padding">Uitloggen</a>
+               <a onclick="window.location.href='login.aspx'" href="#" class="w3-bar-item w3-button w3-padding">Uitloggen</a>
         </div>
     </nav>
 
@@ -113,11 +111,11 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                                                                                                    <asp:DataGrid ID="dtgrid" RowHighlightColor="#cccccc" RowClickColor="#ebe0fb"
+                                                                                                                    <asp:DataGrid ID="dtgDataGrid" RowHighlightColor="#cccccc" RowClickColor="#ebe0fb"
                                     RowSelectionEnabled="true"  HorizontalAlign="Center" RowClickEventCommandName="dtgDataGrid_EditCommand"
                                     runat="server" AutoGenerateColumns="false" CssClass="navigateable" GridLines="Horizontal"
                                     Width="75%" PageSize="40" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false"
-                                    PagerStyle-Visible="false" AllowSorting="true" AlternatingItemStyle-BackColor="Wheat" DataKeyField="ID" ShowFooter="false">
+                                    PagerStyle-Visible="false" AllowSorting="true" AlternatingItemStyle-BackColor="WhiteSmoke" DataKeyField="ID" ShowFooter="false">
                                     <ItemStyle CssClass="datagridItem" />
                                     <FooterStyle CssClass="datagridItem" />
                                                                                                                              <Columns>
@@ -195,8 +193,33 @@
                                             </asp:TemplateColumn>
                                         </Columns>
                                     </asp:DataGrid>
-                                    <br />
-                                    <br />
+ </td>
+                            </tr>
+                            <tr>
+                                                         <td colspan="2" align="center">
+                                    <table width="88%" class="datagridPaging">
+                                        <tr>
+                                            <td style="width: 33%; vertical-align:middle;align-content:flex-start" class="datagridBleuHook">&nbsp;
+                                            </td>
+                                            <td align="center" valign="bottom">
+                                                <asp:ImageButton ID="imgbFirstbutton" ImageUrl="../images/firstRecord.gif" CommandArgument="0"
+                                                    runat="server" OnClick="PagerButtonClick" />&nbsp;&nbsp;
+                                        <asp:ImageButton ID="imgbPrevbutton" ImageUrl="../images/previousRecord.gif" CommandArgument="prev"
+                                            runat="server" OnClick="PagerButtonClick" />&nbsp;&nbsp;
+                                        <asp:ImageButton ID="imgbNextbutton" ImageUrl="../images/nextRecord.gif" CommandArgument="next"
+                                            runat="server" OnClick="PagerButtonClick" />&nbsp;&nbsp;
+                                        <asp:ImageButton ID="imgbLastbutton" ImageUrl="../images/lastRecord.gif" CommandArgument="last"
+                                            runat="server" OnClick="PagerButtonClick" />
+                                            </td>
+                                            <td style="width: 33%; vertical-align: bottom" align="right" class="datagridBleuHook">&nbsp;
+                                <asp:Label ID="lblPagina" Font-Size="Smaller" runat="server"></asp:Label>&nbsp;
+                                        <asp:TextBox ID="txtCurrentPage" Font-Size="Smaller" Width="20" MaxLength="4" runat="server"></asp:TextBox>
+
+                                                <asp:Label ID="lblExtraPaging" Font-Size="Smaller" runat="server"></asp:Label>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>

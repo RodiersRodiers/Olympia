@@ -59,15 +59,6 @@ Partial Public Class BeheerLogging
     Protected WithEvents v_lesgever As Global.System.Web.UI.HtmlControls.HtmlAnchor
     
     '''<summary>
-    '''v_jury control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents v_jury As Global.System.Web.UI.HtmlControls.HtmlAnchor
-    
-    '''<summary>
     '''v_wedstrijd control.
     '''</summary>
     '''<remarks>

@@ -107,20 +107,13 @@ Partial Class K_Wedstrijd
         strDBError = "Fout in het ophalen van de gegevens"
     End Sub
 
-    Private Function getDefaultSortExpression() As String
-        If ViewState("SortExpression") Is Nothing Then
-            Return "datum desc"
-        Else
-            Return String.Format("{0} {1}", ViewState("SortExpression"), ViewState("SortDirection"))
-        End If
-    End Function
-
     Private Sub LoadData(ByVal strfilter As String)
         Try
             Dim myList As List(Of Handelingen) = myBalOlympia.GethandelingWedJurybygebruiker(getDefaultSortExpression, cbopsteller.SelectedValue, strfilter)
             dtgDataGrid.DataSource = myList
             dtgDataGrid.DataBind()
             ResultCount = myList.Count
+            doShowPage()
         Catch ex As Exception
             'UC_Message.setMessage(strAddError, CustomMessage.TypeMessage.Fataal, New Exception("VALIDATION"))
         End Try
@@ -146,10 +139,24 @@ Partial Class K_Wedstrijd
                     myhandeling.Datum = txtInsertDatum.Text
                     myhandeling.Info = txtInsertInfo.InnerText
                     myhandeling.Aantal = 0
-                    myhandeling.dagVM = chkbinsertVM.Checked
-                    myhandeling.dagNM = chkbinsertNM.Checked
-                    myhandeling.dagAV = chkbinsertAV.Checked
+                    If chkbinsertVM.Checked Then
+                        myhandeling.dagVM = 1
+                    Else
+                        myhandeling.dagVM = 0
+                    End If
+                    If chkbinsertNM.Checked Then
+                        myhandeling.dagNM = 1
+                    Else
+                        myhandeling.dagNM = 0
+                    End If
+                    If chkbinsertAV.Checked Then
+                        myhandeling.dagAV = 1
+                    Else
+                        myhandeling.dagAV = 0
+                    End If
+
                     myhandeling.Gebruiker.IdLid = cbopsteller.SelectedValue
+                    myhandeling.Validate = 1
 
                     Try
                         i_Result = myBalOlympia.Inserthandeling(myhandeling)
@@ -193,7 +200,8 @@ Partial Class K_Wedstrijd
 
                 Case "UPDATE"
                     Dim myhandeling As New Handelingen
-                    myhandeling.Id = dtgDataGrid.DataKeys(e.Item.ItemIndex)
+
+                    Dim lblEditID As HiddenField = e.Item.FindControl("lblEditID")
                     Dim txteditDatum As TextBox = e.Item.FindControl("txteditDatum")
                     Dim drpEditGroep As DropDownList = e.Item.FindControl("drpEditGroep")
                     Dim drpEditAard As DropDownList = e.Item.FindControl("drpEditAard")
@@ -202,15 +210,28 @@ Partial Class K_Wedstrijd
                     Dim chkbEditVM As CheckBox = e.Item.FindControl("chkbEditVM")
                     Dim chkbEditNM As CheckBox = e.Item.FindControl("chkbEditNM")
                     Dim chkbEditAV As CheckBox = e.Item.FindControl("chkbEditAV")
+                    myhandeling.Id = lblEditID.Value
                     myhandeling.Datum = txteditDatum.Text
                     myhandeling.Discipline.Id = drpEditGroep.SelectedValue
                     myhandeling.Groep.Id = 0
                     myhandeling.Actie.Id = drpEditAard.SelectedValue
                     myhandeling.Info = txteditinfo.InnerText
                     myhandeling.Aantal = 0
-                    myhandeling.dagVM = chkbEditVM.Checked
-                    myhandeling.dagNM = chkbEditNM.Checked
-                    myhandeling.dagAV = chkbEditAV.Checked
+                    If chkbEditVM.Checked Then
+                        myhandeling.dagVM = 1
+                    Else
+                        myhandeling.dagVM = 0
+                    End If
+                    If chkbEditNM.Checked Then
+                        myhandeling.dagNM = 1
+                    Else
+                        myhandeling.dagNM = 0
+                    End If
+                    If chkbEditAV.Checked Then
+                        myhandeling.dagAV = 1
+                    Else
+                        myhandeling.dagAV = 0
+                    End If
                     Try
                         i_Result = myBalOlympia.Updatehandeling(myhandeling)
                         If i_Result > 0 Then
@@ -227,6 +248,7 @@ Partial Class K_Wedstrijd
                     dtgDataGrid.EditItemIndex = -1
                     dtgDataGrid.ShowFooter = False
                     btnINSERTAdd.Visible = True
+                    setRowsDataGridItemVisible(True)
                     LoadData(txtfilter.Text)
 
                 Case "CANCEL"
@@ -250,9 +272,10 @@ Partial Class K_Wedstrijd
         Try
             Dim myhandeling As Handelingen = e.Item.DataItem()
             If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
-                Dim lblId As Label = e.Item.FindControl("lblId")
+                Dim lblId As HiddenField = e.Item.FindControl("lblId")
                 Dim lblLidID As Label = e.Item.FindControl("lblLidID")
                 Dim lblDatum As Label = e.Item.FindControl("lblDatum")
+                Dim lblDag As Label = e.Item.FindControl("lblDag")
                 Dim lblgroep As Label = e.Item.FindControl("lblgroep")
                 Dim lblinfo As Label = e.Item.FindControl("lblinfo")
                 Dim lblAard As Label = e.Item.FindControl("lblAard")
@@ -261,9 +284,10 @@ Partial Class K_Wedstrijd
                 Dim chkbAV As CheckBox = e.Item.FindControl("chkbAV")
                 Dim cbeDelete As AjaxControlToolkit.ConfirmButtonExtender = e.Item.FindControl("cbeDelete")
                 cbeDelete.ConfirmText = strDeleteConfirm
-                lblId.Text = myhandeling.Id
+                lblId.Value = myhandeling.Id
                 lblLidID.Text = myhandeling.Gebruiker.IdLid
                 lblDatum.Text = myhandeling.Datum
+                lblDag.Text = Format(myhandeling.Datum, "dddd")
                 lblgroep.Text = myhandeling.Discipline.beschrijving
                 lblinfo.Text = myhandeling.Info
                 lblAard.Text = myhandeling.Actie.beschrijving
@@ -293,12 +317,14 @@ Partial Class K_Wedstrijd
             End If
 
             If e.Item.ItemType = ListItemType.EditItem Then
+                Dim lblEditID As HiddenField = e.Item.FindControl("lblEditID")
                 Dim txteditDatum As TextBox = e.Item.FindControl("txteditDatum")
                 Dim txteditinfo As HtmlTextArea = e.Item.FindControl("txteditinfo")
                 Dim txteditaantal As TextBox = e.Item.FindControl("txteditaantal")
                 Dim chkbEditVM As CheckBox = e.Item.FindControl("chkbEditVM")
                 Dim chkbEditNM As CheckBox = e.Item.FindControl("chkbEditNM")
                 Dim chkbEditAV As CheckBox = e.Item.FindControl("chkbEditAV")
+                lblEditID.Value = myhandeling.Id
                 txteditDatum.Text = myhandeling.Datum
                 txteditinfo.InnerText = myhandeling.Info
                 chkbEditVM.Checked = myhandeling.dagVM
@@ -342,16 +368,33 @@ Partial Class K_Wedstrijd
         End If
     End Sub
 
+    Private Function getDefaultSortExpression() As String
+        If ViewState("SortExpression") Is Nothing Then
+            Return "datum desc"
+        Else
+            Return String.Format("{0} {1}", ViewState("SortExpression"), ViewState("SortDirection"))
+        End If
+    End Function
+    Private Sub setRowsDataGridItemVisible(ByVal blnVisible As Boolean)
+        For Each myDatagridItem As DataGridItem In dtgDataGrid.Items
+            If myDatagridItem.ItemType = ListItemType.Item Or myDatagridItem.ItemType = ListItemType.AlternatingItem Then
+                myDatagridItem.Visible = blnVisible
+            End If
+        Next
+    End Sub
+
     Protected Sub BtnCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTCancel.Click
         dtgDataGrid.ShowFooter = False
         btnINSERTAdd.Visible = True
         btnINSERTCancel.Visible = False
+        setRowsDataGridItemVisible(True)
     End Sub
 
     Private Sub BtnINSERTAdd_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTAdd.Click
         dtgDataGrid.ShowFooter = True
         btnINSERTAdd.Visible = False
         btnINSERTCancel.Visible = True
+        setRowsDataGridItemVisible(False)
     End Sub
 
     Private Sub Cbopsteller_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbopsteller.SelectedIndexChanged

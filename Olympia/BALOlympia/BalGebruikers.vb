@@ -685,7 +685,38 @@ Namespace BALOlympia
 
 #Region "Handelingen"
 
+        Public Function GetRapportAllhandelingenbygebruiker(ByVal idlid As Integer, ByVal datumlaag As Date, ByVal datumhoog As Date) As List(Of RapportHandelingen)
+            Dim myList As New List(Of RapportHandelingen)
 
+            Try
+                Dim dt As DataTable = myDalGebruikers.GetRapportAllhandelingenbygebruiker(idlid, datumlaag, datumhoog)
+                For Each myRow As DataRow In dt.Rows
+                    Dim myhandeling As New RapportHandelingen
+                    myhandeling.Id = myRow("id")
+                    myhandeling.Datum = myRow("datum")
+                    myhandeling.Groep = myRow("groepbeschrijving").ToString
+                    myhandeling.Discipline = myRow("Disciplinebeschrijving").ToString
+                    myhandeling.Actie = myRow("actiebeschrijving").ToString
+                    myhandeling.Info = myRow("Info").ToString
+                    myhandeling.Aantal = myRow("Aantal")
+                    myhandeling.Bedrag = myRow("Bedraglg")
+                    myhandeling.KM = myRow("km")
+                    myhandeling.dagVM = myRow("dagVM")
+                    myhandeling.dagNM = myRow("dagNM")
+                    myhandeling.dagAV = myRow("dagAV")
+                    If IsDBNull(myRow("valid")) Then
+                        myhandeling.Validate = 1
+                    Else
+                        myhandeling.Validate = myRow("valid")
+                    End If
+                    myList.Add(myhandeling)
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return myList
+        End Function
 
         Public Function GetAllhandelingenbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String, ByVal datumlaag As Date, ByVal datumhoog As Date) As List(Of Handelingen)
             Dim myList As New List(Of Handelingen)
@@ -748,11 +779,11 @@ Namespace BALOlympia
             Return myList
         End Function
 
-        Public Function GetLesgeverVergoedingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal idactie As Integer, ByVal strfilter As String) As List(Of Handelingen)
+        Public Function GetHandelingLesgeverVergoedingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As List(Of Handelingen)
             Dim myList As New List(Of Handelingen)
 
             Try
-                Dim dt As DataTable = myDalGebruikers.GetLesgeverVergoedingbygebruiker(sort, idlid, idactie, strfilter)
+                Dim dt As DataTable = myDalGebruikers.GetHandelingLesgeverVergoedingbygebruiker(sort, idlid, strfilter)
                 For Each myRow As DataRow In dt.Rows
                     Dim myhandeling As New Handelingen
                     myhandeling.Id = myRow("id")
@@ -777,7 +808,35 @@ Namespace BALOlympia
 
             Return myList
         End Function
+        Public Function GetHandelingAnderebygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As List(Of Handelingen)
+            Dim myList As New List(Of Handelingen)
 
+            Try
+                Dim dt As DataTable = myDalGebruikers.GetHandelingAnderebygebruiker(sort, idlid, strfilter)
+                For Each myRow As DataRow In dt.Rows
+                    Dim myhandeling As New Handelingen
+                    myhandeling.Id = myRow("id")
+                    myhandeling.Datum = myRow("datum")
+                    myhandeling.Discipline.Id = myRow("Disciplineid")
+                    myhandeling.Discipline.beschrijving = myRow("Disciplinebeschrijving").ToString
+                    myhandeling.Groep.Id = myRow("GroepId").ToString
+                    myhandeling.Groep.beschrijving = myRow("GroepBeschrijving").ToString
+                    myhandeling.Gebruiker.IdLid = myRow("gebruikerid")
+                    myhandeling.Gebruiker.Naam = myRow("Naam").ToString
+                    myhandeling.Gebruiker.Voornaam = myRow("Voornaam").ToString
+                    myhandeling.Actie.Id = myRow("actieid")
+                    myhandeling.Actie.beschrijving = myRow("actiebeschrijving").ToString
+                    myhandeling.Info = myRow("Info").ToString
+                    myhandeling.Aantal = myRow("Aantal").ToString
+                    myhandeling.Validate = myRow("Valid")
+                    myList.Add(myhandeling)
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return myList
+        End Function
         Public Function Gethandelingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As List(Of Handelingen)
             Dim myList As New List(Of Handelingen)
 
@@ -839,7 +898,36 @@ Namespace BALOlympia
 
             Return myList
         End Function
+        Public Function GethandelingVerplaatsingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As List(Of Handelingen)
+            Dim myList As New List(Of Handelingen)
 
+            Try
+                Dim dt As DataTable = myDalGebruikers.GethandelingVerplaatsingbygebruiker(sort, idlid, strfilter)
+                For Each myRow As DataRow In dt.Rows
+                    Dim myhandeling As New Handelingen
+                    myhandeling.Id = myRow("id")
+                    myhandeling.Datum = myRow("datum")
+                    myhandeling.Discipline.Id = myRow("Disciplineid")
+                    myhandeling.Discipline.beschrijving = myRow("Disciplinebeschrijving").ToString
+                    myhandeling.Gebruiker.IdLid = myRow("gebruikerid")
+                    myhandeling.Gebruiker.Naam = myRow("Naam").ToString
+                    myhandeling.Gebruiker.Voornaam = myRow("Voornaam").ToString
+                    myhandeling.Actie.Id = myRow("actieid")
+                    myhandeling.Actie.beschrijving = myRow("actiebeschrijving").ToString
+                    myhandeling.Info = myRow("Info").ToString
+                    myhandeling.Aantal = myRow("Aantal").ToString
+                    myhandeling.dagVM = myRow("dagvm").ToString
+                    myhandeling.dagNM = myRow("dagNM").ToString
+                    myhandeling.dagAV = myRow("dagAV").ToString
+                    myhandeling.Validate = myRow("Valid")
+                    myList.Add(myhandeling)
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return myList
+        End Function
 
         Public Function Inserthandeling(ByVal myhandeling As Handelingen) As Integer
             Try
@@ -914,6 +1002,82 @@ Namespace BALOlympia
         Public Function DeleteLesgeverVergoeding(ByVal myvergoeding As Lesgeververgoeding) As Integer
             Try
                 Return myDalGebruikers.DeleteLesgeverVergoeding(myvergoeding)
+            Catch ex As Exception
+                Throw ex
+            Finally
+            End Try
+        End Function
+#End Region
+
+
+#Region "Boodschappen"
+        Public Function getBoodschapById(ByVal IDBoodschap As Integer) As Boodschappen
+            Dim myboodschap As New Boodschappen
+            Try
+                Dim dt As DataTable = myDalGebruikers.GetBoodschappenById(IDBoodschap)
+                For Each myRow As DataRow In dt.Rows
+                    myboodschap.Id = myRow("Id")
+                    myboodschap.Datum = myRow("Datum").ToString
+                    myboodschap.Zender.IdLid = myRow("Zender")
+                    myboodschap.Ontvanger.IdLid = myRow("Ontvanger")
+                    myboodschap.Inhoud = myRow("Inhoud").ToString
+                    myboodschap.gelezen = myRow("gelezen")
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return myboodschap
+        End Function
+
+        Public Function GetBoodschappenByLid(ByVal idlid As Integer, ByVal sort As String) As List(Of Boodschappen)
+            Dim myList As New List(Of Boodschappen)
+
+            Try
+                Dim dt As DataTable = myDalGebruikers.GetBoodschappenByLid(sort, idlid)
+                For Each myRow As DataRow In dt.Rows
+                    Dim myboodschap As New Boodschappen
+                    myboodschap.Id = myRow("Id")
+                    myboodschap.Datum = myRow("Datum").ToString
+                    myboodschap.Zender.IdLid = myRow("Zender")
+                    myboodschap.Ontvanger.IdLid = myRow("Ontvanger")
+                    myboodschap.Inhoud = myRow("Inhoud").ToString
+                    myboodschap.gelezen = myRow("gelezen")
+                    myList.Add(myboodschap)
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return myList
+        End Function
+
+        Public Function InsertBoodschap(ByVal myBoodschap As Boodschappen, ByVal myOntvangers As List(Of Integer)) As Integer
+            Try
+                For Each myOnt As Integer In myOntvangers
+                    myBoodschap.Ontvanger.IdLid = myOnt
+                    myDalGebruikers.InsertBoodschap(myBoodschap)
+                Next
+            Catch ex As Exception
+                Throw
+                Return -1
+            Finally
+            End Try
+            Return 1
+        End Function
+
+        Public Function UpdateBoodschap(ByVal myboodschap As Boodschappen) As Integer
+            Try
+                Return myDalGebruikers.UpdateBoodschap(myboodschap)
+            Catch ex As Exception
+                Throw ex
+            Finally
+            End Try
+        End Function
+
+        Public Function DeleteBoodschap(ByVal idboodschap As Integer) As Integer
+            Try
+                Return myDalGebruikers.DeleteBoodschap(idboodschap)
             Catch ex As Exception
                 Throw ex
             Finally

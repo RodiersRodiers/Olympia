@@ -1,10 +1,10 @@
 Imports Olympia.OBJOlympia
 Imports Olympia.BALOlympia
+Imports Microsoft.Reporting.WebForms
 
 Partial Class GebruikersRapport
     Inherits Page
     Private myBalOlympia As New BalGebruikers
-    Private ResultCount As Integer
     Private strDeleteConfirm, strDeleteError, strDeleteOk, strDBError, strPagingTot, strHeaderTitle, strPagingRecordsFound, strInsertBeschrijving, strUpdateOk,
         strUpdateError, strPrimaryKeyAllreadyExists, strAddError, strAddOk, strCompleted As String
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
@@ -92,70 +92,18 @@ Partial Class GebruikersRapport
 
     End Sub
 
-    Private Sub DoFillUpDropDown(ByRef drpSource As DropDownList, ByVal myOb() As Object, ByVal strDataValueField As String, ByVal strDataTextField As String, ByVal selectedItem As String, ByVal strDefaultTekst As String)
-        drpSource.DataSource = myOb
-        drpSource.DataValueField = strDataValueField
-        drpSource.DataTextField = strDataTextField
-        drpSource.DataBind()
-
-        If selectedItem <> "" Then
-            For Each item As ListItem In drpSource.Items
-                If item.Value = selectedItem Then
-                    item.Selected = True
-                    Exit For
-                End If
-            Next
-        Else
-            If strDefaultTekst <> "" Then
-                drpSource.Items.Insert(0, New ListItem(strDefaultTekst, ""))
-            End If
-        End If
-    End Sub
-
-    Private Function getDefaultSortExpression() As String
-        If ViewState("SortExpression") Is Nothing Then
-            Return "datum asc"
-        Else
-            Return String.Format("{0} {1}", ViewState("SortExpression"), ViewState("SortDirection"))
-        End If
-    End Function
-
     Private Sub LoadData(ByVal myfilter As String, ByVal datumlaag As Date, ByVal datumhoog As Date)
         Try
-            Dim myList As List(Of Handelingen) = myBalOlympia.GetAllhandelingenbygebruiker(getDefaultSortExpression, ViewState("ID_Lid"), "", datumlaag, datumhoog)
-            dtgDataGrid.DataSource = myList
-            dtgDataGrid.DataBind()
-            ResultCount = myList.Count
+            ReportViewer1.LocalReport.ReportPath = "rptGebruiker.rdlc"
+            Dim dataSource As ReportDataSource = New ReportDataSource("gebruikerrapport", myBalOlympia.GetRapportAllhandelingenbygebruiker(ViewState("ID_Lid"), txtdatumlaag.Text, txtdatumhoog.Text))
+            ReportViewer1.LocalReport.DataSources.Clear()
+            ReportViewer1.LocalReport.DataSources.Add(dataSource)
+            ReportViewer1.LocalReport.Refresh()
         Catch ex As Exception
-            'UC_Message.setMessage(strAddError, CustomMessage.TypeMessage.Fataal, New Exception("VALIDATION"))
+            'UC_Message.setMessage(strDBError, CustomMessage.TypeMessage.Fataal, ex)
         End Try
     End Sub
 
-    Private Sub dtgLabel1_ItemDataBound(ByVal sender As Object, ByVal e As DataGridItemEventArgs) Handles dtgDataGrid.ItemDataBound
-        Try
-            Dim myhandeling As Handelingen = e.Item.DataItem()
-            If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
-                Dim lblLidID As Label = e.Item.FindControl("lblLidID")
-                Dim lblDatum As Label = e.Item.FindControl("lblDatum")
-                Dim lblgroep As Label = e.Item.FindControl("lblgroep")
-                Dim lblActie As Label = e.Item.FindControl("lblActie")
-                Dim lblinfo As Label = e.Item.FindControl("lblinfo")
-                Dim lblAantal As Label = e.Item.FindControl("lblAantal")
-                Dim lblBedrag As Label = e.Item.FindControl("lblBedrag")
-                lblLidID.Text = myhandeling.Gebruiker.IdLid
-                lblDatum.Text = myhandeling.Datum
-                lblgroep.Text = myhandeling.Discipline.beschrijving
-                lblActie.Text = myhandeling.Actie.beschrijving
-                lblinfo.Text = myhandeling.Info
-                lblBedrag.Text = myhandeling.Bedrag
-                lblAantal.Text = myhandeling.Aantal
-
-            End If
-
-        Catch ex As Exception
-            ' UC_Message.setMessage(strAddError, CustomMessage.TypeMessage.Fataal, New Exception("VALIDATION"))
-        End Try
-    End Sub
     Private Sub BtnFilter_Click(sender As Object, e As EventArgs) Handles btnFilter.Click
         LoadData("", txtdatumlaag.Text, txtdatumhoog.Text)
     End Sub

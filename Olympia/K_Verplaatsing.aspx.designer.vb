@@ -59,15 +59,6 @@ Partial Public Class K_Verplaatsing
     Protected WithEvents v_lesgever As Global.System.Web.UI.HtmlControls.HtmlAnchor
     
     '''<summary>
-    '''v_jury control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents v_jury As Global.System.Web.UI.HtmlControls.HtmlAnchor
-    
-    '''<summary>
     '''v_wedstrijd control.
     '''</summary>
     '''<remarks>
@@ -230,13 +221,13 @@ Partial Public Class K_Verplaatsing
     Protected WithEvents btnINSERTCancel As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
-    '''dtgrid control.
+    '''dtgDataGrid control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dtgrid As Global.System.Web.UI.WebControls.DataGrid
+    Protected WithEvents dtgDataGrid As Global.System.Web.UI.WebControls.DataGrid
     
     '''<summary>
     '''imgbFirstbutton control.

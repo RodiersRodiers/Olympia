@@ -621,6 +621,33 @@ Namespace DALOlympia
 
 #Region "Handelingen"
 
+        Public Function GetRapportAllhandelingenbygebruiker(ByVal idlid As Integer, ByVal datumlaag As Date, ByVal datumhoog As Date) As DataTable
+            Dim mydt As New DataTable
+
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT km, v.bedrag as Bedraglg, H.ID, dagvm,dagnm,dagav,valid,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal, ")
+                strSQL.Append("T.id as groepid, t.beschrijving as groepbeschrijving ")
+                strSQL.Append("from Handelingen H ")
+                strSQL.Append("join gebruikers G on H.id_lid=G.id_lid ")
+                strSQL.Append("join vergoedingen V on G.id_lid = V.id_Lid ")
+                strSQL.Append("left join PIC_Disciplines D on D.id = H.id_Discipline ")
+                strSQL.Append("left join PIC_Trainingsgroepen T on T.id=H.id_groep ")
+                strSQL.Append("left join PIC_acties A on A.id=H.id_actie ")
+                strSQL.Append("where h.id_lid = ? ")
+                strSQL.Append("And ( h.datum between ? and ? ) ")
+                DoParameterAdd("@idlid", idlid, MySqlDbType.Int32)
+                DoParameterAdd("@datumlaag", datumlaag.ToString("yyyy-MM-dd"), MySqlDbType.String)
+                DoParameterAdd("@datumhoog", datumhoog.ToString("yyyy-MM-dd"), MySqlDbType.String)
+
+                mydt = ReturnDALDataTable(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return mydt
+        End Function
+
         Public Function GetAllhandelingenbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String, ByVal datumlaag As Date, ByVal datumhoog As Date) As DataTable
             Dim mydt As New DataTable
             Dim dtEmptyDate As Date = ConvertDatumToDbTimeStamp(GetEmptyDate)
@@ -637,7 +664,7 @@ Namespace DALOlympia
                 DoParameterAdd("@idlid", idlid, MySqlDbType.Int32)
 
                 If Not datumlaag = dtEmptyDate Then
-                    strSQL.Append("And ( h.datum between ? and ?) ")
+                    strSQL.Append("And ( h.datum between ? and ? )   ")
                     DoParameterAdd("@datumlaag", datumlaag.ToString("yyyy-MM-dd"), MySqlDbType.String)
                     DoParameterAdd("@datumhoog", datumhoog.ToString("yyyy-MM-dd"), MySqlDbType.String)
                 End If
@@ -712,7 +739,34 @@ Namespace DALOlympia
             Return mydt
         End Function
 
-        Public Function GetLesgeverVergoedingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal idactie As Integer, ByVal strfilter As String) As DataTable
+        Public Function GethandelingVerplaatsingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As DataTable
+            Dim mydt As New DataTable
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT dagvm, dagnm, dagav, H.ID, valid,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving,T.id as groepid,t.beschrijving as groepbeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal ")
+                strSQL.Append("from Handelingen H ")
+                strSQL.Append("join gebruikers G on H.id_lid=G.id_lid ")
+                strSQL.Append("left join PIC_Trainingsgroepen T on T.id=H.id_groep ")
+                strSQL.Append("left join PIC_Disciplines D on D.id = H.id_Discipline ")
+                strSQL.Append("left join PIC_acties A on A.id=H.id_actie ")
+                strSQL.Append("where 1=1 AND h.ID_actie = 13 ")
+                strSQL.Append("AND h.id_lid = ? ")
+                DoParameterAdd("@idlid", idlid, MySqlDbType.Int32)
+                If Not strfilter Like "" Then
+                    strSQL.Append(" AND h.info like ? ")
+                    DoParameterAdd("@info", "%" & strfilter & "%", MySqlDbType.String)
+                End If
+
+                strSQL.Append("order by " & sort)
+                mydt = ReturnDALDataTable(strSQL.ToString)
+
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return mydt
+        End Function
+        Public Function GetHandelingAnderebygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As DataTable
             Dim mydt As New DataTable
             Try
                 strSQL.Remove(0, strSQL.Length)
@@ -723,9 +777,35 @@ Namespace DALOlympia
                 strSQL.Append("left join PIC_Disciplines D on D.id = H.id_Discipline ")
                 strSQL.Append("left join PIC_acties A on A.id=H.id_actie ")
                 strSQL.Append("where 1=1  ")
-                strSQL.Append("AND h.id_lid = ? and H.id_actie = ? ")
+                strSQL.Append("AND h.id_lid = ? and H.id_actie = 14 ")
                 DoParameterAdd("@idlid", idlid, MySqlDbType.Int32)
-                DoParameterAdd("@idactie", idactie, MySqlDbType.Int32)
+                If Not strfilter Like "" Then
+                    strSQL.Append(" AND h.info like ? ")
+                    DoParameterAdd("@info", "%" & strfilter & "%", MySqlDbType.String)
+                End If
+
+                strSQL.Append("order by " & sort)
+                mydt = ReturnDALDataTable(strSQL.ToString)
+
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return mydt
+        End Function
+        Public Function GetHandelingLesgeverVergoedingbygebruiker(ByVal sort As String, ByVal idlid As Integer, ByVal strfilter As String) As DataTable
+            Dim mydt As New DataTable
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT H.ID, valid,h.bedrag,h.Datum,D.id as disciplineid, D.beschrijving as disciplinebeschrijving,T.id as groepid,t.beschrijving as groepbeschrijving, A.id as actieid, A.beschrijving as actiebeschrijving,G.ID_Lid as gebruikerid, G.naam, G.voornaam, h.info, H.aantal ")
+                strSQL.Append("from Handelingen H ")
+                strSQL.Append("join gebruikers G on H.id_lid=G.id_lid ")
+                strSQL.Append("left join PIC_Trainingsgroepen T on T.id=H.id_groep ")
+                strSQL.Append("left join PIC_Disciplines D on D.id = H.id_Discipline ")
+                strSQL.Append("left join PIC_acties A on A.id=H.id_actie ")
+                strSQL.Append("where 1=1  ")
+                strSQL.Append("AND h.id_lid = ? and H.id_actie = 15 ")
+                DoParameterAdd("@idlid", idlid, MySqlDbType.Int32)
                 If Not strfilter Like "" Then
                     strSQL.Append(" AND h.info like ? ")
                     DoParameterAdd("@info", "%" & strfilter & "%", MySqlDbType.String)
@@ -931,6 +1011,86 @@ Namespace DALOlympia
             Return i
         End Function
 
+#End Region
+#Region "Boodschappen"
+
+        Public Function GetBoodschappenByLid(ByVal sort As String, ByVal idlid As Integer) As DataTable
+            Dim mydt As New DataTable
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT datum, zender, ontvanger, inhoud, gelezen  ")
+                strSQL.Append("from Boodschappen B ")
+                strSQL.Append("left join gebruikers G on B.ontvanger=G.id_lid ")
+                strSQL.Append("where B.ontvanger = ? ")
+                DoParameterAdd("@idlid", idlid, MySqlDbType.Int32)
+                mydt = ReturnDALDataTable(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return mydt
+        End Function
+
+        Public Function GetBoodschappenById(ByVal id As Integer) As DataTable
+            Dim mydt As New DataTable
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT naam, voornaam,  ")
+                strSQL.Append("G.ID_Lid as gebruikerid from Boodschappen R ")
+                strSQL.Append("left join gebruikers G on R.id_lid=G.id_lid ")
+
+                strSQL.Append("where R.ID_Lid = ? ")
+                DoParameterAdd("@idlid", id, MySqlDbType.Int32)
+                mydt = ReturnDALDataTable(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return mydt
+        End Function
+
+        Public Function InsertBoodschap(ByVal myboodschap As Boodschappen) As Integer
+            Dim i As Integer = 0
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("INSERT into Boodschappen (datum,zender,ontvanger,inhoud) VALUES (?,?,?,?)")
+                DoParameterAdd("@datum", myboodschap.Datum, MySqlDbType.DateTime)
+                DoParameterAdd("@zender", myboodschap.Zender.IdLid, MySqlDbType.Int32)
+                DoParameterAdd("@ontvanger", myboodschap.Ontvanger.IdLid, MySqlDbType.Int32)
+                DoParameterAdd("@inhoud", myboodschap.Inhoud, MySqlDbType.VarChar)
+                i = ExecuteDALCommand(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return i
+        End Function
+
+        Public Function DeleteBoodschap(ByVal myboodschap As Integer) As Integer
+            Dim i As Integer = 0
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("Delete from Boodschappen where ID = ? ")
+                DoParameterAdd("@ID", myboodschap, MySqlDbType.Int32)
+                i = ExecuteDALCommand(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return i
+        End Function
+
+        Public Function UpdateBoodschap(ByVal myboodschap As Boodschappen) As Integer
+            Dim i As Integer = 0
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("update Boodschappen set inhoud=?, gelezen=? where ID = ? ")
+
+                DoParameterAdd("@inhoud", myboodschap.Inhoud, MySqlDbType.Int32)
+                DoParameterAdd("@gelezen", myboodschap.gelezen, MySqlDbType.Int32)
+                DoParameterAdd("@ID", myboodschap.Id, MySqlDbType.Int32)
+                i = ExecuteDALCommand(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return i
+        End Function
 #End Region
 
     End Class

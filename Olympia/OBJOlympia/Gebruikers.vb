@@ -221,7 +221,131 @@ Namespace OBJOlympia
         End Property
 
     End Class
+    Public Class RapportHandelingen
+        Private PFX_Id As Integer
+        Private PFX_Datum As Date
+        Private PFX_Discipline As String
+        Private PFX_Groep As String
+        Private PFX_actie As String
+        Private PFX_Aantal As Decimal
+        Private PFX_Bedrag As Decimal
+        Private PFX_KM As Decimal
+        Private PFX_info As String
+        Private PFX_dagVM As Integer
+        Private PFX_dagNM As Integer
+        Private PFX_dagAV As Integer
+        Private PFX_validate As Integer
 
+        Public Sub New()
+        End Sub
+
+        Public Property Id() As Integer
+            Get
+                Return PFX_Id
+            End Get
+            Set(ByVal value As Integer)
+                PFX_Id = value
+            End Set
+        End Property
+
+        Public Property Datum() As Date
+            Get
+                Return PFX_Datum
+            End Get
+            Set(ByVal value As Date)
+                PFX_Datum = value
+            End Set
+        End Property
+        Public Property Discipline() As String
+            Get
+                Return PFX_Discipline
+            End Get
+            Set(ByVal value As String)
+                PFX_Discipline = value
+            End Set
+        End Property
+        Public Property Groep() As String
+            Get
+                Return PFX_Groep
+            End Get
+            Set(ByVal value As String)
+                PFX_Groep = value
+            End Set
+        End Property
+        Public Property Actie() As String
+            Get
+                Return PFX_actie
+            End Get
+            Set(ByVal value As String)
+                PFX_actie = value
+            End Set
+        End Property
+        Public Property Aantal() As Decimal
+            Get
+                Return PFX_Aantal
+            End Get
+            Set(ByVal value As Decimal)
+                PFX_Aantal = value
+            End Set
+        End Property
+        Public Property Bedrag() As Decimal
+            Get
+                Return PFX_Bedrag
+            End Get
+            Set(ByVal value As Decimal)
+                PFX_Bedrag = value
+            End Set
+        End Property
+        Public Property KM() As Decimal
+            Get
+                Return PFX_KM
+            End Get
+            Set(ByVal value As Decimal)
+                PFX_KM = value
+            End Set
+        End Property
+        Public Property Info() As String
+            Get
+                Return PFX_info
+            End Get
+            Set(ByVal value As String)
+                PFX_info = value
+            End Set
+        End Property
+        Public Property dagVM() As Integer
+            Get
+                Return PFX_dagVM
+            End Get
+            Set(ByVal value As Integer)
+                PFX_dagVM = value
+            End Set
+        End Property
+        Public Property dagNM() As Integer
+            Get
+                Return PFX_dagNM
+            End Get
+            Set(ByVal value As Integer)
+                PFX_dagNM = value
+            End Set
+        End Property
+        Public Property dagAV() As Integer
+            Get
+                Return PFX_dagAV
+            End Get
+            Set(ByVal value As Integer)
+                PFX_dagAV = value
+            End Set
+        End Property
+        Public Property Validate() As Integer
+            Get
+                Return PFX_validate
+            End Get
+            Set(ByVal value As Integer)
+                PFX_validate = value
+            End Set
+        End Property
+
+    End Class
     Public Class Handelingen
         Private PFX_Id As Integer
         Private PFX_gebruiker As Gebruikers
@@ -657,4 +781,69 @@ Namespace OBJOlympia
 
     End Class
 
+    Public Class Boodschappen
+        Private PFX_Id As Integer
+        Private PFX_datum As DateTime
+        Private PFX_zender As Gebruikers
+        Private PFX_onvanger As Gebruikers
+        Private PFX_inhoud As String
+        Private PFX_gelezen As Integer
+
+        Public Sub New()
+            PFX_zender = New Gebruikers
+            PFX_onvanger = New Gebruikers
+        End Sub
+
+        Public Property Id() As Integer
+            Get
+                Return PFX_Id
+            End Get
+            Set(ByVal value As Integer)
+                PFX_Id = value
+            End Set
+        End Property
+
+        Public Property Datum() As DateTime
+            Get
+                Return PFX_datum
+            End Get
+            Set(ByVal value As DateTime)
+                PFX_datum = value
+            End Set
+        End Property
+        Public Property Zender() As Gebruikers
+            Get
+                Return PFX_zender
+            End Get
+            Set(ByVal value As Gebruikers)
+                PFX_zender = value
+            End Set
+        End Property
+        Public Property Ontvanger() As Gebruikers
+            Get
+                Return PFX_onvanger
+            End Get
+            Set(ByVal value As Gebruikers)
+                PFX_onvanger = value
+            End Set
+        End Property
+
+        Public Property Inhoud() As String
+            Get
+                Return PFX_inhoud
+            End Get
+            Set(ByVal value As String)
+                PFX_inhoud = value
+            End Set
+        End Property
+        Public Property gelezen() As Integer
+            Get
+                Return PFX_gelezen
+            End Get
+            Set(ByVal value As Integer)
+                PFX_gelezen = value
+            End Set
+        End Property
+
+    End Class
 End Namespace

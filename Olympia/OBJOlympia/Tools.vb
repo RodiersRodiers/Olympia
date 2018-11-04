@@ -118,6 +118,17 @@ Namespace OBJOlympia
             Return dteIn.ToString("yyyy-MM-dd HH:mm:ss")
         End Function
 
+
+        Public Shared Function doRemoveVBRLFs(ByVal strTekst As String) As String
+            '//doRemoveVBRLFs
+            Return strTekst.Replace(vbCrLf, "$§$")
+        End Function
+
+        Public Shared Function doSetupVBRLFs(ByVal strTekst As String) As String
+            '//doSetupVBRLFs
+            Return strTekst.Replace("$§$", vbCrLf)
+        End Function
+
 #Region "Initializing"
 
         ''' <returns></returns>

@@ -122,13 +122,13 @@ Partial Public Class start
     Protected WithEvents form1 As Global.System.Web.UI.HtmlControls.HtmlForm
     
     '''<summary>
-    '''myUCScript1 control.
+    '''ScriptManager1 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents myUCScript1 As Global.Olympia.CustomScriptControl
+    Protected WithEvents ScriptManager1 As Global.System.Web.UI.ScriptManager
     
     '''<summary>
     '''lblPageTitle control.
@@ -138,4 +138,103 @@ Partial Public Class start
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lblPageTitle As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''test control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents test As Global.System.Web.UI.HtmlControls.HtmlTableCell
+    
+    '''<summary>
+    '''lnkNew control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lnkNew As Global.System.Web.UI.WebControls.LinkButton
+    
+    '''<summary>
+    '''lblAantalGebruikers control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblAantalGebruikers As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''dtgDataGrid control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents dtgDataGrid As Global.System.Web.UI.WebControls.DataGrid
+    
+    '''<summary>
+    '''imgbFirstbutton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgbFirstbutton As Global.System.Web.UI.WebControls.ImageButton
+    
+    '''<summary>
+    '''imgbPrevbutton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgbPrevbutton As Global.System.Web.UI.WebControls.ImageButton
+    
+    '''<summary>
+    '''imgbNextbutton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgbNextbutton As Global.System.Web.UI.WebControls.ImageButton
+    
+    '''<summary>
+    '''imgbLastbutton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents imgbLastbutton As Global.System.Web.UI.WebControls.ImageButton
+    
+    '''<summary>
+    '''lblPagina control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblPagina As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''txtCurrentPage control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtCurrentPage As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''lblExtraPaging control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblExtraPaging As Global.System.Web.UI.WebControls.Label
 End Class

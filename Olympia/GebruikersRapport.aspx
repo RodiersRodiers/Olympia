@@ -1,6 +1,8 @@
 ﻿<%@ Page Language="VB" ValidateRequest="true" AutoEventWireup="false" CodeBehind="GebruikersRapport.aspx.vb" Inherits="Olympia.GebruikersRapport" %>
 
 <!DOCTYPE html>
+<%@ Register Assembly="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+    Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register TagPrefix="uc3" TagName="UCMessage" Src="CustomMessage.ascx" %>
 <%@ Register TagPrefix="uc1" TagName="UCScript" Src="CustomScriptControl.ascx" %>
@@ -33,7 +35,6 @@
             <a onclick="w3.toggleShow('#vergoeding')" href="#" class="w3-button w3-block w3-left-align" visible="false" runat="server" id="myBtn1">Vergoedingen <i class="fa fa-caret-down"></i></a>
             <div id="vergoeding" visible="false" runat="server" class="w3-bar-block w3-padding-large w3-medium ">
                 <a id="v_lesgever" runat="server" onclick="window.location.href='K_Lesgever.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Lesgever</a>
-                <a id="v_jury" runat="server" onclick="window.location.href='K_Jury.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Jury</a>
                 <a id="v_wedstrijd" runat="server" onclick="window.location.href='K_Wedstrijd.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Wedstrijd</a>
                 <a id="v_verplaatsing" runat="server" onclick="window.location.href='K_Verplaatsing.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Verplaatsing</a>
                 <a id="v_andere" runat="server" onclick="window.location.href='K_Andere.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Andere</a>
@@ -49,8 +50,7 @@
                 <a onclick="window.location.href='BeheerVergoedingen.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Vergoedingen</a>
             </div>
 
-            <a onclick="window.location.href='meldingen.aspx'" href="#" class="w3-bar-item w3-button">Meldingen</a>
-            <a onclick="window.location.href='login.aspx'" href="#" class="w3-bar-item w3-button w3-padding">Uitloggen</a>
+                  <a onclick="window.location.href='login.aspx'" href="#" class="w3-bar-item w3-button w3-padding">Uitloggen</a>
         </div>
     </nav>
 
@@ -103,54 +103,11 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <asp:DataGrid ID="dtgDataGrid" RowHighlightColor="#cccccc" RowClickColor="#ebe0fb"
-                                        RowSelectionEnabled="true" HorizontalAlign="Center" RowClickEventCommandName="dtgDataGrid_EditCommand"
-                                        runat="server" AutoGenerateColumns="false" CssClass="navigateable" GridLines="Horizontal"
-                                        Width="95%" PageSize="40" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false"
-                                        PagerStyle-Visible="false" DataKeyField="ID" ShowFooter="false">
-                                        <ItemStyle CssClass="datagridItem" />
-
-                                        <Columns>
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-Width="80" SortExpression="Datum" HeaderText="Datum">
-                                                <ItemTemplate>
-                                                    <asp:Label ID="lblDatum" Width="80" runat="server"></asp:Label>
-                                                    <asp:Label ID="lblLidID" Visible="false" runat="server"></asp:Label>
-
-                                                </ItemTemplate>
-                                            </asp:TemplateColumn>
-
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="A.id" HeaderText="Actie">
-                                                <ItemTemplate>
-                                                    <asp:Label ID="lblActie" Width="100" runat="server"></asp:Label>
-                                                </ItemTemplate>
-                                            </asp:TemplateColumn>
-
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="D.id" HeaderText="Groep">
-                                                <ItemTemplate>
-                                                    <asp:Label ID="lblgroep" Width="100" runat="server"></asp:Label>
-                                                </ItemTemplate>
-
-                                            </asp:TemplateColumn>
-
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" ItemStyle-HorizontalAlign="Center" SortExpression="aantal" HeaderStyle-Width="60" HeaderText="Aantal">
-                                                <ItemTemplate>
-                                                    <asp:Label ID="lblaantal" Width="60" runat="server"></asp:Label>
-                                                </ItemTemplate>
-                                            </asp:TemplateColumn>
-
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-HorizontalAlign="center" ItemStyle-HorizontalAlign="Center" SortExpression="bedrag" HeaderStyle-Width="60" HeaderText="Bedrag">
-                                                <ItemTemplate>
-                                                    <asp:Label ID="lblBedrag" Width="60" runat="server"></asp:Label>
-                                                </ItemTemplate>
-                                            </asp:TemplateColumn>
-
-                                            <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="info" HeaderStyle-Width="300" HeaderText="Info">
-                                                <ItemTemplate>
-                                                    <asp:Label ID="lblinfo" Width="300" runat="server"></asp:Label>
-                                                </ItemTemplate>
-                                            </asp:TemplateColumn>
-                                        </Columns>
-                                    </asp:DataGrid>
+                                    <rsweb:ReportViewer ID="ReportViewer1" runat="server" ShowFindControls="true" ShowPageNavigationControls="true" SizeToReportContent="true" Width="100%" ShowDocumentMapButton="false"
+                                ShowPrintButton="false" ShowZoomControl="false" InternalBorderColor="DarkGray"
+                                ShowRefreshButton="false" AsyncRendering="false">
+                                <LocalReport EnableExternalImages="true" />
+                            </rsweb:ReportViewer>
                                     <br />
                                     <br />
                                 </td>

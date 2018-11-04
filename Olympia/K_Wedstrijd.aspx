@@ -49,7 +49,6 @@
                 <a onclick="window.location.href='beheerandere.aspx'" href="#" class="w3-bar-item w3-button w3-light-grey"><i class="fa fa-caret-right w3-margin-right"></i>Andere</a>
             </div>
 
-            <a onclick="window.location.href='meldingen.aspx'" href="#" class="w3-bar-item w3-button">Meldingen</a>
             <a onclick="window.location.href='login.aspx'" href="#" class="w3-bar-item w3-button w3-padding">Uitloggen</a>
         </div>
     </nav>
@@ -113,21 +112,32 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <asp:DataGrid ID="dtgDataGrid" RowHighlightColor="#cccccc" RowClickColor="#ebe0fb"
-                                        RowSelectionEnabled="true" HorizontalAlign="Center" RowClickEventCommandName="dtgDataGrid_EditCommand"
+                                                                       <asp:DataGrid ID="dtgDataGrid" SelectedItemStyle-BackColor="#cccccc"
                                         runat="server" AutoGenerateColumns="false" CssClass="navigateable" GridLines="Horizontal"
-                                        Width="85%" PageSize="40" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false"
-                                        PagerStyle-Visible="false" AllowSorting="true" AlternatingItemStyle-BackColor="WhiteSmoke" DataKeyField="ID" ShowFooter="false">
-                                        <ItemStyle CssClass="datagridItem" />
-                                        <FooterStyle CssClass="datagridItem" />
+                                        Width="95%" PageSize="25" AllowPaging="true" BorderWidth="0" AllowCustomPaging="false"
+                                        AllowSorting="true" ShowFooter="false" PagerStyle-Visible="false">
+                                        <ItemStyle CssClass="datagridItem" Wrap="false" />
                                         <Columns>
+                                                                                        <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-Width="85" SortExpression="Datum" HeaderText="Dag">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="lblDag" Width="80" runat="server"></asp:Label>
+                                               
+                                                </ItemTemplate>
+                                                <EditItemTemplate>
+                               
+                                                </EditItemTemplate>
+                                                <FooterTemplate>
+                                       
+                                                </FooterTemplate>
+                                            </asp:TemplateColumn>
                                             <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderStyle-Width="85" SortExpression="Datum" HeaderText="Datum">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblDatum" Width="85" runat="server"></asp:Label>
                                                     <asp:Label ID="lblLidID" Visible="false" runat="server"></asp:Label>
-                                                    <asp:Label ID="lblID" Visible="false" runat="server"></asp:Label>
+                                                          <asp:hiddenfield ID="lblID" runat="server"></asp:hiddenfield>
                                                 </ItemTemplate>
                                                 <EditItemTemplate>
+                                                      <asp:hiddenfield ID="lblEditID" runat="server"></asp:hiddenfield>
                                                     <asp:TextBox ID="txtEditDatum" Width="85" runat="server"></asp:TextBox>
                                                     <asp:CalendarExtender ID="calDocumentDatum" runat="server" TargetControlID="txtEditDatum"
                                                         Animated="false" Format="dd/MM/yyyy" />
@@ -139,15 +149,15 @@
                                                 </FooterTemplate>
                                             </asp:TemplateColumn>
 
-                                                <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" HeaderText="a.id">
+                                                <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" SortExpression="A.id" HeaderText="Aard">
                                                 <ItemTemplate>
-                                                    <asp:Label ID="lblAard" Width="100" runat="server"></asp:Label>
+                                                    <asp:Label ID="lblAard" Width="80" runat="server"></asp:Label>
                                                 </ItemTemplate>
                                                 <EditItemTemplate>
-                                                    <asp:DropDownList ID="drpEditAard" Width="100" runat="server"></asp:DropDownList>
+                                                    <asp:DropDownList ID="drpEditAard" Width="80" runat="server"></asp:DropDownList>
                                                 </EditItemTemplate>
                                                 <FooterTemplate>
-                                                    <asp:DropDownList ID="drpInsertAard" Width="100" runat="server"></asp:DropDownList>
+                                                    <asp:DropDownList ID="drpInsertAard" Width="80" runat="server"></asp:DropDownList>
                                                 </FooterTemplate>
                                             </asp:TemplateColumn>
 
@@ -216,13 +226,11 @@
                                             </asp:TemplateColumn>
                                         </Columns>
                                         </asp:DataGrid>
-                                    <br />
-                                    <br />
                                 </td>
                             </tr>
                             <tr>
-                                <td valign="top">
-                                    <table width="100%" class="datagridPaging">
+                                                       <td colspan="2" align="center">
+                                    <table width="95%" class="datagridPaging">
                                         <tr>
                                             <td style="width: 33%; vertical-align:middle;align-content:flex-start" class="datagridBleuHook">&nbsp;
                                             </td>
