@@ -83,7 +83,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <asp:DataGrid ID="dtgLabel1"  runat="server" AutoGenerateColumns="false" AlternatingItemStyle-BackColor="Wheat" CssClass="navigateable" GridLines="Horizontal" Width="100%" PageSize="50" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false" PagerStyle-Visible="false" AllowSorting="true" DataKeyField="id" ShowFooter="false">
+                                <asp:DataGrid ID="dtgLabel1"  runat="server" AutoGenerateColumns="false" AlternatingItemStyle-BackColor="WhiteSmoke" CssClass="navigateable" GridLines="Horizontal" Width="100%" PageSize="50" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false" PagerStyle-Visible="false" AllowSorting="true" DataKeyField="id" ShowFooter="false">
                                     <ItemStyle CssClass="datagridItem" />
                                     <FooterStyle CssClass="datagridItem" />
                                     <Columns>

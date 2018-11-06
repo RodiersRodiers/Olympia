@@ -8,10 +8,10 @@ Namespace DALOlympia
     Public Class DALBase
 
         'lokaal
-        Public conn As New MySqlConnection("Server=185.41.126.25;Port=9151;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
+        'Public conn As New MySqlConnection("Server=185.41.126.25;Port=9151;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
 
         'online
-        'Public conn As New MySqlConnection("Server=mysql9.mijnhostingpartner.nl;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
+        Public conn As New MySqlConnection("Server=mysql9.mijnhostingpartner.nl;Database=rodierscurato;Uid=RodiersRodiers;Pwd=%Roller75!;SslMode=none;")
 
         Private myListParamColl As New List(Of MySqlParameter)
 
@@ -29,6 +29,11 @@ Namespace DALOlympia
                 myparam.Value = strObjectValue
             ElseIf myDBType = MySqlDbType.Date Then
                 myparam.MySqlDbType = MySqlDbType.Date
+                myparam.Direction = ParameterDirection.Input
+                myparam.Value = objValue
+            ElseIf myDBType = MySqlDbType.Decimal Then
+                objValue.ToString.Replace(",", ".")
+                myparam.MySqlDbType = MySqlDbType.Decimal
                 myparam.Direction = ParameterDirection.Input
                 myparam.Value = objValue
             Else

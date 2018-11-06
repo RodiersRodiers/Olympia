@@ -9,7 +9,7 @@ Partial Class Start
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         If Not IsPostBack Then
-            Dim idlid As Integer = Request.QueryString("ID_lid")
+            Dim idlid As Integer = Session("Gebruiker")
             ViewState("ID_Lid") = idlid
             setMultiLanguages()
             validateToegang()

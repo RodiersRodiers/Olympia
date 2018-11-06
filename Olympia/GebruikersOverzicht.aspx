@@ -59,12 +59,20 @@
                 <tr>
                     <td style="vertical-align: top; align-content: center">
                         <!-- CONTENT -->
-                        <table style="width: 85%">
+                        <table style="width: 95%">
                             <tr>
                                 <td colspan="4">
                                     <asp:Label ID="lblPageTitle" CssClass="PageTitle" runat="server"></asp:Label>
                                     <br />
                                       <asp:Label ID="lblgebruiker" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td colspan="4" class="w3-gray ">
+                                    <asp:Button ID="btnDetail" runat="server"  />
+                                    <asp:Button ID="btnRechten" runat="server" />
+                                    <asp:Button ID="btnOverzicht" runat="server" forecolor="Blue"/>
+                                    <asp:Button ID="btnrapport" runat="server"  />
                                 </td>
                             </tr>
                             <tr>
@@ -101,7 +109,7 @@
                                     <asp:DataGrid ID="dtgDataGrid" RowHighlightColor="#cccccc" RowClickColor="#ebe0fb"
                                         RowSelectionEnabled="true" HorizontalAlign="Center" RowClickEventCommandName="dtgDataGrid_EditCommand"
                                         runat="server" AutoGenerateColumns="false" CssClass="navigateable" GridLines="Horizontal"
-                                        Width="95%" PageSize="40" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false"
+                                        Width="90%" PageSize="40" AllowPaging="true" BorderWidth="1" AllowCustomPaging="false"
                                         PagerStyle-Visible="false" AllowSorting="true" AlternatingItemStyle-BackColor="WhiteSmoke" DataKeyField="ID" ShowFooter="false">
                                         <ItemStyle CssClass="datagridItem" />
                                         <FooterStyle CssClass="datagridItem" />
@@ -227,10 +235,9 @@
                                             </asp:TemplateColumn>
                                         </Columns>
                                     </asp:DataGrid>
-                                    <br />
-                                    <br />
                                 </td>
                             </tr>
+ 
                             <tr>
                                 <td valign="top">
                                     <table width="100%" class="datagridPaging">

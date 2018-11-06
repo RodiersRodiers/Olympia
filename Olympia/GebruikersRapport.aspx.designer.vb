@@ -149,6 +149,42 @@ Partial Public Class GebruikersRapport
     Protected WithEvents lblgebruiker As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
+    '''btnDetail control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnDetail As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''btnRechten control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnRechten As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''btnOverzicht control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnOverzicht As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''btnrapport control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnrapport As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
     '''lblFilter control.
     '''</summary>
     '''<remarks>

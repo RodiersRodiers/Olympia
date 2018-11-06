@@ -54,7 +54,7 @@
     <!-- !PAGE CONTENT! -->
     <div class="w3-main" style="margin-left: 250px">
         <form id="form1" runat="server">
-            <uc1:UCScript ID="myUCScript1" runat="server" />
+      <asp:scriptmanager ID="ScriptManager1" runat="server" EnablePageMethods = "true"> </asp:scriptmanager>
             <table style="width: 100%">
                 <tr>
                     <td style="vertical-align: top; align-content: center">
@@ -90,6 +90,21 @@
                                                 <br />
                                             </td>
                                         </tr>
+                                        <tr>
+                                                                                    <td colspan="3" align="center">
+                                            <asp:Label ID="lblGebruiker" runat="server"></asp:Label>
+                                            <asp:TextBox ID="txtGebruiker" Width="300" runat="server" Font-Bold="true" Font-Size="Larger"
+                                                TabIndex="2"></asp:TextBox>
+                                            <asp:FilteredTextBoxExtender ID="fte1" runat="server" FilterMode="InvalidChars" InvalidChars="<>&" TargetControlID="txtGebruiker"></asp:FilteredTextBoxExtender>
+                                            <asp:AutoCompleteExtender ID="AutoCompleteExtender1" Enabled="true" runat="server" ServiceMethod="getGebruikersSuggest"
+                                                ServicePath="~/OlympiaService.asmx" TargetControlID="txtGebruiker" MinimumPrefixLength="2"
+                                                CompletionInterval="50" CompletionSetCount="20" CompletionListItemCssClass="autocomplete_listItem"
+                                                CompletionListHighlightedItemCssClass="autocomplete_highlightedListItem">
+                                            </asp:AutoCompleteExtender>
+
+                                        </td>
+
+                                        </tr>
                                     </table>
                                 </td>
                             </tr>
@@ -99,7 +114,7 @@
                                     <asp:DataGrid ID="dtgDataGrid" SelectedItemStyle-BackColor="#cccccc"
                                         runat="server" AutoGenerateColumns="false" CssClass="navigateable" GridLines="Horizontal"
                                         Width="100%" PageSize="20" AllowPaging="true" BorderWidth="0" AllowCustomPaging="false"
-                                        AllowSorting="true" ShowFooter="false" PagerStyle-Visible="false">
+                                        AllowSorting="true" ShowFooter="false" AlternatingItemStyle-BackColor="WhiteSmoke" PagerStyle-Visible="false">
                                         <ItemStyle CssClass="datagridItem" Wrap="false" />
                                         <Columns>
                                             <asp:TemplateColumn HeaderStyle-CssClass="datagridHeaderNonSort" ItemStyle-Width="30"

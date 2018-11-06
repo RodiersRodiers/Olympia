@@ -62,12 +62,20 @@
                 <tr>
                     <td style="vertical-align: top; align-content: center">
                         <!-- CONTENT -->
-                        <table style="width: 85%">
+                        <table style="width: 95%">
                             <tr>
                                 <td colspan="4">
                                     <asp:Label ID="lblPageTitle" CssClass="PageTitle" runat="server"></asp:Label>
                                     <br />
                                     <asp:Label ID="lblgebruiker" runat="server"></asp:Label>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td colspan="4" class="w3-gray ">
+                                    <asp:Button ID="btnDetail" runat="server" />
+                                    <asp:Button ID="btnRechten" runat="server" />
+                                    <asp:Button ID="btnOverzicht" runat="server" />
+                                    <asp:Button ID="btnrapport" runat="server" forecolor="Blue" />
                                 </td>
                             </tr>
                             <tr>
@@ -103,7 +111,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <rsweb:ReportViewer ID="ReportViewer1" runat="server" ShowFindControls="true" ShowPageNavigationControls="true" SizeToReportContent="true" Width="100%" ShowDocumentMapButton="false"
+                                    <rsweb:ReportViewer ID="ReportViewer1" runat="server" ShowFindControls="true" ShowPageNavigationControls="true" SizeToReportContent="true" Width="95%" ShowDocumentMapButton="false"
                                 ShowPrintButton="false" ShowZoomControl="false" InternalBorderColor="DarkGray"
                                 ShowRefreshButton="false" AsyncRendering="false">
                                 <LocalReport EnableExternalImages="true" />

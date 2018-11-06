@@ -13,7 +13,7 @@ Partial Class GebruikersOverzicht
             Dim idlid As Integer = Request.QueryString("ID_lid")
             ViewState("ID_Lid") = idlid
             setMultiLanguages()
-            validateToegang
+            validateToegang()
             LoadData(txtfilter.Text)
         End If
     End Sub
@@ -89,6 +89,10 @@ Partial Class GebruikersOverzicht
         lbllogin.Text = "u bent ingelogd als " & mygebruiker.Naam & " " & mygebruiker.Voornaam & " (" & mygebruiker.GebDatum & ")"
         Dim mygebruiker2 As Gebruikers = myBalOlympia.getGebruiker(ViewState("ID_Lid"))
         lblgebruiker.Text = mygebruiker2.Naam & " " & mygebruiker2.Voornaam & " (" & mygebruiker2.GebDatum & ")"
+        btnRechten.Text = "Rechten"
+        btnOverzicht.Text = "Handelingen"
+        btnrapport.Text = "Rapport"
+        btnDetail.Text = "Detail"
     End Sub
 
     Private Sub DoFillUpDropDown(ByRef drpSource As DropDownList, ByVal myOb() As Object, ByVal strDataValueField As String, ByVal strDataTextField As String, ByVal selectedItem As String, ByVal strDefaultTekst As String)
@@ -311,6 +315,30 @@ Partial Class GebruikersOverzicht
         btnINSERTCancel.Visible = True
     End Sub
 
+    Private Sub btnWisFilter_Click(sender As Object, e As EventArgs) Handles btnWisFilter.Click
+        txtfilter.Text = ""
+        LoadData(txtfilter.Text)
+    End Sub
+
+    Private Sub btnFilter_Click(sender As Object, e As EventArgs) Handles btnFilter.Click
+        LoadData(txtfilter.Text)
+    End Sub
+
+    Private Sub BtnRechten_Click(sender As Object, e As EventArgs) Handles btnRechten.Click
+        Response.Redirect("GebruikersRechten.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
+
+    Private Sub BtnOverzicht_Click(sender As Object, e As EventArgs) Handles btnOverzicht.Click
+        Response.Redirect("GebruikersOverzicht.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
+
+    Private Sub btnrapport_Click(sender As Object, e As EventArgs) Handles btnrapport.Click
+        Response.Redirect("GebruikersRapport.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
+
+    Private Sub btnDetail_Click(sender As Object, e As EventArgs) Handles btnDetail.Click
+        Response.Redirect("GebruikerDetail.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
 #Region "DATAGRID - Sorting" ' To move to original class
 
     Private Sub dtgDataGrid_SortCommand(ByVal source As Object, ByVal e As DataGridSortCommandEventArgs) Handles dtgDataGrid.SortCommand
@@ -439,15 +467,6 @@ Partial Class GebruikersOverzicht
         Else
             txtCurrentPage.Text = dtgDataGrid.CurrentPageIndex + 1
         End If
-    End Sub
-
-    Private Sub btnWisFilter_Click(sender As Object, e As EventArgs) Handles btnWisFilter.Click
-        txtfilter.Text = ""
-        LoadData(txtfilter.Text)
-    End Sub
-
-    Private Sub btnFilter_Click(sender As Object, e As EventArgs) Handles btnFilter.Click
-        LoadData(txtfilter.Text)
     End Sub
 
 #End Region

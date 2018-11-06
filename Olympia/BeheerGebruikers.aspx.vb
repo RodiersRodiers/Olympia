@@ -56,6 +56,7 @@ Public Class BeheerGebruikers
         lbllogin.Text = "u bent ingelogd als " & mygebruiker.Naam & " " & mygebruiker.Voornaam & " (" & mygebruiker.GebDatum & ")"
         lblOpen.Text = "Openstaand"
         lblFilter.Text = "Filter"
+        lblGebruiker.Text = "Gebruiker"
         btnFilter.Text = "Zoek"
         btnWisFilter.Text = "Wis Filter"
         btn_nieuw.Text = "Nieuwe gebruiker aanmaken"

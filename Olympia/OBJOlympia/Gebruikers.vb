@@ -542,6 +542,8 @@ Namespace OBJOlympia
         Private PFX_gebruiker As Gebruikers
         Private PFX_datum As Date
         Private PFX_bedrag As Decimal
+        Private PFX_KM As Decimal
+        Private PFX_info As String
 
         Public Sub New()
             PFX_gebruiker = New Gebruikers
@@ -582,8 +584,22 @@ Namespace OBJOlympia
                 PFX_bedrag = value
             End Set
         End Property
-
-
+        Public Property Km() As Decimal
+            Get
+                Return PFX_KM
+            End Get
+            Set(ByVal value As Decimal)
+                PFX_KM = value
+            End Set
+        End Property
+        Public Property info() As String
+            Get
+                Return PFX_info
+            End Get
+            Set(ByVal value As String)
+                PFX_info = value
+            End Set
+        End Property
     End Class
 
     Public Class Aanwezigheid

@@ -140,31 +140,49 @@ Partial Public Class GebruikerDetail
     Protected WithEvents lblPageTitle As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''btn_Opslaan control.
+    '''lblgebruiker control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btn_Opslaan As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents lblgebruiker As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''btn_Annuleer control.
+    '''btnDetail control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btn_Annuleer As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents btnDetail As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
-    '''btn_Changepw control.
+    '''btnRechten control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btn_Changepw As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents btnRechten As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''btnOverzicht control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnOverzicht As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''btnrapport control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnrapport As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
     '''lblNaam control.
@@ -428,29 +446,56 @@ Partial Public Class GebruikerDetail
     Protected WithEvents txtareaInfo As Global.System.Web.UI.HtmlControls.HtmlTextArea
     
     '''<summary>
-    '''btnRechten control.
+    '''btn_Opslaan control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnRechten As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents btn_Opslaan As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
-    '''btnOverzicht control.
+    '''btn_Annuleer control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnOverzicht As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents btn_Annuleer As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
-    '''btnrapport control.
+    '''btn_Changepw control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnrapport As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents btn_Changepw As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''btnINSERTAdd control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnINSERTAdd As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''btnINSERTCancel control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnINSERTCancel As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''dtgDataGrid control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents dtgDataGrid As Global.System.Web.UI.WebControls.DataGrid
 End Class

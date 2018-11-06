@@ -76,6 +76,10 @@ Public Class GebruikersRechten
         lblPageTitle.Text = "Gebruikers > Beheer Rechten"
         btnINSERTAdd.Text = "Toevoegen"
         btnINSERTCancel.Text = "Annuleren"
+        btnRechten.Text = "Rechten"
+        btnOverzicht.Text = "Handelingen"
+        btnrapport.Text = "Rapport"
+        btnDetail.Text = "Detail"
     End Sub
 
     Private Sub LoadData(ByVal idlid As Integer)
@@ -275,4 +279,20 @@ Public Class GebruikersRechten
         btnINSERTCancel.Visible = True
     End Sub
 
+    Private Sub BtnRechten_Click(sender As Object, e As EventArgs) Handles btnRechten.Click
+        Response.Redirect("GebruikersRechten.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
+
+
+    Private Sub BtnOverzicht_Click(sender As Object, e As EventArgs) Handles btnOverzicht.Click
+        Response.Redirect("GebruikersOverzicht.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
+
+    Private Sub btnrapport_Click(sender As Object, e As EventArgs) Handles btnrapport.Click
+        Response.Redirect("GebruikersRapport.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
+
+    Private Sub btnDetail_Click(sender As Object, e As EventArgs) Handles btnDetail.Click
+        Response.Redirect("GebruikerDetail.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
 End Class

@@ -5,16 +5,17 @@ Public Class GebruikerDetail
     Inherits Page
     Private myBalOlympia As New BalGebruikers
     Private ResultCount As Integer
+    Private strDeleteConfirm As String
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
-
-        setMultiLanguages()
         If Not IsPostBack Then
             Dim idlid As Integer = Request.QueryString("ID_lid")
             ViewState("ID_Lid") = idlid
+            SetMultiLanguages()
             InitPicklists()
             validateToegang()
             LoadData()
+            LoadData2()
         End If
     End Sub
     Private Sub validateToegang()
@@ -76,7 +77,8 @@ Public Class GebruikerDetail
     Private Sub SetMultiLanguages()
         Dim mygebruiker As Gebruikers = myBalOlympia.GetGebruiker(Session("Gebruiker"))
         lbllogin.Text = "u bent ingelogd als " & mygebruiker.Naam & " " & mygebruiker.Voornaam & " (" & mygebruiker.GebDatum & ")"
-
+        Dim mygebruiker2 As Gebruikers = myBalOlympia.GetGebruiker(ViewState("ID_Lid"))
+        lblgebruiker.Text = mygebruiker2.Naam & " " & mygebruiker2.Voornaam & " (" & mygebruiker2.GebDatum & ")"
         lblPageTitle.Text = "Gebruikers > Beheer Algemeen"
         lblEmail.Text = "Email"
         lblNaam.Text = "Naam"
@@ -94,9 +96,12 @@ Public Class GebruikerDetail
         btn_Annuleer.Text = "Annuleer"
         btn_Opslaan.Text = "Opslaan"
         btnRechten.Text = "Rechten"
-        btnOverzicht.Text = "Overzicht"
+        btnOverzicht.Text = "Handelingen"
         btnrapport.Text = "Rapport"
-
+        btnDetail.Text = "Detail"
+        btnINSERTAdd.Text = "Toevoegen"
+        btnINSERTCancel.Text = "Annuleren"
+        strDeleteConfirm = "Bent u zeker dat dit record wilt verwijderen ?"
     End Sub
 
     Private Sub LoadData()
@@ -182,6 +187,162 @@ Public Class GebruikerDetail
         End Try
     End Sub
 
+    Private Function getDefaultSortExpression() As String
+        If ViewState("SortExpression") Is Nothing Then
+            Return "datum desc"
+        Else
+            Return String.Format("{0} {1}", ViewState("SortExpression"), ViewState("SortDirection"))
+        End If
+    End Function
+
+    Private Sub LoadData2()
+        Try
+            Dim myList As List(Of Lesgeververgoeding) = myBalOlympia.GetLesgeverVergoedingen(getDefaultSortExpression, ViewState("ID_Lid"))
+            dtgDataGrid.DataSource = myList
+            dtgDataGrid.DataBind()
+            ResultCount = myList.Count
+        Catch ex As Exception
+            'UC_Message.setMessage(strAddError, CustomMessage.TypeMessage.Fataal, New Exception("VALIDATION"))
+        End Try
+    End Sub
+
+    Private Sub dtgDataGrid_ItemCommand(ByVal source As Object, ByVal e As DataGridCommandEventArgs) Handles dtgDataGrid.ItemCommand
+        Try
+            Dim i_Result As Integer
+            Select Case e.CommandName
+                Case "INSERT"
+                    Dim mylsvgd As New Lesgeververgoeding
+                    Dim txtInsertDatum As TextBox = e.Item.FindControl("txtInsertDatum")
+                    Dim txtInsertKm As TextBox = e.Item.FindControl("txtInsertKm")
+                    Dim txtInsertBedrag As TextBox = e.Item.FindControl("txtInsertBedrag")
+                    Dim txtInsertinfo As HtmlTextArea = e.Item.FindControl("txtInsertinfo")
+                    mylsvgd.Datum = txtInsertDatum.Text
+                    mylsvgd.Km = txtInsertKm.Text
+                    mylsvgd.Bedrag = txtInsertBedrag.Text
+                    mylsvgd.Gebruiker.IdLid = ViewState("ID_Lid")
+                    mylsvgd.info = txtInsertinfo.InnerText
+                    Try
+                        i_Result = myBalOlympia.InsertLesgeverVergoeding(mylsvgd)
+                        dtgDataGrid.ShowFooter = False
+                        btnINSERTAdd.Visible = True
+                        btnINSERTCancel.Visible = False
+
+                        If i_Result >= 1 Then
+                            ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strAddOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
+                            LoadData2()
+                        End If
+                    Catch ex As Exception
+                        If ex.Message = "119" Then
+                            ' UC_Message.setMessage(strDuplicate, CustomMessage.TypeMessage.Fout, New Exception("VALIDATION"))
+                        Else
+                            '  UC_Message.setMessage(strAddError, CustomMessage.TypeMessage.Fout, New Exception("VALIDATION"))
+                        End If
+                    End Try
+
+                Case "DELETE"
+                    Dim mylsvgd As New Lesgeververgoeding With {
+                        .Id = dtgDataGrid.DataKeys(e.Item.ItemIndex)
+                    }
+                    i_Result = myBalOlympia.DeleteLesgeverVergoeding(mylsvgd)
+
+                    LoadData2()
+                    ' UC_MessageChild.setMessage(strDeleteOk, CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
+
+                Case "UPDATE"
+                    Try
+                        Dim mylsvgd As New Lesgeververgoeding
+                        Dim txteditkm As TextBox = e.Item.FindControl("txteditKm")
+                        Dim txteditBedrag As TextBox = e.Item.FindControl("txteditBedrag")
+                        Dim txteditInfo As HtmlTextArea = e.Item.FindControl("txteditInfo")
+                        mylsvgd.Id = dtgDataGrid.DataKeys(e.Item.ItemIndex)
+                        mylsvgd.Km = txteditkm.Text
+                        mylsvgd.Bedrag = txteditBedrag.Text
+                        mylsvgd.info = txteditInfo.InnerText
+
+                        i_Result = myBalOlympia.UpdateLesgeverVergoeding(mylsvgd)
+                        If i_Result = 1 Then
+                            ' UC_Message.setMessage(String.Format("{0} ({1} {2} )", strUpdateOk, i_Result, strCompleted), CustomMessage.TypeMessage.Bevestiging, New Exception("VALIDATION"))
+                        End If
+                    Catch ex As Exception
+                        ' UC_Message.setMessage(strUpdateError, CustomMessage.TypeMessage.Fataal, ex)
+                    End Try
+
+                    btnINSERTAdd.Visible = True
+                    dtgDataGrid.EditItemIndex = -1
+                    LoadData2()
+
+                Case "CANCEL"
+                    dtgDataGrid.EditItemIndex = -1
+                    dtgDataGrid.ShowFooter = False
+                    LoadData2()
+                    btnINSERTAdd.Visible = True
+
+                Case "EDIT"
+                    dtgDataGrid.EditItemIndex = e.Item.ItemIndex
+                    LoadData2()
+                    btnINSERTAdd.Visible = False
+
+            End Select
+
+        Catch ex As Exception
+            ' UC_Message.setMessage(strAddError, CustomMessage.TypeMessage.Fataal, New Exception("VALIDATION"))
+        End Try
+    End Sub
+
+    Private Sub dtgDataGrid_ItemDataBound(ByVal sender As Object, ByVal e As DataGridItemEventArgs) Handles dtgDataGrid.ItemDataBound
+        Try
+            Dim mylsvgd As Lesgeververgoeding = e.Item.DataItem()
+            If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
+                Dim lblId As Label = e.Item.FindControl("lblId")
+                Dim lblLidID As Label = e.Item.FindControl("lblLidID")
+                Dim lblDatum As Label = e.Item.FindControl("lblDatum")
+                Dim lblinfo As Label = e.Item.FindControl("lblinfo")
+                Dim lblkm As Label = e.Item.FindControl("lblkm")
+                Dim lblBedrag As Label = e.Item.FindControl("lblBedrag")
+                Dim cbeDelete As AjaxControlToolkit.ConfirmButtonExtender = e.Item.FindControl("cbeDelete")
+                cbeDelete.ConfirmText = strDeleteConfirm
+                lblId.Text = mylsvgd.Id
+                lblLidID.Text = mylsvgd.Gebruiker.IdLid
+                lblDatum.Text = mylsvgd.Datum
+                lblinfo.Text = mylsvgd.info
+                lblBedrag.Text = mylsvgd.Bedrag
+                lblkm.Text = mylsvgd.Km
+
+            End If
+
+            If e.Item.ItemType = ListItemType.EditItem Then
+                Dim txteditDatum As Label = e.Item.FindControl("txteditDatum")
+                Dim txteditinfo As HtmlTextArea = e.Item.FindControl("txteditinfo")
+                Dim txteditkm As TextBox = e.Item.FindControl("txteditkm")
+                Dim txteditBedrag As TextBox = e.Item.FindControl("txteditBedrag")
+                txteditDatum.Text = mylsvgd.Datum
+                txteditinfo.InnerText = mylsvgd.info
+                txteditkm.Text = mylsvgd.Km
+                txteditBedrag.Text = mylsvgd.Bedrag
+
+            End If
+
+            If e.Item.ItemType = ListItemType.Footer Then
+            End If
+
+        Catch ex As Exception
+            ' UC_Message.setMessage(strAddError, CustomMessage.TypeMessage.Fataal, New Exception("VALIDATION"))
+        End Try
+    End Sub
+
+    Protected Sub btnCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTCancel.Click
+        dtgDataGrid.ShowFooter = False
+        btnINSERTAdd.Visible = True
+        btnINSERTCancel.Visible = False
+    End Sub
+
+    Private Sub btnINSERTAdd_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnINSERTAdd.Click
+        dtgDataGrid.ShowFooter = True
+        btnINSERTAdd.Visible = False
+        btnINSERTCancel.Visible = True
+    End Sub
+
+
     Private Sub Btn_Changepw_Click(sender As Object, e As EventArgs) Handles btn_Changepw.Click
 
     End Sub
@@ -197,5 +358,8 @@ Public Class GebruikerDetail
 
     Private Sub btnrapport_Click(sender As Object, e As EventArgs) Handles btnrapport.Click
         Response.Redirect("GebruikersRapport.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
+    Private Sub btnDetail_Click(sender As Object, e As EventArgs) Handles btnDetail.Click
+        Response.Redirect("GebruikerDetail.aspx?ID_lid=" & ViewState("ID_Lid"))
     End Sub
 End Class

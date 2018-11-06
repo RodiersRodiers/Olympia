@@ -959,11 +959,11 @@ Namespace BALOlympia
 #End Region
 
 #Region "Vergoedingen"
-        Public Function GetLesgeverVergoeding(ByVal sort As String) As List(Of Lesgeververgoeding)
+        Public Function GetAllLesgeverVergoedingen(ByVal sort As String) As List(Of Lesgeververgoeding)
             Dim myList As New List(Of Lesgeververgoeding)
 
             Try
-                Dim dt As DataTable = myDalGebruikers.GetLesgeverVergoeding(sort)
+                Dim dt As DataTable = myDalGebruikers.GetAllLesgeverVergoedingen(sort)
                 For Each myRow As DataRow In dt.Rows
                     Dim myvergoeding As New Lesgeververgoeding
                     myvergoeding.Id = myRow("Id").ToString
@@ -971,6 +971,29 @@ Namespace BALOlympia
                     myvergoeding.Bedrag = myRow("beschrijving").ToString
                     myvergoeding.Datum = myRow("active").ToString
 
+
+                    myList.Add(myvergoeding)
+                Next
+            Catch ex As Exception
+                Throw
+            End Try
+
+            Return myList
+        End Function
+
+        Public Function GetLesgeverVergoedingen(ByVal sort As String, ByVal idlid As Integer) As List(Of Lesgeververgoeding)
+            Dim myList As New List(Of Lesgeververgoeding)
+
+            Try
+                Dim dt As DataTable = myDalGebruikers.GetLesgeverVergoedingen(sort, idlid)
+                For Each myRow As DataRow In dt.Rows
+                    Dim myvergoeding As New Lesgeververgoeding
+                    myvergoeding.Id = myRow("idvergoeding")
+                    myvergoeding.Gebruiker.IdLid = myRow("gebruikerid")
+                    myvergoeding.Bedrag = myRow("Bedrag").ToString
+                    myvergoeding.Datum = myRow("Datum").ToString
+                    myvergoeding.Km = myRow("km").ToString
+                    myvergoeding.info = myRow("info").ToString
 
                     myList.Add(myvergoeding)
                 Next

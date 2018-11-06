@@ -89,6 +89,10 @@ Partial Class GebruikersRapport
         lblgebruiker.Text = mygebruiker2.Naam & " " & mygebruiker2.Voornaam & " (" & mygebruiker2.GebDatum & ")"
         txtdatumlaag.Text = Now.AddMonths(-1).ToString("dd/MM/yyyy")
         txtdatumhoog.Text = Now().ToString("dd/MM/yyyy")
+        btnRechten.Text = "Rechten"
+        btnOverzicht.Text = "Handelingen"
+        btnrapport.Text = "Rapport"
+        btnDetail.Text = "Detail"
 
     End Sub
 
@@ -112,5 +116,20 @@ Partial Class GebruikersRapport
         txtdatumlaag.Text = Now.AddMonths(-1).ToString("dd/MM/yyyy")
         txtdatumhoog.Text = Now().ToString("dd/MM/yyyy")
         LoadData("", txtdatumlaag.Text, txtdatumhoog.Text)
+    End Sub
+
+    Private Sub BtnRechten_Click(sender As Object, e As EventArgs) Handles btnRechten.Click
+        Response.Redirect("GebruikersRechten.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
+
+    Private Sub BtnOverzicht_Click(sender As Object, e As EventArgs) Handles btnOverzicht.Click
+        Response.Redirect("GebruikersOverzicht.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
+
+    Private Sub btnrapport_Click(sender As Object, e As EventArgs) Handles btnrapport.Click
+        Response.Redirect("GebruikersRapport.aspx?ID_lid=" & ViewState("ID_Lid"))
+    End Sub
+    Private Sub btnDetail_Click(sender As Object, e As EventArgs) Handles btnDetail.Click
+        Response.Redirect("GebruikerDetail.aspx?ID_lid=" & ViewState("ID_Lid"))
     End Sub
 End Class

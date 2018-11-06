@@ -219,7 +219,6 @@ Namespace DALOlympia
         End Function
 
         Public Function InsertGebruiker(ByVal mygebruiker As Gebruikers) As Integer
-            Dim i As Integer = 0
             Try
                 strSQL.Remove(0, strSQL.Length)
                 strSQL.Append("INSERT into gebruikers (email, naam, voornaam, gebdatum, geslacht,gsm,password) VALUES (?,?,?,?,?,?,?)")
@@ -238,7 +237,6 @@ Namespace DALOlympia
         End Function
 
         Public Function DeleteGebruiker(ByVal ID_Lid As Integer) As Integer
-            Dim i As Integer = 0
             Try
                 strSQL.Remove(0, strSQL.Length)
                 strSQL.Append("update gebruikers set Active = 0 where ID_lid = ?")
@@ -251,7 +249,6 @@ Namespace DALOlympia
         End Function
 
         Public Function UpdateGebruiker(ByVal mygebruiker As Gebruikers) As Integer
-            Dim i As Integer = 0
             Try
                 strSQL.Remove(0, strSQL.Length)
                 strSQL.Append("update gebruikers set email=?, naam=?,voornaam=?,gemeente=?,postcode=?,gsm=?,straat=?,Huisnr=?,Rekeningnr=?,info=?,gebdatum=?,geslacht= ? where ID_lid = ? ")
@@ -276,7 +273,6 @@ Namespace DALOlympia
         End Function
 
         Public Function CheckGebruiker(ByVal Naam As String, ByVal Voornaam As String, ByVal gebDatum As Date) As Integer
-            Dim i As Integer = 0
             Try
                 strSQL.Remove(0, strSQL.Length)
                 strSQL.Append("select * from gebruikers where naam = ? AND voornaam = ? AND gebdatum= ? ")
@@ -292,7 +288,6 @@ Namespace DALOlympia
         End Function
 
         Public Function CheckToegangGebruiker(ByVal ID_Lid As Integer, ByVal pagina As Integer) As Integer
-            Dim i As Integer = 0
             Try
                 strSQL.Remove(0, strSQL.Length)
                 strSQL.Append("select Validate from Rechten where ID_Lid = ? AND ID_actie = ?")
@@ -951,15 +946,33 @@ Namespace DALOlympia
 #Region "vergoedingen"
 
 
-        Public Function GetLesgeverVergoeding(ByVal sort As String) As DataTable
+        Public Function GetAllLesgeverVergoedingen(ByVal sort As String) As DataTable
             Dim mydt As New DataTable
             Try
                 strSQL.Remove(0, strSQL.Length)
-                strSQL.Append("SELECT naam, voornaam, gebdatum,r.bedrag,r.datum, T.id as groepid,T.beschrijving as groepbeschrijving, ")
+                strSQL.Append("SELECT r.info, km,naam, voornaam, gebdatum,r.bedrag,r.datum, T.id as groepid,T.beschrijving as groepbeschrijving, ")
                 strSQL.Append("G.ID_Lid as gebruikerid  ")
-                strSQL.Append("from vergoedingen r")
+                strSQL.Append("from vergoedingen r ")
                 strSQL.Append("left join gebruikers G on R.id_lid=G.id_lid ")
                 strSQL.Append("left join PIC_Trainingsgroepen T on T.id=R.id_groep ")
+                strSQL.Append("order by " & sort)
+                mydt = ReturnDALDataTable(strSQL.ToString)
+            Catch ex As Exception
+                Throw
+            End Try
+            Return mydt
+        End Function
+
+        Public Function GetLesgeverVergoedingen(ByVal sort As String, ByVal idlid As Integer) As DataTable
+            Dim mydt As New DataTable
+            Try
+                strSQL.Remove(0, strSQL.Length)
+                strSQL.Append("SELECT r.info,r.id as idvergoeding ,naam, voornaam, gebdatum,r.bedrag,r.datum, KM, G.ID_Lid as gebruikerid  ")
+                strSQL.Append("from vergoedingen r ")
+                strSQL.Append("left join gebruikers G on R.id_lid=G.id_lid ")
+                strSQL.Append("where r.ID_Lid = ? ")
+                DoParameterAdd("@ID_Lid", idlid, MySqlDbType.Int32)
+                strSQL.Append("order by " & sort)
                 mydt = ReturnDALDataTable(strSQL.ToString)
             Catch ex As Exception
                 Throw
@@ -971,10 +984,12 @@ Namespace DALOlympia
             Dim i As Integer = 0
             Try
                 strSQL.Remove(0, strSQL.Length)
-                strSQL.Append("INSERT into vergoedingen (ID_Lid, datum, bedrag) VALUES (?,?,?)")
+                strSQL.Append("INSERT into vergoedingen (ID_Lid, datum, bedrag, km, info) VALUES (?,?,?,?,?)")
                 DoParameterAdd("@ID_Lid", myvergoeding.Gebruiker.IdLid, MySqlDbType.Int32)
                 DoParameterAdd("@datum", myvergoeding.Datum, MySqlDbType.Date)
                 DoParameterAdd("@bedrag", myvergoeding.Bedrag, MySqlDbType.Decimal)
+                DoParameterAdd("@km", myvergoeding.Km, MySqlDbType.Decimal)
+                DoParameterAdd("@info", myvergoeding.info, MySqlDbType.String)
                 i = ExecuteDALCommand(strSQL.ToString)
             Catch ex As Exception
                 Throw
@@ -986,10 +1001,10 @@ Namespace DALOlympia
             Dim i As Integer = 0
             Try
                 strSQL.Remove(0, strSQL.Length)
-                strSQL.Append("Update vergoedingen set ID_Lid=?, datum=?, bedrag=? where id = ?")
-                DoParameterAdd("@ID_Lid", myvergoeding.Gebruiker.IdLid, MySqlDbType.Int32)
-                DoParameterAdd("@datum", myvergoeding.Datum, MySqlDbType.Date)
+                strSQL.Append("Update vergoedingen set bedrag=? , km=?, info=? where id = ?")
                 DoParameterAdd("@bedrag", myvergoeding.Bedrag, MySqlDbType.Decimal)
+                DoParameterAdd("@km", myvergoeding.Km, MySqlDbType.Decimal)
+                DoParameterAdd("@info", myvergoeding.info, MySqlDbType.String)
                 DoParameterAdd("@ID", myvergoeding.Id, MySqlDbType.Int32)
                 i = ExecuteDALCommand(strSQL.ToString)
             Catch ex As Exception
